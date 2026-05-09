@@ -176,7 +176,7 @@ app.get('/api/v1/version', (req, res) => {
   res.json({ version: APP_VERSION, app_name: appName });
 });
 
-app.get('/manifest.webmanifest', (req, res) => {
+app.get('/manifest.webmanifest', apiLimiter, (req, res) => {
   let appName = DEFAULT_APP_NAME;
   try {
     const row = db.get().prepare('SELECT value FROM sync_config WHERE key = ?').get('app_name');
