@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.0] - 2026-05-11
+
+### Added
+- **Bike icon**: added `bike` icon to the calendar event icon selector (transport category), with translations for all 16 supported locales.
+
 ## [0.51.0] - 2026-05-11
 
 ### Added
