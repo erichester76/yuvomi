@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.3] - 2026-05-12
+
+### Added
+- Complete Ukrainian (uk) localization: all previously untranslated strings in tasks, shopping, meals, calendar, housekeeping, budget, contacts, settings, reminders, documents, and onboarding are now fully translated (contributed by @baragoon)
+
 ## [0.52.2] - 2026-05-12
 
 ### Fixed
