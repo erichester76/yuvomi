@@ -1111,7 +1111,10 @@
     "unitWeek": "vecka",
     "unitWeeks": "veckor",
     "unitMonth": "månad",
-    "unitMonths": "månader"
+    "unitMonths": "månader",
+    "freqYearly": "Årligen",
+    "unitYear": "år",
+    "unitYears": "år"
   },
   "recipes": {
     "title": "Recept",

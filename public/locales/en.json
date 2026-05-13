@@ -1111,7 +1111,10 @@
     "unitWeek": "week",
     "unitWeeks": "weeks",
     "unitMonth": "month",
-    "unitMonths": "months"
+    "unitMonths": "months",
+    "freqYearly": "Yearly",
+    "unitYear": "year",
+    "unitYears": "years"
   },
   "reminders": {
     "sectionTitle": "Reminder",

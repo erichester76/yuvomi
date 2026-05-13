@@ -1111,7 +1111,10 @@
     "unitWeek": "週",
     "unitWeeks": "週",
     "unitMonth": "ヶ月",
-    "unitMonths": "ヶ月"
+    "unitMonths": "ヶ月",
+    "freqYearly": "毎年",
+    "unitYear": "年",
+    "unitYears": "年"
   },
   "recipes": {
     "title": "レシピ",

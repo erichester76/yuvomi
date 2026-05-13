@@ -1111,7 +1111,10 @@
     "unitWeek": "semaine",
     "unitWeeks": "semaines",
     "unitMonth": "mois",
-    "unitMonths": "mois"
+    "unitMonths": "mois",
+    "freqYearly": "Annuel",
+    "unitYear": "an",
+    "unitYears": "ans"
   },
   "recipes": {
     "title": "Recettes",

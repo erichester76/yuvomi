@@ -1111,7 +1111,10 @@
     "unitWeek": "неделю",
     "unitWeeks": "недель",
     "unitMonth": "месяц",
-    "unitMonths": "месяцев"
+    "unitMonths": "месяцев",
+    "freqYearly": "Ежегодно",
+    "unitYear": "год",
+    "unitYears": "лет"
   },
   "recipes": {
     "title": "Рецепты",

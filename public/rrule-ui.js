@@ -11,6 +11,7 @@ const FREQ_OPTIONS = () => [
   { value: 'DAILY',   label: t('rrule.freqDaily') },
   { value: 'WEEKLY',  label: t('rrule.freqWeekly') },
   { value: 'MONTHLY', label: t('rrule.freqMonthly') },
+  { value: 'YEARLY',  label: t('rrule.freqYearly') },
 ];
 
 const WEEKDAYS = () => [
@@ -128,6 +129,7 @@ function unitLabel(freq, interval) {
   if (freq === 'DAILY')   return n ? t('rrule.unitDays')   : t('rrule.unitDay');
   if (freq === 'WEEKLY')  return n ? t('rrule.unitWeeks')  : t('rrule.unitWeek');
   if (freq === 'MONTHLY') return n ? t('rrule.unitMonths') : t('rrule.unitMonth');
+  if (freq === 'YEARLY')  return n ? t('rrule.unitYears')  : t('rrule.unitYear');
   return '';
 }
 

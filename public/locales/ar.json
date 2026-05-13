@@ -1111,7 +1111,10 @@
     "unitWeek": "أسبوع",
     "unitWeeks": "أسابيع",
     "unitMonth": "شهر",
-    "unitMonths": "أشهر"
+    "unitMonths": "أشهر",
+    "freqYearly": "سنوياً",
+    "unitYear": "سنة",
+    "unitYears": "سنوات"
   },
   "recipes": {
     "title": "الوصفات",

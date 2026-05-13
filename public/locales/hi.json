@@ -1111,7 +1111,10 @@
     "unitWeek": "सप्ताह",
     "unitWeeks": "सप्ताह",
     "unitMonth": "माह",
-    "unitMonths": "माह"
+    "unitMonths": "माह",
+    "freqYearly": "वार्षिक",
+    "unitYear": "वर्ष",
+    "unitYears": "वर्ष"
   },
   "recipes": {
     "title": "रेसिपी",

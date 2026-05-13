@@ -1111,7 +1111,10 @@
     "unitWeek": "hafta",
     "unitWeeks": "hafta",
     "unitMonth": "ay",
-    "unitMonths": "ay"
+    "unitMonths": "ay",
+    "freqYearly": "Yıllık",
+    "unitYear": "yıl",
+    "unitYears": "yıl"
   },
   "recipes": {
     "title": "Tarifler",

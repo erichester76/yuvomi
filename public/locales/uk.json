@@ -1111,7 +1111,10 @@
     "unitWeek": "тиждень",
     "unitWeeks": "тижнів",
     "unitMonth": "місяць",
-    "unitMonths": "місяців"
+    "unitMonths": "місяців",
+    "freqYearly": "Щороку",
+    "unitYear": "рік",
+    "unitYears": "років"
   },
   "reminders": {
     "sectionTitle": "Нагадування",

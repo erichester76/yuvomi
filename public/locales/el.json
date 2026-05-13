@@ -1111,7 +1111,10 @@
     "unitWeek": "εβδομάδα",
     "unitWeeks": "εβδομάδες",
     "unitMonth": "μήνα",
-    "unitMonths": "μήνες"
+    "unitMonths": "μήνες",
+    "freqYearly": "Ετησίως",
+    "unitYear": "χρόνο",
+    "unitYears": "χρόνια"
   },
   "recipes": {
     "title": "Συνταγές",

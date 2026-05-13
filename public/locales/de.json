@@ -1117,7 +1117,10 @@
     "unitWeek": "Woche",
     "unitWeeks": "Wochen",
     "unitMonth": "Monat",
-    "unitMonths": "Monate"
+    "unitMonths": "Monate",
+    "freqYearly": "Jährlich",
+    "unitYear": "Jahr",
+    "unitYears": "Jahre"
   },
   "reminders": {
     "sectionTitle": "Erinnerung",

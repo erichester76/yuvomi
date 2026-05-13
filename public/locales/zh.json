@@ -1111,7 +1111,10 @@
     "unitWeek": "周",
     "unitWeeks": "周",
     "unitMonth": "个月",
-    "unitMonths": "个月"
+    "unitMonths": "个月",
+    "freqYearly": "每年",
+    "unitYear": "年",
+    "unitYears": "年"
   },
   "recipes": {
     "title": "食谱",
