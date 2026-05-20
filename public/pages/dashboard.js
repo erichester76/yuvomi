@@ -693,6 +693,10 @@ function renderDashboardLayout(cfg, data, weather, currency, { editing = false }
 }
 
 function renderDashboardSkeleton() {
+  const tiles = DEFAULT_WIDGET_CONFIG
+    .filter((w) => w.visible)
+    .map((w) => `<div class="widget-wrapper ${widgetSizeClass(w.size)}">${skeletonWidget(3)}</div>`)
+    .join('');
   return `
     <section class="dashboard-overview">
       <div class="dashboard-overview__header">
@@ -702,14 +706,7 @@ function renderDashboardSkeleton() {
         </div>
       </div>
     </section>
-    <div class="dashboard__grid">
-      ${skeletonWidget(3)}
-      ${skeletonWidget(3)}
-      ${skeletonWidget(2)}
-      ${skeletonWidget(3)}
-      ${skeletonWidget(3)}
-      ${skeletonWidget(2)}
-    </div>
+    <div class="dashboard__grid">${tiles}</div>
   `;
 }
 

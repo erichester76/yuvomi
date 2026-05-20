@@ -177,7 +177,7 @@ Status-Spalte beim Abarbeiten: `[ ]` offen → `[x]` erledigt
   ).join(''));
   // Nach API-Daten: grid.replaceChildren() + echte Widgets
   ```
-- **Status:** [ ]
+- **Status:** [x]
 
 ---
 
@@ -398,7 +398,8 @@ Diese Aspekte sind gut umgesetzt und sollten nicht verändert werden:
 - **Phase 4 abgeschlossen (v0.52.17):** H1 ✅
 - **Phase 5 abgeschlossen (v0.52.18):** H3 ✅
 - **Phase 6 abgeschlossen (v0.52.19):** H4 ✅
-- **Nächste Phase:** Phase 7 — H7 (Dashboard Skeleton-Screen)
+- **Phase 7 abgeschlossen (v0.52.20):** H7 ✅
+- **Nächste Phase:** Phase 8 — K2 + H6 (Such-Deep-Links)
 
 ---
 
