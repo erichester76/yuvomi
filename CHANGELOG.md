@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.31] - 2026-05-23
+
+### Fixed
+- Dashboard scrolling restored. The internal-scroll-container approach introduced in v0.52.29 (`display: flex; height: 100%; overflow: hidden` on `.dashboard`, `flex: 1; overflow-y: auto` on `.dashboard-shell`) caused a scroll regression: `height: 100%` on `.dashboard` resolved against `.page-transition` (its direct parent, `height: auto`), making it equivalent to `height: auto` per CSS spec. As a result `.dashboard-shell` received no height constraint and its `overflow-y: auto` never activated; on iOS, `overscroll-behavior-y: contain` on the unconstrained `.dashboard-shell` additionally blocked touch events from reaching `.app-content`. Fix: reverted to `overflow: visible` on `.dashboard` and removed the internal scroll container from `.dashboard-shell`; scrolling happens via `.app-content` as on every other page.
+
 ## [0.52.30] - 2026-05-23
 
 ### Fixed
