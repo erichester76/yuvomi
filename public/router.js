@@ -827,24 +827,36 @@ function initOfflineBanner() {
  * Nur auf Mobile aktiv (< 1024px), da auf Desktop die Sidebar fest sichtbar ist.
  */
 function initNavHideOnScroll(container) {
-  const content = container.querySelector('#main-content');
   const nav = container.querySelector('.nav-bottom');
-  if (!content || !nav) return;
+  if (!nav) return;
 
   let lastY = 0;
+  let lastTarget = null;
 
   const setNavHidden = (hidden) => {
     nav.classList.toggle('nav-bottom--hidden', hidden);
     document.documentElement.classList.toggle('nav-bottom--hidden', hidden);
   };
 
-  content.addEventListener('scroll', () => {
+  // capture:true catches scroll on any descendant without bubbling.
+  // Accept only the two possible main scroll containers:
+  //   #main-content  — .app-content, used by all pages except Dashboard
+  //   #dashboard-shell — internal scroll container on the Dashboard page
+  document.addEventListener('scroll', (e) => {
     if (window.innerWidth >= 1024) {
       setNavHidden(false);
       return;
     }
 
-    const y = content.scrollTop;
+    const target = e.target;
+    if (target.id !== 'main-content' && target.id !== 'dashboard-shell') return;
+
+    if (target !== lastTarget) {
+      lastY = target.scrollTop;
+      lastTarget = target;
+    }
+
+    const y = target.scrollTop;
     if (y < 10) {
       setNavHidden(false);
     } else if (y > lastY + 4) {
@@ -853,7 +865,7 @@ function initNavHideOnScroll(container) {
       setNavHidden(false);
     }
     lastY = y;
-  }, { passive: true });
+  }, { passive: true, capture: true });
 }
 
 /**

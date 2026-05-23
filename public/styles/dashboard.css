@@ -2030,9 +2030,21 @@
 .dashboard {
   max-width: min(1680px, 100%);
   /* isolation:isolate + overflow:clip (Modern Skin) cause blank-screen on scroll on iOS WebKit.
-   * The blob decorations they were meant to contain are hidden, so both can be reset. */
+   * The blob decorations they were meant to contain are hidden, so both can be reset.
+   * display:flex + height + overflow:hidden: .dashboard-shell takes over as internal scroll
+   * container so .app-content never scrolls — eliminates the iOS WebKit compositor conflict
+   * between backdrop-filter on .nav-bottom and a scrolling .app-content. */
   isolation: auto;
-  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--safe-area-inset-top) - var(--nav-bottom-height) - var(--safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .dashboard {
+    height: 100dvh;
+  }
 }
 
 .dashboard::before,
@@ -2042,6 +2054,11 @@
 
 .dashboard-shell {
   gap: var(--space-5);
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 .dashboard-overview {

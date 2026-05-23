@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.29] - 2026-05-23
+
+### Fixed
+- Dashboard no longer goes blank when scrolling on iOS Safari/WebKit (root cause fix). The real cause was that the dashboard was the only page scrolling via `.app-content`; on scroll, `initNavHideOnScroll` applied `transform: translateY(100%)` to `.nav-bottom` which—combined with its `backdrop-filter`—created an iOS 26 WebKit compositor conflict with the active scroll container. Fixed by giving `.dashboard` an internal scroll container (`.dashboard-shell`, analogous to all other pages), so `.app-content` never scrolls and the nav transition is never triggered. `initNavHideOnScroll` updated to use document-level capture scroll delegation and additionally listens to `#dashboard-shell`. Closes #166.
+
 ## [0.52.28] - 2026-05-23
 
 ### Fixed
