@@ -835,7 +835,6 @@ function initNavHideOnScroll(container) {
 
   const setNavHidden = (hidden) => {
     nav.classList.toggle('nav-bottom--hidden', hidden);
-    document.documentElement.classList.toggle('nav-bottom--hidden', hidden);
   };
 
   // capture:true catches scroll on any descendant without bubbling.
@@ -844,6 +843,13 @@ function initNavHideOnScroll(container) {
   //   #dashboard-shell — internal scroll container on the Dashboard page
   document.addEventListener('scroll', (e) => {
     if (window.innerWidth >= 1024) {
+      setNavHidden(false);
+      return;
+    }
+
+    // Dashboard is the only mobile page that still hit the scroll-blank compositor path.
+    // Keep the bottom nav stable there; other pages retain auto-hide behavior.
+    if (currentPath === '/') {
       setNavHidden(false);
       return;
     }

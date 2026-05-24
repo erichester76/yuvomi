@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.38] - 2026-05-24
+
+### Fixed
+- Dashboard blank-screen on mobile scroll — keep the mobile bottom navigation stable on the Dashboard, stop mirroring scroll state onto `<html>`, and remove scroll-time FAB and bottom-nav layout mutations that could trigger mobile WebKit/Blink compositor blanking.
+
 ## [0.52.37] - 2026-05-23
 
 ### Fixed
