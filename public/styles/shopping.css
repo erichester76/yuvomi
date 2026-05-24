@@ -331,7 +331,8 @@
   border-bottom: 1px solid var(--color-border-subtle);
   border-left: 3px solid var(--module-accent);
   transition: opacity var(--transition-fast);
-  min-height: 44px;
+  min-height: var(--target-base);
+  cursor: pointer;
 }
 
 .shopping-item:last-child { border-bottom: none; }
@@ -342,10 +343,10 @@
 
 /* Checkbox */
 .item-check {
-  width: 24px;
-  height: 24px;
+  width: var(--target-base);
+  height: var(--target-base);
   border-radius: var(--radius-sm);
-  border: 2px solid var(--color-border);
+  border: none;
   background: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -359,13 +360,21 @@
 .item-check::before {
   content: '';
   position: absolute;
-  inset: -12px;
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .item-check--checked {
+  animation: check-pop 0.2s var(--ease-out);
+}
+
+.item-check--checked::before {
   background-color: var(--color-success);
   border-color: var(--color-success);
-  animation: check-pop 0.2s var(--ease-out);
 }
 
 .item-check__icon {
@@ -373,6 +382,8 @@
   height: var(--space-3);
   color: var(--color-text-on-accent);
   display: none;
+  position: relative;
+  z-index: 1;
 }
 
 .item-check--checked .item-check__icon { display: block; }

@@ -139,8 +139,8 @@
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
-  width: 24px;
-  height: 24px;
+  width: var(--target-base);
+  height: var(--target-base);
   border-radius: var(--radius-full);
   background: var(--color-overlay-light);
   border: none;
@@ -148,7 +148,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   opacity: 0;
   transition: opacity var(--transition-fast), background-color var(--transition-fast);
   color: inherit;
@@ -157,7 +156,7 @@
 .note-card__pin::before {
   content: '';
   position: absolute;
-  inset: -12px;
+  inset: 0;
 }
 
 .note-card--pinned .note-card__pin {
@@ -169,7 +168,9 @@
   opacity: 1;
 }
 
-.note-card__pin:hover {
+.note-card__pin:hover,
+.note-card__pin:focus-visible {
+  opacity: 1;
   background: var(--color-overlay);
 }
 
@@ -178,7 +179,7 @@
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-1);
   color: inherit;
-  padding-right: var(--space-6);
+  padding-right: var(--target-base);
 }
 
 .note-card__content {
@@ -226,8 +227,8 @@
 }
 
 .note-card__delete {
-  width: 24px;
-  height: 24px;
+  width: var(--target-base);
+  height: var(--target-base);
   border-radius: var(--radius-full);
   background: var(--color-overlay-light);
   border: none;
@@ -244,16 +245,24 @@
 .note-card__delete::before {
   content: '';
   position: absolute;
-  inset: -12px;
+  inset: 0;
 }
 
-.note-card:hover .note-card__delete {
+.note-card:hover .note-card__delete,
+.note-card__delete:focus-visible {
   opacity: 1;
 }
 
 .note-card__delete:hover {
   background: var(--color-danger-light);
   color: var(--color-danger);
+}
+
+@media (pointer: coarse) {
+  .note-card__pin,
+  .note-card__delete {
+    opacity: 1;
+  }
 }
 
 
@@ -338,4 +347,3 @@
   background-color: var(--color-border);
   color: var(--color-text-secondary);
 }
-

@@ -374,34 +374,51 @@
 
 /* Status-Checkbox */
 .task-status-btn {
-  width: var(--space-5);
-  height: var(--space-5);
+  width: var(--target-base);
+  height: var(--target-base);
   border-radius: var(--radius-full);
-  border: 2px solid var(--color-border);
+  border: none;
   background: none;
   cursor: pointer;
   flex-shrink: 0;
-  margin-top: 1px;
+  margin-top: calc((var(--target-base) - var(--space-5)) / -2);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
   position: relative;
 }
 
 .task-status-btn::before {
   content: '';
   position: absolute;
-  inset: -13px;
+  inset: 0;
+  width: var(--target-base);
+  height: var(--target-base);
+}
+
+.task-status-btn::after {
+  content: '';
+  width: var(--space-5);
+  height: var(--space-5);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .task-status-btn--done {
-  border-color: var(--color-success);
-  background-color: var(--color-success);
   animation: check-pop 0.2s var(--ease-out);
 }
 
+.task-status-btn--done::after {
+  border-color: var(--color-success);
+  background-color: var(--color-success);
+}
+
 .task-status-btn--in_progress {
+  border-color: transparent;
+}
+
+.task-status-btn--in_progress::after {
   border-color: var(--color-warning);
 }
 
@@ -410,6 +427,8 @@
   height: 12px;
   color: var(--color-text-on-accent);
   display: none;
+  position: absolute;
+  z-index: 1;
 }
 
 .task-status-btn--done .task-status-btn__check { display: block; }
@@ -808,4 +827,3 @@
   gap: var(--space-2);
   flex-wrap: wrap;
 }
-

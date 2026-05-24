@@ -50,3 +50,15 @@ test('router hides inactive overlays from keyboard focus', () => {
   assert.match(source, /\.inert\s*=/);
   assert.match(source, /returnFocus/);
 });
+
+test('phase 3 high-frequency controls use tokenized touch targets', () => {
+  const tasks = read('./public/styles/tasks.css');
+  const shopping = read('./public/styles/shopping.css');
+  const notes = read('./public/styles/notes.css');
+
+  assert.match(tasks, /\.task-status-btn::before[\s\S]*var\(--target-base\)/);
+  assert.match(shopping, /\.item-check[\s\S]*(?:min-width|width):\s*var\(--target-base\)/);
+  assert.match(shopping, /\.shopping-item[\s\S]*min-height:\s*var\(--target-base\)/);
+  assert.match(notes, /\.note-card__pin[\s\S]*width:\s*var\(--target-base\)/);
+  assert.match(notes, /\.note-card__delete[\s\S]*width:\s*var\(--target-base\)/);
+});

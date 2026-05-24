@@ -60,6 +60,31 @@ function groupItemsByCategory(items) {
   return [...known, ...unknown];
 }
 
+function shouldIgnoreShoppingRowToggle(target) {
+  return Boolean(target?.closest?.('button, a, input, select, textarea, [data-no-row-toggle]'));
+}
+
+async function toggleShoppingItem(id, checked, container) {
+  const newVal = checked ? 0 : 1;
+
+  const item = state.items.find((i) => i.id === id);
+  if (item) {
+    item.is_checked = newVal;
+    updateItemsList(container);
+    updateListCounter(state.activeListId, 0, newVal ? 1 : -1);
+    renderTabs(container);
+  }
+
+  try {
+    await api.patch(`/shopping/items/${id}`, { is_checked: newVal });
+    vibrate(10);
+  } catch (err) {
+    if (item) item.is_checked = checked;
+    updateItemsList(container);
+    window.oikos.showToast(err.message, 'danger');
+  }
+}
+
 // --------------------------------------------------------
 // Render-Bausteine
 // --------------------------------------------------------
@@ -657,33 +682,22 @@ function wireListContentEvents(container) {
 
   content.addEventListener('click', async (e) => {
     const target = e.target.closest('[data-action]');
-    if (!target) return;
+    if (!target) {
+      if (shouldIgnoreShoppingRowToggle(e.target)) return;
+      const row = e.target.closest('.shopping-item');
+      if (!row) return;
+      const toggle = row.querySelector('[data-action="toggle-item"]');
+      if (!toggle) return;
+      await toggleShoppingItem(Number(row.dataset.itemId), Number(toggle.dataset.checked), container);
+      return;
+    }
     const action = target.dataset.action;
 
     // ---- Artikel abhaken ----
     if (action === 'toggle-item') {
       const id      = Number(target.dataset.id);
       const checked = Number(target.dataset.checked);
-      const newVal  = checked ? 0 : 1;
-
-      // Optimistisches Update
-      const item = state.items.find((i) => i.id === id);
-      if (item) {
-        item.is_checked = newVal;
-        updateItemsList(container);
-        updateListCounter(state.activeListId, 0, newVal ? 1 : -1);
-        renderTabs(container);
-      }
-
-      try {
-        await api.patch(`/shopping/items/${id}`, { is_checked: newVal });
-        vibrate(10);
-      } catch (err) {
-        // Zurückrollen
-        if (item) item.is_checked = checked;
-        updateItemsList(container);
-        window.oikos.showToast(err.message, 'danger');
-      }
+      await toggleShoppingItem(id, checked, container);
     }
 
     // ---- Artikel löschen (mit Undo, 4s Fenster) ----
@@ -905,3 +919,5 @@ export async function render(container, { user }) {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
+
+export const __test = { shouldIgnoreShoppingRowToggle };

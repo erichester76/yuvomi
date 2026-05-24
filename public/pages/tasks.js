@@ -1069,6 +1069,7 @@ function renderTaskList(container) {
   if (window.lucide) window.lucide.createIcons();
   stagger(listEl.querySelectorAll('.swipe-row, .kanban-card'));
   updateOverdueBadge();
+  updateBulkActionsBar(container);
   wireSwipeGestures(container);
   maybeShowSwipeHint(container);
   listEl.querySelector('#empty-cta-tasks')?.addEventListener('click', () => {
@@ -1600,10 +1601,14 @@ function updateBulkActionsBar(container) {
   if (!bar) return;
 
   const selected = state.selectedTaskIds.size;
-  if (selected === 0) {
-    bar.hidden = true;
-  } else {
-    bar.hidden = false;
+  const buttons = bar.querySelectorAll('button[id^="bulk-"]');
+
+  bar.hidden = !state.bulkSelectMode;
+  buttons.forEach((button) => {
+    button.disabled = selected === 0;
+  });
+
+  if (count) {
     count.textContent = t('tasks.bulkSelectedCount', { count: selected });
   }
 }
