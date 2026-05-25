@@ -227,6 +227,15 @@ function returnFocus(target) {
   }
 }
 
+function focusMainContentAfterNavigation(path) {
+  if (path === '/login') return;
+  const main = document.getElementById('main-content');
+  if (!main || typeof main.focus !== 'function') return;
+  requestAnimationFrame(() => {
+    main.focus({ preventScroll: true });
+  });
+}
+
 const FOCUSABLE_SELECTOR = [
   'a[href]',
   'button:not([disabled])',
@@ -348,6 +357,7 @@ async function navigate(path, userOrPushState = true, pushState = true) {
     updateNav(basePath);
     updateThemeColorForRoute(route);
     updateBranding(basePath);
+    focusMainContentAfterNavigation(basePath);
   } finally {
     isNavigating = false;
     // auth:expired kann waehrend einer Navigation gefeuert haben (z.B. wenn ein
@@ -566,6 +576,7 @@ function renderAppShell(container) {
   const main = document.createElement('main');
   main.className = 'app-content';
   main.id = 'main-content';
+  main.tabIndex = -1;
 
   const bottomNav = document.createElement('nav');
   bottomNav.className = 'nav-bottom';

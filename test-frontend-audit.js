@@ -105,6 +105,14 @@ test('More sheet search trigger is a native button with visible focus styling', 
   assert.match(focusRule, /box-shadow:/);
 });
 
+test('SPA navigation can move focus to main content after route changes', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /main\.tabIndex\s*=\s*-1/);
+  assert.match(source, /function\s+focusMainContentAfterNavigation/);
+  assert.match(source, /focusMainContentAfterNavigation\(basePath/);
+});
+
 test('bottom navigation labels are constrained against localized overflow', () => {
   const layout = read('./public/styles/layout.css');
   const labelRule = cssRuleBody(layout, '.nav-item__label');
