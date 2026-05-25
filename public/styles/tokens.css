@@ -349,7 +349,7 @@
    * 12. Layout
    * -------------------------------------------------------- */
   --nav-height-mobile: 56px;
-  --nav-bottom-height: calc(var(--nav-height-mobile) + 12px); /* scroll (56px) + dots-indicator (12px) */
+  --nav-bottom-height: calc(var(--nav-height-mobile) + var(--safe-area-inset-bottom));
   --sidebar-width: 56px;             /* Fallback (mobile: sidebar hidden) */
   --sidebar-width-expanded: 220px;   /* full sidebar (≥1024px), max 240px laut Spec */
   --content-max-width: 1280px;

@@ -164,6 +164,7 @@
   border-top: 1px solid var(--color-border-subtle);
   display: flex;
   flex-direction: column;
+  padding-bottom: var(--safe-area-inset-bottom);
   z-index: var(--z-nav);
   backdrop-filter: var(--blur-md) saturate(180%);
   -webkit-backdrop-filter: var(--blur-md) saturate(180%);
@@ -607,7 +608,7 @@
 
 .page-fab {
   position: fixed;
-  bottom: calc(var(--nav-bottom-height) + 24px + var(--safe-area-inset-bottom));
+  bottom: calc(var(--nav-bottom-height) + var(--space-6));
   right: var(--space-4);
   width: 52px;
   height: 52px;
