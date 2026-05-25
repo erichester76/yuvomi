@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.52] - 2026-05-25
+
+### Fixed
+- Mobile More navigation now closes reliably when choosing a route after locale or navigation rebuilds.
+
 ## [0.52.51] - 2026-05-25
 
 ### Changed
