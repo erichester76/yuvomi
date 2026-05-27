@@ -636,9 +636,7 @@ function renderAppShell(container) {
   const sidebarItems = document.createElement('div');
   sidebarItems.className = 'nav-sidebar__items';
   sidebarItems.setAttribute('role', 'list');
-  navItems().forEach((item) => {
-    sidebarItems.appendChild(navItemEl(item));
-  });
+  sidebarNavItems().forEach((item) => sidebarItems.appendChild(item));
   if (window.lucide) window.lucide.createIcons({ el: sidebarItems });
   sidebar.appendChild(sidebarLogo);
   sidebar.appendChild(sidebarItems);
@@ -1259,6 +1257,22 @@ function navItems() {
   return settings ? [...sortable, settings] : sortable;
 }
 
+function sidebarNavItems() {
+  const elements = [];
+  let kitchenAdded = false;
+  navItems().forEach((item) => {
+    if (item.kitchenGroup) {
+      if (!kitchenAdded) {
+        elements.push(sidebarKitchenEl());
+        kitchenAdded = true;
+      }
+      return;
+    }
+    elements.push(navItemEl(item));
+  });
+  return elements;
+}
+
 function isModuleDisabled(moduleName) {
   return _disabledModules.has(moduleName);
 }
@@ -1328,6 +1342,20 @@ function replaceLucideIcon(container, selector, iconName) {
   next.setAttribute('aria-hidden', 'true');
   current.replaceWith(next);
   if (window.lucide) window.lucide.createIcons({ el: container });
+}
+
+function sidebarKitchenEl() {
+  const item = {
+    path: getLastKitchenRoute(),
+    label: t('nav.kitchen'),
+    icon: 'utensils',
+    module: navItems().find((n) => n.path === getLastKitchenRoute())?.module || 'meals',
+  };
+  const a = navItemEl(item);
+  a.id = 'sidebar-kitchen-nav';
+  a.setAttribute('aria-label', kitchenNavAriaLabel(currentPath));
+  a.setAttribute('title', t('nav.kitchen'));
+  return a;
 }
 
 function moreItemEl({ path, label, icon, module: mod, accent }) {
@@ -1419,6 +1447,20 @@ function updateNav(path) {
     if (kitchenBtnIcon) kitchenBtnIcon.dataset.lucide = 'utensils';
     kitchenNavBtn.setAttribute('aria-label', kitchenNavAriaLabel(path));
     kitchenNavBtn.setAttribute('title', t('nav.kitchen'));
+  }
+
+  const sidebarKitchenNav = document.querySelector('#sidebar-kitchen-nav');
+  if (sidebarKitchenNav) {
+    const isKitchen = isKitchenRoute(path);
+    if (isKitchen) {
+      sidebarKitchenNav.setAttribute('aria-current', 'page');
+      const kitchenMod = navItems().find((n) => n.path === getLastKitchenRoute())?.module;
+      if (kitchenMod) sidebarKitchenNav.style.setProperty('--item-module-accent', `var(--module-${kitchenMod})`);
+    } else {
+      sidebarKitchenNav.removeAttribute('aria-current');
+    }
+    sidebarKitchenNav.setAttribute('aria-label', kitchenNavAriaLabel(path));
+    sidebarKitchenNav.setAttribute('title', t('nav.kitchen'));
   }
 
   const moreBtn = document.querySelector('#more-btn');
@@ -1650,7 +1692,7 @@ function rebuildNavigation({ updateLabels = true } = {}) {
   }
 
   if (navSidebarItems) {
-    const sidebarEls = navItems().map(navItemEl);
+    const sidebarEls = sidebarNavItems();
     navSidebarItems.replaceChildren(...sidebarEls);
     if (window.lucide) window.lucide.createIcons({ el: navSidebarItems });
   }
