@@ -1009,3 +1009,80 @@
   flex-shrink: 0;
   opacity: 0.65;
 }
+
+/* --------------------------------------------------------
+ * Task-Chips im Kalender (read-only)
+ * -------------------------------------------------------- */
+
+.cal-task-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-0h) var(--space-2);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  line-height: 1.3;
+  user-select: none;
+  margin-bottom: var(--space-0h);
+  border: 1px solid transparent;
+}
+
+.cal-task-chip:hover,
+.cal-task-chip:focus-visible {
+  filter: brightness(0.9);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.cal-task-chip .icon-xs {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.cal-task-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Prioritätsvarianten – nutzt dieselben -bg/-text-Token wie tasks.css */
+.cal-task-chip--urgent {
+  background: var(--color-priority-urgent-bg);
+  color: var(--color-priority-urgent);
+}
+.cal-task-chip--high {
+  background: var(--color-priority-high-bg);
+  color: var(--color-priority-high);
+}
+.cal-task-chip--medium {
+  background: var(--color-priority-medium-bg);
+  color: var(--color-priority-medium);
+}
+.cal-task-chip--low {
+  background: var(--color-priority-low-bg);
+  color: var(--color-priority-low);
+}
+.cal-task-chip--none {
+  background: var(--color-priority-none-bg);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+/* Aufgaben-Sektion in Agenda-Ansicht */
+.agenda-tasks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+}
+
+.agenda-tasks .cal-task-chip {
+  margin-bottom: 0;
+}
