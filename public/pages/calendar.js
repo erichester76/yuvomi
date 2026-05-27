@@ -329,6 +329,7 @@ let state = {
   today:       '',
   cursor:      null,     // aktuell angezeigte Referenz-Datum (YYYY-MM-DD)
   events:      [],
+  tasks:       [],       // Aufgaben mit due_date für Kalender-Anzeige
   users:       [],
   rangeFrom:   '',
   rangeTo:     '',
@@ -575,17 +576,53 @@ function eventsOnDay(dateStr) {
   });
 }
 
+/** Filtert Tasks: nur open/in_progress mit due_date werden angezeigt. */
+function filterTasksForCalendar(tasks) {
+  return tasks.filter(
+    (t) => t.due_date && t.status !== 'done' && t.status !== 'archived'
+  );
+}
+
+/** Tasks, die an einem bestimmten Tag fällig sind. */
+function tasksOnDay(dateStr) {
+  return state.tasks.filter((t) => t.due_date === dateStr);
+}
+
+/** Rendert einen read-only Task-Chip für Kalenderansichten. */
+function renderTaskChip(task) {
+  const priority = task.priority || 'none';
+  const label    = esc(task.title);
+  const ariaLbl  = t('calendar.taskChipAriaLabel', { title: task.title });
+  const timeStr  = task.due_time ? ` · ${task.due_time.slice(0, 5)}` : '';
+  return `<div class="cal-task-chip cal-task-chip--${priority}"
+               data-task-id="${task.id}"
+               role="button" tabindex="0"
+               aria-label="${esc(ariaLbl)}"
+               title="${label}${esc(timeStr)}">
+    <i data-lucide="check-square" class="icon-xs" aria-hidden="true"></i>
+    <span>${label}${esc(timeStr)}</span>
+  </div>`;
+}
+
 // --------------------------------------------------------
 // API
 // --------------------------------------------------------
 
 async function loadRange(from, to) {
   try {
-    const res      = await api.get(`/calendar?from=${from}&to=${to}`);
-    state.events   = res.data;
+    const [evRes, taskRes] = await Promise.all([
+      api.get(`/calendar?from=${from}&to=${to}`),
+      api.get('/tasks?include_future=1').catch((err) => {
+        console.warn('[Calendar] Tasks-Fetch fehlgeschlagen:', err);
+        return { data: [] };
+      }),
+    ]);
+    state.events = evRes.data;
+    state.tasks  = filterTasksForCalendar(taskRes.data ?? []);
   } catch (err) {
     console.error('[Calendar] loadRange Fehler:', err);
     state.events = [];
+    state.tasks  = [];
     window.oikos?.showToast(t('calendar.loadError'), 'danger');
   }
   state.rangeFrom = from;
@@ -805,6 +842,12 @@ function renderMonthView(container) {
   `);
 
   container.querySelector('#month-grid').addEventListener('click', (e) => {
+    const taskChip = e.target.closest('.cal-task-chip');
+    if (taskChip) {
+      e.stopPropagation();
+      window.oikos.navigate(`/tasks?open=${taskChip.dataset.taskId}`);
+      return;
+    }
     const evEl = e.target.closest('.month-day__event');
     if (evEl) {
       e.stopPropagation();
@@ -821,6 +864,7 @@ function renderMonthView(container) {
 
 function renderMonthDay(date, inMonth) {
   const evs      = eventsOnDay(date);
+  const dayTasks = tasksOnDay(date);
   const isToday  = date === state.today;
   const classes  = [
     'month-day',
@@ -844,11 +888,15 @@ function renderMonthDay(date, inMonth) {
   `;
   }).join('');
 
+  const MAX_TASK_SHOW = 2;
+  const taskHtml = dayTasks.slice(0, MAX_TASK_SHOW).map(renderTaskChip).join('');
+
   return `
     <div class="${classes}" data-date="${date}">
       <div class="month-day__number">${new Date(date + 'T00:00:00').getDate()}</div>
       ${evHtml}
       ${extra > 0 ? `<div class="month-day__more">${t('calendar.moreEvents', { count: extra })}</div>` : ''}
+      ${taskHtml}
     </div>
   `;
 }
@@ -900,6 +948,7 @@ function renderWeekView(container) {
                    style="${ev.cal_color || ev.color ? `background-color:${esc(ev.cal_color || ev.color)};` : ''}${getContrastColor(ev.cal_color || ev.color) ? `color:${getContrastColor(ev.cal_color || ev.color)};` : ''}"
                    title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span></div>
             `).join('')}
+            ${tasksOnDay(d).map(renderTaskChip).join('')}
           </div>
         `).join('')}
       </div>
@@ -942,6 +991,11 @@ function renderWeekView(container) {
   });
 
   container.querySelector('.allday-row').addEventListener('click', (e) => {
+    const taskChip = e.target.closest('.cal-task-chip');
+    if (taskChip) {
+      window.oikos.navigate(`/tasks?open=${taskChip.dataset.taskId}`);
+      return;
+    }
     const evEl = e.target.closest('.allday-event');
     if (evEl) {
       const ev = state.events.find((ev) => ev.id === parseInt(evEl.dataset.id, 10));
@@ -1064,7 +1118,7 @@ function renderDayView(container) {
       <div class="day-view__header">
         <div class="day-view__date-label">${formatDate(state.cursor, { weekday: true, long: true })}</div>
       </div>
-      ${allday.length ? `
+      ${(allday.length || tasksOnDay(state.cursor).length) ? `
       <div class="allday-row" style="display:grid;grid-template-columns:48px 1fr;">
         <div style="padding:2px 4px 2px 0;font-size:10px;color:var(--color-text-disabled);text-align:right;line-height:24px;">${t('calendar.allDayShort')}</div>
         <div class="allday-cell">
@@ -1072,6 +1126,7 @@ function renderDayView(container) {
             <div class="allday-event" data-id="${ev.id}"
                  style="${ev.cal_color || ev.color ? `background-color:${esc(ev.cal_color || ev.color)};` : ''}${getContrastColor(ev.cal_color || ev.color) ? `color:${getContrastColor(ev.cal_color || ev.color)};` : ''}"
                  title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span></div>`).join('')}
+          ${tasksOnDay(state.cursor).map(renderTaskChip).join('')}
         </div>
       </div>` : ''}
       <div class="day-view__scroll" id="day-scroll">
@@ -1094,6 +1149,19 @@ function renderDayView(container) {
       </div>
     </div>
   `);
+
+  container.querySelector('.allday-row')?.addEventListener('click', (e) => {
+    const taskChip = e.target.closest('.cal-task-chip');
+    if (taskChip) {
+      window.oikos.navigate(`/tasks?open=${taskChip.dataset.taskId}`);
+      return;
+    }
+    const evEl = e.target.closest('.allday-event');
+    if (evEl) {
+      const ev = state.events.find((ev) => ev.id === parseInt(evEl.dataset.id, 10));
+      if (ev) showEventPopup(ev, evEl);
+    }
+  });
 
   container.querySelector('#day-col').addEventListener('click', (e) => {
     const evEl = e.target.closest('.week-event');
@@ -1121,21 +1189,22 @@ function renderAgendaView(container) {
   const days = Array.from({ length: 31 }, (_, i) => addDays(from, i));
 
   const groups = days
-    .map((d) => ({ date: d, events: eventsOnDay(d) }))
-    .filter((g) => g.events.length > 0);
+    .map((d) => ({ date: d, events: eventsOnDay(d), tasks: tasksOnDay(d) }))
+    .filter((g) => g.events.length > 0 || g.tasks.length > 0);
 
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
     <div class="agenda-view" id="agenda-view">
       ${groups.length === 0
         ? `<div class="agenda-empty">${t('calendar.agendaEmpty')}</div>`
-        : groups.map(({ date, events }) => `
+        : groups.map(({ date, events, tasks }) => `
           <div class="agenda-day">
             <div class="agenda-day__header ${date === state.today ? 'agenda-day__header--today' : ''}">
               <span class="agenda-day__date">${formatDate(date)}</span>
               <span class="agenda-day__weekday">${DAY_NAMES_LONG()[new Date(date + 'T00:00:00').getDay()]}</span>
             </div>
             ${events.map((ev) => renderAgendaEvent(ev)).join('')}
+            ${tasks.length ? `<div class="agenda-tasks">${tasks.map(renderTaskChip).join('')}</div>` : ''}
           </div>
         `).join('')
       }
@@ -1145,6 +1214,11 @@ function renderAgendaView(container) {
   stagger(container.querySelectorAll('.agenda-event'));
 
   container.querySelector('#agenda-view').addEventListener('click', (e) => {
+    const taskChip = e.target.closest('.cal-task-chip');
+    if (taskChip) {
+      window.oikos.navigate(`/tasks?open=${taskChip.dataset.taskId}`);
+      return;
+    }
     const evEl = e.target.closest('.agenda-event');
     if (evEl) {
       const ev = state.events.find((ev) => ev.id === parseInt(evEl.dataset.id, 10));
@@ -1153,7 +1227,7 @@ function renderAgendaView(container) {
   });
 }
 
-export const __test = { normalizeCalendarView, defaultCalendarViewFromState };
+export const __test = { normalizeCalendarView, defaultCalendarViewFromState, filterTasksForCalendar, tasksOnDay };
 
 function renderAgendaEvent(ev) {
   const timeStr = ev.all_day

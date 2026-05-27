@@ -11,6 +11,7 @@ import test from 'node:test';
 const routerJs = readFileSync(new URL('./public/router.js', import.meta.url), 'utf8');
 const layoutCss = readFileSync(new URL('./public/styles/layout.css', import.meta.url), 'utf8');
 const glassCss = readFileSync(new URL('./public/styles/glass.css', import.meta.url), 'utf8');
+const tokensCss = readFileSync(new URL('./public/styles/tokens.css', import.meta.url), 'utf8');
 
 function cssRuleBody(css, selector) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -50,4 +51,13 @@ test('mobile dashboard scroll does not mutate root or fixed layers', () => {
     false,
     'Ausblendende Bottom-Nav darf kein margin-bottom setzen; das verändert Layout während Momentum-Scroll'
   );
+});
+
+test('mobile bottom navigation reserves safe-area space without scroll-time root mutation', () => {
+  const navRule = cssRuleBody(layoutCss, '.nav-bottom');
+  const rootRule = cssRuleBody(layoutCss, ':root');
+
+  assert.match(navRule, /padding-bottom:\s*var\(--safe-area-inset-bottom\)/);
+  assert.match(tokensCss, /--nav-bottom-height:\s*calc\(var\(--nav-height-mobile\)\s*\+\s*var\(--safe-area-inset-bottom\)\)/);
+  assert.equal(rootRule.includes('nav-bottom--hidden'), false);
 });

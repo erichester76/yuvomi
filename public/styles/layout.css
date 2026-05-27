@@ -141,6 +141,15 @@
     var(--color-bg);
 }
 
+.app-content:focus {
+  outline: none;
+}
+
+.app-content:focus-visible {
+  outline: 2px solid var(--active-module-accent, var(--color-accent));
+  outline-offset: -2px;
+}
+
 /* Sidebar auf Mobile verstecken */
 .nav-sidebar {
   display: none;
@@ -149,7 +158,7 @@
 /* --------------------------------------------------------
  * Bottom Navigation (Mobil + Tablet)
  *
- * Kompakte Bar: 56px Höhe, Icons 22px, Labels 11px.
+ * Kompakte Bar mit pillenförmigen Icon-Wells und lesbaren Labels.
  * Leichter Blur-Effekt für Glassmorphismus.
  * -------------------------------------------------------- */
 .nav-bottom {
@@ -164,6 +173,7 @@
   border-top: 1px solid var(--color-border-subtle);
   display: flex;
   flex-direction: column;
+  padding-bottom: var(--safe-area-inset-bottom);
   z-index: var(--z-nav);
   backdrop-filter: var(--blur-md) saturate(180%);
   -webkit-backdrop-filter: var(--blur-md) saturate(180%);
@@ -250,15 +260,19 @@
 /* ── More-Sheet Suchleiste ── */
 .more-sheet__search {
   grid-column: 1 / -1;
+  appearance: none;
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  width: 100%;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-lg);
   background-color: var(--color-surface-elevated);
   border: 1.5px solid var(--color-border);
   color: var(--color-text-tertiary);
   cursor: text;
+  font-family: inherit;
+  text-align: left;
   margin-bottom: var(--space-1);
   -webkit-tap-highlight-color: transparent;
   transition: border-color var(--transition-fast), background-color var(--transition-fast), transform 0.1s ease;
@@ -271,15 +285,16 @@
 }
 
 .more-sheet__search:active {
-  outline: none;
   border-color: var(--color-accent);
   background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface-elevated));
   transform: scale(0.985);
 }
 
-.more-sheet__search:focus {
-  outline: none;
-  border-color: var(--color-accent);
+.more-sheet__search:focus-visible {
+  outline: 2px solid var(--active-module-accent, var(--color-accent));
+  outline-offset: 2px;
+  border-color: var(--active-module-accent, var(--color-accent));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--active-module-accent, var(--color-accent)) 18%, transparent);
 }
 
 .more-sheet__search-icon {
@@ -502,6 +517,10 @@
   position: relative;
 }
 
+.nav-bottom .nav-item {
+  padding-block: var(--space-0h);
+}
+
 .nav-item__icon-wrap {
   position: relative;
   display: inline-flex;
@@ -552,8 +571,9 @@
 }
 
 .nav-bottom .nav-item__icon-well {
-  width: 36px;
-  height: 36px;
+  width: var(--target-base);
+  height: var(--target-sm);
+  border-radius: var(--radius-full);
 }
 
 .nav-sidebar .nav-item__icon-well {
@@ -592,6 +612,10 @@
   white-space: nowrap;
 }
 
+.nav-bottom .nav-item__label {
+  line-height: 1.2;
+}
+
 /* --------------------------------------------------------
  * Page FAB - Schwebender Erstellen-Button (alle Breakpoints)
  *
@@ -607,7 +631,7 @@
 
 .page-fab {
   position: fixed;
-  bottom: calc(var(--nav-bottom-height) + 24px + var(--safe-area-inset-bottom));
+  bottom: calc(var(--nav-bottom-height) + var(--space-6));
   right: var(--space-4);
   width: 52px;
   height: 52px;

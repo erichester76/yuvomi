@@ -227,6 +227,50 @@ function returnFocus(target) {
   }
 }
 
+function focusMainContentAfterNavigation(path) {
+  if (path === '/login') return;
+  const main = document.getElementById('main-content');
+  if (!main || typeof main.focus !== 'function') return;
+  requestAnimationFrame(() => {
+    main.focus({ preventScroll: true });
+  });
+}
+
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+function visibleFocusable(container) {
+  return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+    .filter((el) => !el.hidden && !el.closest('[hidden]') && !el.inert);
+}
+
+function createFocusTrap(container) {
+  return (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = visibleFocusable(container);
+    if (!focusable.length) {
+      e.preventDefault();
+      container.focus?.();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+}
+
 /**
  * Navigiert zu einem Pfad und rendert die entsprechende Seite.
  * @param {string} path
@@ -313,6 +357,7 @@ async function navigate(path, userOrPushState = true, pushState = true) {
     updateNav(basePath);
     updateThemeColorForRoute(route);
     updateBranding(basePath);
+    focusMainContentAfterNavigation(basePath);
   } finally {
     isNavigating = false;
     // auth:expired kann waehrend einer Navigation gefeuert haben (z.B. wenn ein
@@ -531,6 +576,7 @@ function renderAppShell(container) {
   const main = document.createElement('main');
   main.className = 'app-content';
   main.id = 'main-content';
+  main.tabIndex = -1;
 
   const bottomNav = document.createElement('nav');
   bottomNav.className = 'nav-bottom';
@@ -546,6 +592,7 @@ function renderAppShell(container) {
     kitchenBtn.className = 'nav-item nav-item--kitchen';
     kitchenBtn.id = 'kitchen-btn';
     kitchenBtn.type = 'button';
+    kitchenBtn.style.setProperty('--item-module-accent', 'var(--module-meals)');
     kitchenBtn.setAttribute('aria-label', t('nav.kitchen'));
     kitchenBtn.setAttribute('title', t('nav.kitchen'));
     const kitchenBtnWrap = document.createElement('div');
@@ -570,8 +617,11 @@ function renderAppShell(container) {
     moreBtn.className = 'nav-item nav-item--more';
     moreBtn.id = 'more-btn';
     moreBtn.type = 'button';
+    moreBtn.style.setProperty('--item-module-accent', 'var(--color-accent)');
     moreBtn.setAttribute('aria-label', t('nav.more'));
+    moreBtn.setAttribute('title', t('nav.more'));
     moreBtn.setAttribute('aria-expanded', 'false');
+    moreBtn.setAttribute('aria-controls', 'more-sheet');
     const moreBtnWrap = document.createElement('div');
     moreBtnWrap.className = 'nav-item__icon-wrap';
     const moreBtnWell = document.createElement('div');
@@ -606,11 +656,10 @@ function renderAppShell(container) {
     dragHandle.setAttribute('aria-hidden', 'true');
     moreSheet.insertAdjacentElement('afterbegin', dragHandle);
 
-    const moreSearchBar = document.createElement('div');
+    const moreSearchBar = document.createElement('button');
+    moreSearchBar.type = 'button';
     moreSearchBar.className = 'more-sheet__search';
     moreSearchBar.id = 'more-sheet-search';
-    moreSearchBar.setAttribute('role', 'button');
-    moreSearchBar.setAttribute('tabindex', '0');
     moreSearchBar.setAttribute('aria-label', t('search.placeholder'));
     const moreSearchIcon = document.createElement('i');
     moreSearchIcon.dataset.lucide = 'search';
@@ -913,18 +962,22 @@ function initMoreSheet(container, openSearch) {
   const sheet    = container.querySelector('#more-sheet');
   if (!moreBtn || !backdrop || !sheet) return;
   let lastFocusedBeforeSheet = null;
+  const moreSheetTrap = createFocusTrap(sheet);
 
   function openSheet() {
     lastFocusedBeforeSheet = document.activeElement;
     setOverlayInteractive(sheet, true);
+    sheet.addEventListener('keydown', moreSheetTrap);
     backdrop.classList.add('more-backdrop--visible');
     moreBtn.setAttribute('aria-expanded', 'true');
-    setTimeout(() => sheet.querySelector('#more-sheet-search, [data-route]')?.focus(), 0);
+    sheet.querySelector('#more-sheet-search, [data-route]')?.focus();
     if (window.lucide) window.lucide.createIcons();
   }
 
   function closeSheet({ restoreFocus = true } = {}) {
+    if (sheet.getAttribute('aria-hidden') === 'true') return;
     setOverlayInteractive(sheet, false);
+    sheet.removeEventListener('keydown', moreSheetTrap);
     backdrop.classList.remove('more-backdrop--visible');
     moreBtn.setAttribute('aria-expanded', 'false');
     if (restoreFocus) returnFocus(lastFocusedBeforeSheet || moreBtn);
@@ -950,8 +1003,8 @@ function initMoreSheet(container, openSearch) {
     if (e.changedTouches[0].clientY - _touchStartY > 60) closeSheet();
   }, { passive: true });
 
-  sheet.querySelectorAll('[data-route]').forEach((el) => {
-    el.addEventListener('click', () => closeSheet());
+  sheet.addEventListener('click', (e) => {
+    if (e.target.closest('[data-route]')) closeSheet({ restoreFocus: false });
   });
 
   const moreSearchBar = sheet.querySelector('#more-sheet-search');
@@ -966,9 +1019,6 @@ function initMoreSheet(container, openSearch) {
       });
     };
     moreSearchBar.addEventListener('click', triggerSearch);
-    moreSearchBar.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); triggerSearch(); }
-    });
   }
 
   window._closeMoreSheet = closeSheet;
@@ -998,19 +1048,7 @@ function initSearch(container) {
     setTimeout(() => input.focus(), 50);
     if (window.lucide) window.lucide.createIcons();
 
-    const FOCUSABLE = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
-    _searchTrapHandler = (e) => {
-      if (e.key !== 'Tab') return;
-      const focusable = Array.from(overlay.querySelectorAll(FOCUSABLE));
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last  = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault(); last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault(); first.focus();
-      }
-    };
+    _searchTrapHandler = createFocusTrap(overlay);
     overlay.addEventListener('keydown', _searchTrapHandler);
   }
 
@@ -1163,6 +1201,20 @@ function navItemEl({ path, label, icon, module: mod }) {
   return a;
 }
 
+function replaceLucideIcon(container, selector, iconName) {
+  const current = container.querySelector(selector);
+  if (!current) return;
+  const next = document.createElement('i');
+  next.dataset.lucide = iconName;
+  const classes = (current.getAttribute('class') || '')
+    .split(/\s+/)
+    .filter((className) => className && className !== 'lucide' && !className.startsWith('lucide-'));
+  next.className = classes.join(' ') || 'nav-item__icon';
+  next.setAttribute('aria-hidden', 'true');
+  current.replaceWith(next);
+  if (window.lucide) window.lucide.createIcons({ el: container });
+}
+
 function sidebarKitchenEl() {
   const a = document.createElement('a');
   a.href = '/meals';
@@ -1229,6 +1281,30 @@ function kitchenNavAriaLabel(path) {
  * Aktiven Nav-Link hervorheben und More-Button als aktiv markieren
  * wenn die aktive Route im More-Sheet liegt.
  */
+function setMoreButtonState(moreBtn, activeSecondary) {
+  const inMoreSheet = !!activeSecondary;
+  const moreLabel = activeSecondary ? activeSecondary.label : t('nav.more');
+  const moreIcon = activeSecondary ? activeSecondary.icon : 'grid-2x2';
+
+  moreBtn.classList.toggle('nav-item--active', inMoreSheet);
+  if (inMoreSheet) {
+    moreBtn.setAttribute('aria-current', 'page');
+    if (activeSecondary.module) {
+      moreBtn.style.setProperty('--item-module-accent', `var(--module-${activeSecondary.module})`);
+    }
+  } else {
+    moreBtn.removeAttribute('aria-current');
+    moreBtn.style.setProperty('--item-module-accent', 'var(--color-accent)');
+  }
+
+  moreBtn.setAttribute('aria-label', moreLabel);
+  moreBtn.setAttribute('title', moreLabel);
+
+  const moreBtnLabel = moreBtn.querySelector('.nav-item__label');
+  if (moreBtnLabel) moreBtnLabel.textContent = moreLabel;
+  replaceLucideIcon(moreBtn, '.nav-item__icon', moreIcon);
+}
+
 function updateNav(path) {
   document.querySelectorAll('[data-route]').forEach((el) => {
     el.removeAttribute('aria-current');
@@ -1247,7 +1323,8 @@ function updateNav(path) {
       if (kitchenMod) kitchenNavBtn.style.setProperty('--item-module-accent', `var(--module-${kitchenMod})`);
     } else {
       kitchenNavBtn.removeAttribute('aria-current');
-      kitchenNavBtn.style.removeProperty('--item-module-accent');
+      const kitchenMod = navItems().find((n) => n.path === getLastKitchenRoute())?.module;
+      kitchenNavBtn.style.setProperty('--item-module-accent', `var(--module-${kitchenMod || 'meals'})`);
     }
 
     const kitchenBtnLabel = kitchenNavBtn.querySelector('.nav-item__label');
@@ -1279,26 +1356,7 @@ function updateNav(path) {
   if (moreBtn) {
     const secondaryItems = navItems().filter((i) => !i.kitchenGroup).slice(PRIMARY_NAV);
     const activeSecondary = secondaryItems.find((n) => n.path === path);
-    const inMoreSheet = !!activeSecondary;
-
-    moreBtn.classList.toggle('nav-item--active', inMoreSheet);
-    moreBtn.toggleAttribute('aria-current', inMoreSheet);
-
-    if (inMoreSheet && activeSecondary.module) {
-      moreBtn.style.setProperty('--item-module-accent', `var(--module-${activeSecondary.module})`);
-    } else {
-      moreBtn.style.removeProperty('--item-module-accent');
-    }
-
-    const moreBtnLabel = moreBtn.querySelector('.nav-item__label');
-    const moreBtnIcon  = moreBtn.querySelector('.nav-item__icon');
-
-    if (moreBtnLabel) {
-      moreBtnLabel.textContent = activeSecondary ? activeSecondary.label : t('nav.more');
-    }
-    if (moreBtnIcon) {
-      moreBtnIcon.dataset.lucide = activeSecondary ? activeSecondary.icon : 'grid-2x2';
-    }
+    setMoreButtonState(moreBtn, activeSecondary);
   }
 
   if (window.lucide) {

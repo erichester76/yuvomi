@@ -65,6 +65,63 @@ test('router hides inactive overlays from keyboard focus', () => {
   assert.match(source, /returnFocus/);
 });
 
+test('mobile More sheet trigger controls its dialog and traps keyboard focus', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /moreBtn\.setAttribute\('aria-controls',\s*'more-sheet'\)/);
+  assert.match(source, /function\s+createFocusTrap/);
+  assert.match(source, /moreSheetTrap/);
+  assert.match(source, /addEventListener\('keydown',\s*moreSheetTrap/);
+  assert.match(source, /removeEventListener\('keydown',\s*moreSheetTrap/);
+});
+
+test('More button active state keeps visible and accessible labels in sync', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /function\s+setMoreButtonState/);
+  assert.match(source, /moreBtn\.setAttribute\('aria-current',\s*'page'\)/);
+  assert.match(source, /moreBtn\.setAttribute\('aria-label',\s*moreLabel\)/);
+  assert.match(source, /moreBtn\.setAttribute\('title',\s*moreLabel\)/);
+  assert.doesNotMatch(source, /moreBtn\.toggleAttribute\('aria-current',\s*inMoreSheet\)/);
+});
+
+test('mobile Kitchen and More nav buttons keep colored icon wells while inactive', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /kitchenBtn\.style\.setProperty\('--item-module-accent',\s*'var\(--module-meals\)'\)/);
+  assert.match(source, /moreBtn\.style\.setProperty\('--item-module-accent',\s*'var\(--color-accent\)'\)/);
+  assert.doesNotMatch(source, /kitchenNavBtn\.style\.removeProperty\('--item-module-accent'\)/);
+  assert.doesNotMatch(source, /moreBtn\.style\.removeProperty\('--item-module-accent'\)/);
+});
+
+test('More sheet closes route clicks through delegated handler after rebuilds', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /sheet\.addEventListener\('click',\s*\(e\) =>/);
+  assert.match(source, /e\.target\.closest\('\[data-route\]'\)/);
+  assert.doesNotMatch(source, /sheet\.querySelectorAll\('\[data-route\]'\)\.forEach/);
+});
+
+test('More sheet search trigger is a native button with visible focus styling', () => {
+  const router = read('./public/router.js');
+  const layout = read('./public/styles/layout.css');
+  const focusRule = cssRuleBody(layout, '.more-sheet__search:focus-visible');
+
+  assert.match(router, /const moreSearchBar = document\.createElement\('button'\)/);
+  assert.match(router, /moreSearchBar\.type = 'button'/);
+  assert.doesNotMatch(router, /moreSearchBar\.setAttribute\('role',\s*'button'\)/);
+  assert.match(focusRule, /outline:/);
+  assert.match(focusRule, /box-shadow:/);
+});
+
+test('SPA navigation can move focus to main content after route changes', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /main\.tabIndex\s*=\s*-1/);
+  assert.match(source, /function\s+focusMainContentAfterNavigation/);
+  assert.match(source, /focusMainContentAfterNavigation\(basePath/);
+});
+
 test('bottom navigation labels are constrained against localized overflow', () => {
   const layout = read('./public/styles/layout.css');
   const labelRule = cssRuleBody(layout, '.nav-item__label');
@@ -73,6 +130,19 @@ test('bottom navigation labels are constrained against localized overflow', () =
   assert.match(labelRule, /overflow:\s*hidden/);
   assert.match(labelRule, /text-overflow:\s*ellipsis/);
   assert.match(labelRule, /white-space:\s*nowrap/);
+});
+
+test('mobile bottom navigation avoids clipped Android labels and sparse icon spacing', () => {
+  const layout = read('./public/styles/layout.css');
+  const navItemRule = cssRuleBody(layout, '.nav-bottom .nav-item');
+  const iconWellRule = cssRuleBody(layout, '.nav-bottom .nav-item__icon-well');
+  const labelRule = cssRuleBody(layout, '.nav-bottom .nav-item__label');
+
+  assert.match(navItemRule, /padding-block:\s*var\(--space-0h\)/);
+  assert.match(iconWellRule, /width:\s*var\(--target-base\)/);
+  assert.match(iconWellRule, /height:\s*var\(--target-sm\)/);
+  assert.match(iconWellRule, /border-radius:\s*var\(--radius-full\)/);
+  assert.match(labelRule, /line-height:\s*1\.2/);
 });
 
 test('phase 3 high-frequency controls use tokenized touch targets', () => {

@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.58] - 2026-05-27
+
+### Added
+- **Task chips in Calendar:** Open and in-progress tasks with a due date now appear as priority-coloured chips in all four calendar views (month, week, day, agenda). Clicking a chip navigates directly to the task edit modal. Tasks with a due time show the time in the chip label. Done and archived tasks are not shown.
+
+## [0.52.57] - 2026-05-26
+
+### Fixed
+- Restored colored inactive icon wells for the mobile Kitchen and More navigation buttons.
+
+## [0.52.56] - 2026-05-26
+
+### Security
+- Updated helmet from 8.1.0 to 8.2.0 (adds `noopener-allow-popups` support for Cross-Origin-Opener-Policy).
+- Updated googleapis from 171.4.0 to 172.0.0 (optional dependency for Google Calendar sync; Calendar API v3 unaffected by breaking changes).
+
+## [0.52.55] - 2026-05-25
+
+### Fixed
+- Improved mobile bottom navigation spacing with wider pill-shaped icon wells and more reliable label line-height to avoid clipped text on Android.
+
+## [0.52.54] - 2026-05-25
+
+### Fixed
+- Allow task date fields to accept slash and hyphen separators when creating or editing tasks.
+
+## [0.52.53] - 2026-05-25
+
+### Fixed
+- Mobile bottom navigation now reserves iOS safe-area space while keeping floating action buttons stable.
+- Mobile More search now uses a native button with visible keyboard focus styling and focuses immediately when the sheet opens.
+- SPA route changes now move keyboard focus to the main content after navigation while leaving login focus behavior untouched.
+
+## [0.52.52] - 2026-05-25
+
+### Fixed
+- Mobile More navigation now closes reliably when choosing a route after locale or navigation rebuilds.
+
 ## [0.52.51] - 2026-05-25
 
 ### Changed
