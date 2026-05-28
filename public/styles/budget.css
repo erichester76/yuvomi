@@ -883,7 +883,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background: rgba(0, 0, 0, 0.38);
+  background: var(--color-overlay-glass);
 }
 
 .budget-inline-modal__panel {
