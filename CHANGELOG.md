@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.54.12] - 2026-05-29
+
+### Added
+- **UI/UX audit (May 2026):** Added `docs/UI-UX-AUDIT-2026-05.md` documenting a full review across mobile/desktop and light/dark mode with prioritized findings.
+
+### Fixed
+- **PWA theme color mismatched the app accent:** The light-mode `theme-color` meta tag was a stale indigo (`#4F46E5`) while the actual app accent is violet (`#6c3aed`), so the installed PWA's status/address bar rendered a different hue than the UI. Aligned `theme-color` to the brand accent.
+- **Login page could overflow horizontally on desktop:** The login screen used `width: 100vw`, which includes the scrollbar width and produced a horizontal scrollbar / clipped edge whenever a vertical scrollbar was present. Switched to `width: 100%`.
+- **Sub-12px UI text raised to the 12px readability floor:** The desktop sidebar version label, sidebar section headings, and the reminder count badge still used a 10px font size, below the project's own 12px minimum. Raised them to 12px and aligned the reminder badge box to 18px to match the standard nav badge.
+
 ## [0.54.11] - 2026-05-29
 
 ### Fixed
