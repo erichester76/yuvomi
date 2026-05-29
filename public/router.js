@@ -840,7 +840,20 @@ function renderAppShell(container) {
   routeAnnouncer.setAttribute('aria-live', 'polite');
   routeAnnouncer.setAttribute('aria-atomic', 'true');
 
-  const shellNodes = [skipLink, sidebar, main, bottomNav];
+  // Lebender Backdrop — driftende, getönte Blobs (Liquid Glass).
+  // Erstes Shell-Kind: liegt via z-index: -1 (glass.css Section 40) hinter
+  // dem transluzenten Content, aber über dem app-shell-Basis-Gradient.
+  // Blob 1 folgt --active-module-accent → rekoloriert pro Sektion.
+  const lgBackdrop = document.createElement('div');
+  lgBackdrop.className = 'lg-backdrop';
+  lgBackdrop.setAttribute('aria-hidden', 'true');
+  for (let i = 1; i <= 4; i++) {
+    const blob = document.createElement('div');
+    blob.className = `lg-blob lg-blob--${i}`;
+    lgBackdrop.appendChild(blob);
+  }
+
+  const shellNodes = [skipLink, lgBackdrop, sidebar, main, bottomNav];
   if (backdrop)   shellNodes.push(backdrop);
   if (moreSheet)  shellNodes.push(moreSheet);
   shellNodes.push(searchOverlay, toastContainerPolite, toastContainerAssertive, routeAnnouncer);

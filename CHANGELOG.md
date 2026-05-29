@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.54.9] - 2026-05-29
+## [0.54.10] - 2026-05-29
+
+### Added
+- **Liquid Glass – living drifting backdrop:** Added a `.lg-backdrop` layer with four blurred, slowly drifting color blobs behind the entire app shell — the "liquid" that the glass surfaces now refract. Blob 1 follows `--active-module-accent`, so the whole ambient subtly recolors per section (e.g. violet on Calendar, teal on Budget), while blobs 2–4 use fixed module tints (shopping, tasks, meals) for variety. The blobs live on the non-scrolling `.app-shell` (outside the `.app-content` scroll container), so they neither trigger nor are affected by the iOS/Android blank-screen mitigation (Issue #166). The drift animation honors `prefers-reduced-motion` (freezes), and `prefers-reduced-transparency` / `prefers-contrast: more` hide the backdrop entirely via tokens.
+- **Liquid Glass – design tokens:** Introduced five `--lg-*` tokens in `tokens.css` — `--lg-blob-opacity` (0.4 light / 0.55 dark, 0 in reduced-transparency/contrast), `--lg-glass-saturate`, `--lg-card-radius`, `--lg-density`, and `--lg-specular`.
+
+### Changed
+- **Liquid Glass – stronger specular on elevated surfaces:** The sidebar and bottom navigation now carry an inset top-highlight driven by `--lg-specular`, per the canonical glass recipe, giving the elevated glass panels a crisper specular edge.
 
 ### Changed
 - **Calendar – week view time-slot click opens create-event modal:** Clicking an empty time slot in the week view time grid now opens the create-event modal again (reverts the day-view navigation introduced in v0.54.8). Navigating to the day view on time-slot clicks was too disruptive for users who intentionally tap a specific hour to create an event quickly.

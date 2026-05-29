@@ -21,6 +21,12 @@
    * sichtbaren Streifen unten führt. -webkit-fill-available füllt zuverlässig. */
   height: -webkit-fill-available;
   height: 100dvh;
+  /* Containing-Block für den lebenden Backdrop (.lg-backdrop, position: absolute;
+   * inset: 0). Bewusst KEIN isolation/z-index → app-shell bleibt kein eigener
+   * Stacking-Context, damit die globale z-Reihenfolge (Toast 300 > Modal 200 etc.)
+   * unverändert bleibt. Der Backdrop malt mit z-index: 0 über die opaken
+   * html/body-Hintergründe; .app-content liegt via position: relative darüber. */
+  position: relative;
 }
 
 /* --------------------------------------------------------

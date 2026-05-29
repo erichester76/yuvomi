@@ -886,3 +886,114 @@ html.navigating .app-content *::after {
     -webkit-backdrop-filter: none;
   }
 }
+
+/* ================================================================
+ * PHASE 5 — Liquid Glass: lebender Backdrop + Specular
+ * ================================================================ */
+
+/* ================================================================
+ * 40. Lebender Backdrop — driftende, getönte Blobs
+ *
+ * Das "Flüssige", das die Glass-Flächen brechen. Liegt als
+ * .lg-backdrop direkt in .app-shell (Viewport-Container, scrollt
+ * NICHT). z-index: 0 → malt über die opaken html/body- und
+ * app-shell-Hintergründe; .app-content (position: relative, später
+ * im DOM) und alle positionierten Nav-/Overlay-Flächen liegen
+ * darüber. Bewusst KEINE negative z-Ebene / kein isolation auf der
+ * Shell, damit die globale z-Reihenfolge unverändert bleibt.
+ *
+ * WICHTIG (Issue #166): Die Blobs liegen AUSSERHALB von .app-content.
+ * Die Blanket-Regel `.app-content * { filter: none }` greift hier
+ * nicht — der blur() der Blobs bleibt erhalten, ohne den Scroll-
+ * Container zu rastern. Da sie nicht scrollen, lösen sie den
+ * Blank-Screen-Bug nicht aus.
+ *
+ * Blob 1 folgt --active-module-accent → die ganze App rekoloriert
+ * pro Sektion (Headline-Interaktion). Blobs 2–4 sind feste
+ * Modul-Tints für Farbvielfalt.
+ * Opazität/Specular werden in prefers-reduced-transparency /
+ * prefers-contrast über die Tokens auf 0 gesetzt (tokens.css).
+ * ================================================================ */
+.lg-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* .app-content über den Backdrop heben (position: relative → wird im
+ * Root-Stacking-Context nach dem Backdrop in DOM-Reihenfolge gemalt).
+ * z-index bewusst weggelassen → app-content wird KEIN Stacking-Context,
+ * damit Descendants (FAB etc.) ihre bisherige z-Ebene behalten. */
+.app-content {
+  position: relative;
+}
+
+.lg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: var(--lg-blob-opacity);
+  animation: lg-drift 26s ease-in-out infinite alternate;
+  transition: background 0.6s var(--ease-out);
+}
+
+.lg-blob--1 {
+  width: 46vw; height: 46vw; top: -8%; left: 8%;
+  background: radial-gradient(circle, var(--active-module-accent, var(--color-accent)) 0%, transparent 70%);
+}
+.lg-blob--2 {
+  width: 38vw; height: 38vw; top: 30%; right: 2%;
+  background: radial-gradient(circle, var(--module-shopping) 0%, transparent 70%);
+  animation-delay: -8s;
+  opacity: calc(var(--lg-blob-opacity) * 0.7);
+}
+.lg-blob--3 {
+  width: 40vw; height: 40vw; bottom: -10%; left: 22%;
+  background: radial-gradient(circle, var(--module-tasks) 0%, transparent 70%);
+  animation-delay: -14s;
+  opacity: calc(var(--lg-blob-opacity) * 0.6);
+}
+.lg-blob--4 {
+  width: 30vw; height: 30vw; top: 45%; left: 0%;
+  background: radial-gradient(circle, var(--module-meals) 0%, transparent 70%);
+  animation-delay: -19s;
+  opacity: calc(var(--lg-blob-opacity) * 0.5);
+}
+
+@keyframes lg-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(4vw, -3vw) scale(1.12); }
+  100% { transform: translate(-3vw, 2vw) scale(0.94); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-blob {
+    animation: none;
+  }
+}
+
+/* ================================================================
+ * 41. Stärkerer Specular — Inset-Top-Highlight auf erhöhten Flächen
+ *
+ * Kanonische Glass-Rezeptur (siehe README): jede erhöhte Glass-
+ * Fläche erhält einen Inset-Top-Highlight, dessen Stärke über
+ * --lg-specular gesteuert wird (0 in prefers-reduced-transparency /
+ * prefers-contrast → Highlight verschwindet).
+ * ================================================================ */
+.nav-bottom {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white calc(var(--lg-specular) * 100%), transparent),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    var(--glass-shadow-sm);
+}
+
+@media (min-width: 1024px) {
+  .nav-sidebar {
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white calc(var(--lg-specular) * 100%), transparent),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+      var(--glass-shadow-md);
+  }
+}
