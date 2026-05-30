@@ -156,7 +156,7 @@
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 8px;
       background: none; border: none; color: var(--text-2);
-      padding: 14px 20px; border-radius: 12px; font-weight: 600;
+      padding: 14px 20px; border-radius: calc(var(--radius) * 0.75); font-weight: 600;
       font-size: 1rem; cursor: pointer; transition: color 0.2s ease;
       font-family: var(--ff-body); text-decoration: none;
     }
@@ -192,7 +192,7 @@
     .problem-card p { font-size: 0.875rem; color: var(--text-2); line-height: 1.7; }
     .prob-cta {
       text-align: center; font-family: var(--ff-display);
-      font-size: 1.4rem; color: var(--accent);
+      font-size: clamp(1.2rem, 2.5vw, 1.4rem); color: var(--accent);
     }
     @media (max-width: 900px) { .problem-grid { grid-template-columns: 1fr; } }
 
