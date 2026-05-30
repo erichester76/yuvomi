@@ -54,13 +54,17 @@ Each module is independent. Use what fits, skip what doesn't.
 | **API Tokens** | Named Bearer / X-API-Key tokens for integrations. OpenAPI 3.0 spec included. |
 | **Backup** | Manual and scheduled database backup and restore, with automatic pre-restore rollback. |
 
+---
+
 ## Design & Technology
 
-- **Liquid Glass UI** — translucent surfaces, backdrop blur, module-tinted overlays, spring animations — inspired by Apple's Liquid Glass, built in pure CSS
-- **PWA** — installable on any device, works offline, dark mode, responsive from phone to desktop
-- **Privacy First** — SQLCipher AES-256 encrypted database, fully self-hosted, zero telemetry
+- **Liquid Glass UI** — translucent surfaces, backdrop blur, spring animations, and module-tinted overlays — built in pure CSS
+- **PWA** — installable on any device, works offline, responsive from phone to desktop, dark mode
+- **Privacy First** — fully self-hosted, SQLCipher AES-256 encrypted database, zero telemetry
 - **Zero Build Step** — pure ES modules, no bundler, no transpiler, no framework
 - **Multilingual** — 16 languages with automatic locale detection (de, en, es, fr, it, sv, el, ru, tr, zh, ja, ar, hi, pt, uk, pl)
+
+---
 
 ## Quick Start
 
@@ -96,6 +100,8 @@ Open `http://localhost:3000` and sign in with the admin credentials you created 
 
 > **New to Docker?** The **[Installation Guide](docs/installation.md)** covers Docker setup, HTTPS, backups, and troubleshooting step by step.
 
+---
+
 ## Tech Stack
 
 <p>
@@ -107,14 +113,17 @@ Open `http://localhost:3000` and sign in with the admin credentials you created 
   <img src="https://img.shields.io/badge/PWA-5A0FC8?style=flat-square&logo=pwa&logoColor=white" alt="PWA">
 </p>
 
+---
+
 ## Documentation
 
-| [Installation](docs/installation.md) | [Spec & Data Model](docs/SPEC.md) | [Modules](MODULES.md) | [Contributing](CONTRIBUTING.md) | [Security](SECURITY.md) | [Changelog](CHANGELOG.md) | [Backlog](BACKLOG.md) |
-|---|---|---|---|---|---|---|
+[Installation](docs/installation.md) &nbsp;·&nbsp; [Spec & Data Model](docs/SPEC.md) &nbsp;·&nbsp; [Modules](MODULES.md) &nbsp;·&nbsp; [Contributing](CONTRIBUTING.md) &nbsp;·&nbsp; [Security](SECURITY.md) &nbsp;·&nbsp; [Changelog](CHANGELOG.md) &nbsp;·&nbsp; [Backlog](BACKLOG.md)
+
+---
 
 ## License
 
-<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
+MIT — see [LICENSE](LICENSE).
 
 <div align="center">
   <sub>Built with care for families who value privacy and simplicity.</sub>
