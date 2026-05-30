@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.2] - 2026-05-30
+
+### Fixed
+- **Mobile screenshots no longer have a gray bar at the bottom:** The screenshot script now uses a proportionally larger viewport (459×993) instead of CSS `zoom: 0.85` on the root element. CSS zoom shrinks content below the viewport height, leaving an empty gray strip; the larger viewport lets the app fill the frame naturally while still showing the equivalent of 85%-zoomed content.
+
 ## [0.55.1] - 2026-05-30
 
 ### Fixed
