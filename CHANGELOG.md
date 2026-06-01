@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.8] - 2026-06-01
+
+### Changed
+- **Mobile task and shopping controls refined:** Collapsed secondary task toolbar controls into a compact mobile overflow, kept bulk actions hidden until tasks are selected, and rebuilt the shopping quick-add row for clearer 390px touch ergonomics.
+
 ## [0.55.7] - 2026-05-31
 
 ### Fixed

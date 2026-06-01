@@ -218,12 +218,12 @@ function renderTaskCard(task, opts = {}) {
 
         ${renderAvatarStack(task.assigned_users ?? [], { size: 28 })}
 
-        <button class="btn btn--ghost btn--icon btn--icon-sm" data-action="edit-task" data-id="${task.id}"
+        <button class="btn btn--ghost btn--icon btn--icon-sm task-card__inline-action" data-action="edit-task" data-id="${task.id}"
                 aria-label="${t('tasks.editButton')}">
           <i data-lucide="pencil" class="icon-md" aria-hidden="true"></i>
         </button>
         ${task.status !== 'archived' ? `
-        <button class="btn btn--ghost btn--icon btn--icon-sm" data-action="archive-task" data-id="${task.id}"
+        <button class="btn btn--ghost btn--icon btn--icon-sm task-card__inline-action" data-action="archive-task" data-id="${task.id}"
                 aria-label="${t('tasks.archiveButton')}">
           <i data-lucide="archive" class="icon-md" aria-hidden="true"></i>
         </button>` : ''}
@@ -1603,7 +1603,8 @@ function updateBulkActionsBar(container) {
   const selected = state.selectedTaskIds.size;
   const buttons = bar.querySelectorAll('button[id^="bulk-"]');
 
-  bar.hidden = !state.bulkSelectMode;
+  bar.hidden = !(state.bulkSelectMode && selected > 0);
+  bar.classList.toggle('bulk-actions-bar--active', selected > 0);
   buttons.forEach((button) => {
     button.disabled = selected === 0;
   });
@@ -1623,6 +1624,7 @@ function wireBulkSelect(container) {
       state.selectedTaskIds.clear();
     }
     toggleBtn.classList.toggle('btn--active', state.bulkSelectMode);
+    toggleBtn.setAttribute('aria-pressed', String(state.bulkSelectMode));
     loadTasks(container);
   });
 }
@@ -1775,24 +1777,32 @@ export async function render(container, { user }) {
       <div class="tasks-toolbar">
         <h1 class="tasks-toolbar__title">${t('tasks.title')}</h1>
         <div class="tasks-toolbar__actions">
-          <div class="group-toggle" id="group-mode-toggle" ${isKanban ? 'style="display:none"' : ''}>
-            <button class="group-toggle__btn group-toggle__btn--active" data-mode="category">${t('tasks.categoryLabel')}</button>
-            <button class="group-toggle__btn" data-mode="due">${t('tasks.dueDateLabel')}</button>
-          </div>
-          <div class="group-toggle" id="view-toggle">
-            <button class="group-toggle__btn ${isKanban ? '' : 'group-toggle__btn--active'}" data-view="list"
-                    title="${t('tasks.listView')}" aria-label="${t('tasks.listView')}">
-              <i data-lucide="list" class="icon-md" aria-hidden="true"></i>
-            </button>
-            <button class="group-toggle__btn ${isKanban ? 'group-toggle__btn--active' : ''}" data-view="kanban"
-                    title="${t('tasks.kanbanView')}" aria-label="${t('tasks.kanbanView')}">
-              <i data-lucide="columns" class="icon-md" aria-hidden="true"></i>
-            </button>
-          </div>
-          <button class="btn btn--ghost btn--icon" id="btn-bulk-select" ${isKanban ? 'style="display:none"' : ''}
-                  title="${t('tasks.bulkSelect')}" aria-label="${t('tasks.bulkSelect')}">
-            <i data-lucide="list-checks" class="icon-lg" aria-hidden="true"></i>
-          </button>
+          <details class="tasks-toolbar__secondary">
+            <summary class="btn btn--ghost btn--icon tasks-toolbar__secondary-trigger"
+                     title="${t('nav.more')}" aria-label="${t('nav.more')}">
+              <i data-lucide="sliders-horizontal" class="icon-lg" aria-hidden="true"></i>
+            </summary>
+            <div class="tasks-toolbar__secondary-panel">
+              <div class="group-toggle" id="group-mode-toggle" ${isKanban ? 'style="display:none"' : ''}>
+                <button class="group-toggle__btn group-toggle__btn--active" data-mode="category">${t('tasks.categoryLabel')}</button>
+                <button class="group-toggle__btn" data-mode="due">${t('tasks.dueDateLabel')}</button>
+              </div>
+              <div class="group-toggle" id="view-toggle">
+                <button class="group-toggle__btn ${isKanban ? '' : 'group-toggle__btn--active'}" data-view="list"
+                        title="${t('tasks.listView')}" aria-label="${t('tasks.listView')}">
+                  <i data-lucide="list" class="icon-md" aria-hidden="true"></i>
+                </button>
+                <button class="group-toggle__btn ${isKanban ? 'group-toggle__btn--active' : ''}" data-view="kanban"
+                        title="${t('tasks.kanbanView')}" aria-label="${t('tasks.kanbanView')}">
+                  <i data-lucide="columns" class="icon-md" aria-hidden="true"></i>
+                </button>
+              </div>
+              <button class="btn btn--ghost btn--icon" id="btn-bulk-select" ${isKanban ? 'style="display:none"' : ''}
+                      title="${t('tasks.bulkSelect')}" aria-label="${t('tasks.bulkSelect')}" aria-pressed="false">
+                <i data-lucide="list-checks" class="icon-lg" aria-hidden="true"></i>
+              </button>
+            </div>
+          </details>
           <button class="btn btn--primary toolbar-new-btn" id="btn-new-task" style="gap:var(--space-1)">
             <i data-lucide="plus" class="icon-lg" aria-hidden="true"></i> ${t('tasks.newTask')}
           </button>

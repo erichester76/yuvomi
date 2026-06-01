@@ -151,10 +151,58 @@ test('phase 3 high-frequency controls use tokenized touch targets', () => {
   const notes = read('./public/styles/notes.css');
 
   assert.match(tasks, /\.task-status-btn::before[\s\S]*var\(--target-base\)/);
+  assert.match(tasks, /\.task-bulk-checkbox[\s\S]*(?:min-width|width):\s*var\(--target-base\)/);
+  assert.match(tasks, /\.task-card__inline-action[\s\S]*width:\s*var\(--target-base\)/);
+  assert.match(tasks, /\.task-card__inline-action[\s\S]*height:\s*var\(--target-base\)/);
+  assert.match(tasks, /\.bulk-actions-bar__actions \.btn[\s\S]*min-height:\s*var\(--target-base\)/);
   assert.match(shopping, /\.item-check[\s\S]*(?:min-width|width):\s*var\(--target-base\)/);
+  assert.match(shopping, /\.item-delete[\s\S]*width:\s*var\(--target-base\)/);
+  assert.match(shopping, /\.item-delete[\s\S]*height:\s*var\(--target-base\)/);
   assert.match(shopping, /\.shopping-item[\s\S]*min-height:\s*var\(--target-base\)/);
   assert.match(notes, /\.note-card__pin[\s\S]*width:\s*var\(--target-base\)/);
   assert.match(notes, /\.note-card__delete[\s\S]*width:\s*var\(--target-base\)/);
+});
+
+test('phase 3 mobile Tasks toolbar collapses secondary controls into one overflow trigger', () => {
+  const tasksPage = read('./public/pages/tasks.js');
+  const tasksCss = read('./public/styles/tasks.css');
+
+  assert.match(tasksPage, /<details class="tasks-toolbar__secondary"/);
+  assert.match(tasksPage, /class="btn btn--ghost btn--icon tasks-toolbar__secondary-trigger"/);
+  assert.match(tasksPage, /<div class="tasks-toolbar__secondary-panel">[\s\S]*id="group-mode-toggle"[\s\S]*id="view-toggle"[\s\S]*id="btn-bulk-select"/);
+  assert.match(
+    tasksCss,
+    /@media \(max-width:\s*640px\)[\s\S]*\.tasks-toolbar__secondary-panel\s*\{[\s\S]*position:\s*absolute[\s\S]*display:\s*none/
+  );
+  assert.match(
+    tasksCss,
+    /@media \(max-width:\s*640px\)[\s\S]*\.tasks-toolbar__secondary\[open\] \.tasks-toolbar__secondary-panel\s*\{[\s\S]*display:\s*flex/
+  );
+});
+
+test('phase 3 Tasks bulk actions stay de-emphasized until tasks are selected', () => {
+  const tasksPage = read('./public/pages/tasks.js');
+  const tasksCss = read('./public/styles/tasks.css');
+
+  assert.match(tasksPage, /bar\.hidden\s*=\s*!\(state\.bulkSelectMode && selected > 0\)/);
+  assert.match(tasksPage, /bar\.classList\.toggle\('bulk-actions-bar--active',\s*selected > 0\)/);
+  assert.match(tasksPage, /toggleBtn\.setAttribute\('aria-pressed',\s*String\(state\.bulkSelectMode\)\)/);
+  assert.match(tasksCss, /\.bulk-actions-bar\[hidden\]\s*\{[\s\S]*display:\s*none/);
+  assert.match(tasksCss, /\.bulk-actions-bar--active\s*\{/);
+});
+
+test('phase 3 mobile Shopping quick-add separates name, quantity, category, and add controls', () => {
+  const shoppingPage = read('./public/pages/shopping.js');
+  const shoppingCss = read('./public/styles/shopping.css');
+
+  assert.match(shoppingPage, /<div class="quick-add__input-wrap">[\s\S]*id="item-name-input"[\s\S]*id="autocomplete-dropdown" hidden[\s\S]*<\/div>\s*<input class="quick-add__qty"/);
+  assert.match(
+    shoppingCss,
+    /\.quick-add__form\s*\{[\s\S]*display:\s*grid[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s*minmax\(0,\s*1fr\)\s*var\(--target-base\)/
+  );
+  assert.match(shoppingCss, /\.quick-add__input-wrap\s*\{[\s\S]*grid-column:\s*1\s*\/\s*-1/);
+  assert.match(shoppingCss, /\.quick-add__qty\s*\{[\s\S]*position:\s*static[\s\S]*min-height:\s*var\(--target-base\)/);
+  assert.match(shoppingCss, /\.quick-add__cat\s*\{[\s\S]*min-width:\s*0[\s\S]*min-height:\s*var\(--target-base\)/);
 });
 
 test('phase 6 touched UI files continue using design tokens for target sizes', () => {

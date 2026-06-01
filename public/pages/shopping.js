@@ -107,7 +107,7 @@ function renderTabs(container) {
   bar.insertAdjacentHTML('beforeend', `
     ${tabsHtml}
     <button class="list-tab__new" data-action="new-list" aria-label="${t('shopping.newListButton')}">
-      <i data-lucide="plus" style="width:18px;height:18px" aria-hidden="true"></i>
+      <i data-lucide="plus" class="icon-md" aria-hidden="true"></i>
     </button>
   `);
   if (window.lucide) window.lucide.createIcons();
@@ -163,15 +163,15 @@ function renderListContent(container) {
         <div class="quick-add__input-wrap">
           <input class="quick-add__input" type="text" id="item-name-input"
                  placeholder="${t('shopping.itemNamePlaceholder')}" aria-label="${t('shopping.itemNameLabel')}" autocomplete="off">
-          <input class="quick-add__qty" type="text" id="item-qty-input"
-                 placeholder="${t('shopping.itemQtyPlaceholder')}" aria-label="${t('shopping.itemQtyLabel')}" autocomplete="off">
           <div class="autocomplete-dropdown" id="autocomplete-dropdown" hidden></div>
         </div>
+        <input class="quick-add__qty" type="text" id="item-qty-input"
+               placeholder="${t('shopping.itemQtyPlaceholder')}" aria-label="${t('shopping.itemQtyLabel')}" autocomplete="off">
         <select class="quick-add__cat" id="item-cat-select" aria-label="${t('shopping.categoryLabel')}">
           ${state.categories.map((c) => `<option value="${esc(c.name)}">${esc(categoryLabel(c.name))}</option>`).join('')}
         </select>
         <button class="quick-add__btn" type="submit" aria-label="${t('shopping.addItemLabel')}">
-          <i data-lucide="plus" style="width:20px;height:20px" aria-hidden="true"></i>
+          <i data-lucide="plus" class="icon-lg" aria-hidden="true"></i>
         </button>
       </form>
     </div>
@@ -223,11 +223,11 @@ function renderItem(item) {
   return `
     <div class="swipe-row" data-swipe-id="${item.id}" data-swipe-checked="${item.is_checked}">
       <div class="swipe-reveal swipe-reveal--done" aria-hidden="true">
-        <i data-lucide="${isDone ? 'rotate-ccw' : 'check'}" style="width:22px;height:22px" aria-hidden="true"></i>
+        <i data-lucide="${isDone ? 'rotate-ccw' : 'check'}" class="icon-xl" aria-hidden="true"></i>
         <span>${isDone ? t('shopping.swipeBack') : t('shopping.swipeCheck')}</span>
       </div>
       <div class="swipe-reveal swipe-reveal--delete" aria-hidden="true">
-        <i data-lucide="trash-2" style="width:22px;height:22px" aria-hidden="true"></i>
+        <i data-lucide="trash-2" class="icon-xl" aria-hidden="true"></i>
         <span>${t('shopping.swipeDelete')}</span>
       </div>
       <div class="shopping-item ${isDone ? 'shopping-item--checked' : ''}"
@@ -243,7 +243,7 @@ function renderItem(item) {
         </div>
         <button class="item-delete" data-action="delete-item" data-id="${item.id}"
                 aria-label="${t('shopping.deleteItemLabel', { name: esc(item.name) })}">
-          <i data-lucide="x" style="width:16px;height:16px" aria-hidden="true"></i>
+          <i data-lucide="x" class="icon-md" aria-hidden="true"></i>
         </button>
       </div>
     </div>`;

@@ -42,7 +42,7 @@ console.log('\n[Tasks-Test] CRUD + Filter + Subtasks\n');
 test('Bulk-Aktionsleiste ist standardmäßig verborgen und zeigt Nullauswahl nur im Bulk-Modus', () => {
   const source = readFileSync(new URL('./public/pages/tasks.js', import.meta.url), 'utf8');
   assert(source.includes('id="bulk-actions-bar" hidden'), 'Bulk-Leiste muss initial hidden gerendert werden');
-  assert(/bar\.hidden\s*=\s*!state\.bulkSelectMode/.test(source), 'Bulk-Leiste muss an bulkSelectMode gekoppelt sein');
+  assert(/bar\.hidden\s*=\s*!\(state\.bulkSelectMode && selected > 0\)/.test(source), 'Bulk-Leiste darf erst bei aktiver Auswahl sichtbar werden');
   assert(/button\.disabled\s*=\s*selected\s*===\s*0/.test(source), 'Bulk-Buttons müssen bei 0 Auswahl deaktiviert sein');
 });
 
