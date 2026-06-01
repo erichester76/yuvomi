@@ -34,7 +34,9 @@
     "errorForbidden": "アクセスが拒否されました。再度サインインしてください。",
     "errorNotFound": "エントリが見つかりませんでした。",
     "errorServer": "サーバーエラーが発生しました。後でもう一度お試しください。",
-    "errorTimeout": "接続に時間がかかりすぎました。もう一度お試しください。"
+    "errorTimeout": "接続に時間がかかりすぎました。もう一度お試しください。",
+    "requiredFields": "必須項目をすべて入力してください。",
+    "invalidInput": "無効な入力です。"
   },
   "nav": {
     "dashboard": "ダッシュボード",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "キッチン、{{section}} がアクティブ",
     "section": {
       "household": "家庭"
-    }
+    },
+    "reminders": "リマインダー"
   },
   "dashboard": {
     "title": "ダッシュボード",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "読み込み中..."
   },
   "login": {
     "tagline": "家族計画。安全。プライバシー重視。オープンソース。",

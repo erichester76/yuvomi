@@ -11,7 +11,7 @@
  *   - Timing: Banner erst nach 2 Nutzer-Interaktionen anzeigen
  */
 
-import { t } from '/i18n.js';
+import { t, whenI18nReady } from '/i18n.js';
 import {
   getPwaInstallState,
   onPwaInstallStateChanged,
@@ -108,7 +108,10 @@ class OikosInstallPrompt extends HTMLElement {
   }
 
   /** Banner rendern */
-  _showBanner(isIOS) {
+  async _showBanner(isIOS) {
+    await whenI18nReady();
+    if (!this.isConnected) return;
+
     this._currentIsIOS = isIOS;
     this._shadow.replaceChildren();
 

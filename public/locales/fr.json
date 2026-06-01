@@ -34,7 +34,9 @@
     "errorForbidden": "Accès refusé. Veuillez vous reconnecter.",
     "errorNotFound": "L'entrée n'a pas été trouvée.",
     "errorServer": "Erreur serveur. Veuillez réessayer plus tard.",
-    "errorTimeout": "La connexion a pris trop de temps. Veuillez réessayer."
+    "errorTimeout": "La connexion a pris trop de temps. Veuillez réessayer.",
+    "requiredFields": "Veuillez remplir tous les champs obligatoires.",
+    "invalidInput": "Saisie invalide."
   },
   "nav": {
     "dashboard": "Accueil",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Cuisine, {{section}} actif",
     "section": {
       "household": "Maison"
-    }
+    },
+    "reminders": "Rappels"
   },
   "dashboard": {
     "title": "Accueil",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Chargement..."
   },
   "login": {
     "tagline": "Planification familiale. Sécurisée. Respectueuse de la vie privée. Open source.",

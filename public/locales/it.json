@@ -34,7 +34,9 @@
     "errorForbidden": "Accesso negato. Per favore accedi di nuovo.",
     "errorNotFound": "La voce non è stata trovata.",
     "errorServer": "Errore del server. Riprova più tardi.",
-    "errorTimeout": "La connessione ha impiegato troppo tempo. Riprova."
+    "errorTimeout": "La connessione ha impiegato troppo tempo. Riprova.",
+    "requiredFields": "Compila tutti i campi obbligatori.",
+    "invalidInput": "Input non valido."
   },
   "nav": {
     "dashboard": "Panoramica",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Cucina, {{section}} attiva",
     "section": {
       "household": "Casa"
-    }
+    },
+    "reminders": "Promemoria"
   },
   "dashboard": {
     "title": "Panoramica",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Caricamento..."
   },
   "login": {
     "tagline": "Pianificazione familiare. Sicura. Rispettosa della privacy. Open source.",

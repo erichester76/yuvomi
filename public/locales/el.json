@@ -34,7 +34,9 @@
     "errorForbidden": "Η πρόσβαση απορρίφθηκε. Παρακαλώ συνδεθείτε ξανά.",
     "errorNotFound": "Η εγγραφή δεν βρέθηκε.",
     "errorServer": "Σφάλμα διακομιστή. Δοκιμάστε ξανά αργότερα.",
-    "errorTimeout": "Η σύνδεση διήρκεσε πολύ. Παρακαλώ δοκιμάστε ξανά."
+    "errorTimeout": "Η σύνδεση διήρκεσε πολύ. Παρακαλώ δοκιμάστε ξανά.",
+    "requiredFields": "Συμπληρώστε όλα τα υποχρεωτικά πεδία.",
+    "invalidInput": "Μη έγκυρη είσοδος."
   },
   "nav": {
     "dashboard": "Επισκόπηση",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Κουζίνα, {{section}} ενεργό",
     "section": {
       "household": "Νοικοκυριό"
-    }
+    },
+    "reminders": "Υπενθυμίσεις"
   },
   "dashboard": {
     "title": "Επισκόπηση",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Φόρτωση..."
   },
   "login": {
     "tagline": "Οικογενειακός προγραμματισμός. Ασφαλής. Φιλικός προς την ιδιωτικότητα. Ανοιχτός κώδικας.",

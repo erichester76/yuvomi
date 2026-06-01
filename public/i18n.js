@@ -17,6 +17,11 @@ const VALID_TIME_FORMATS = ['24h', '12h'];
 let currentLocale = DEFAULT_LOCALE;
 let translations = {};
 let fallbackTranslations = {};
+let i18nReady = false;
+let resolveI18nReady;
+const i18nReadyPromise = new Promise((resolve) => {
+  resolveI18nReady = resolve;
+});
 
 /** Resolve locale: manual override > navigator.language > English > default */
 function resolveLocale() {
@@ -53,6 +58,14 @@ export async function initI18n() {
     translations = fallbackTranslations;
   }
   document.documentElement.lang = currentLocale;
+  i18nReady = true;
+  resolveI18nReady();
+  window.dispatchEvent(new CustomEvent('i18n-ready', { detail: { locale: currentLocale } }));
+}
+
+/** Warten bis die erste Locale geladen wurde */
+export function whenI18nReady() {
+  return i18nReady ? Promise.resolve() : i18nReadyPromise;
 }
 
 /** Sprache wechseln - löst 'locale-changed' Event aus */

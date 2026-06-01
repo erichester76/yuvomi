@@ -34,7 +34,9 @@
     "errorForbidden": "Erişim reddedildi. Lütfen tekrar giriş yapın.",
     "errorNotFound": "Kayıt bulunamadı.",
     "errorServer": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
-    "errorTimeout": "Bağlantı çok uzun sürdü. Lütfen tekrar deneyin."
+    "errorTimeout": "Bağlantı çok uzun sürdü. Lütfen tekrar deneyin.",
+    "requiredFields": "Lütfen tüm zorunlu alanları doldurun.",
+    "invalidInput": "Geçersiz giriş."
   },
   "nav": {
     "dashboard": "Genel Bakış",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Mutfak, {{section}} aktif",
     "section": {
       "household": "Ev"
-    }
+    },
+    "reminders": "Hatırlatıcılar"
   },
   "dashboard": {
     "title": "Genel Bakış",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Yükleniyor..."
   },
   "login": {
     "tagline": "Aile planlaması. Güvenli. Gizlilik dostu. Açık kaynak.",

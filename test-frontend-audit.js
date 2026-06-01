@@ -8,6 +8,19 @@ import { readFileSync, readdirSync } from 'node:fs';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 
+function walkJsFiles(dir) {
+  const entries = readdirSync(new URL(dir, import.meta.url), { withFileTypes: true });
+  return entries.flatMap((entry) => {
+    const path = `${dir}${entry.name}`;
+    if (entry.isDirectory()) return walkJsFiles(`${path}/`);
+    return entry.isFile() && entry.name.endsWith('.js') ? [path] : [];
+  });
+}
+
+function resolveLocaleKey(obj, key) {
+  return key.split('.').reduce((value, part) => (value != null ? value[part] : undefined), obj);
+}
+
 function cssRuleBody(css, selector) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const match = css.match(new RegExp(`${escaped}\\s*\\{([^}]*)\\}`, 'm'));
@@ -32,6 +45,39 @@ test('audited frontend files do not assign innerHTML', () => {
   for (const file of files) {
     assert.doesNotMatch(read(file), /\.innerHTML\s*=/, `${file} must not assign innerHTML`);
   }
+});
+
+test('static frontend translation keys exist in every locale', () => {
+  const localeFiles = readdirSync(new URL('./public/locales/', import.meta.url))
+    .filter((file) => file.endsWith('.json'));
+  const locales = localeFiles.map((file) => ({
+    file,
+    data: JSON.parse(read(`./public/locales/${file}`)),
+  }));
+  const missing = [];
+
+  for (const file of walkJsFiles('./public/')) {
+    const source = read(file);
+    const keys = [...source.matchAll(/\bt\(\s*(['"])([^'"]+)\1/g)].map((match) => match[2]);
+    for (const key of keys) {
+      for (const locale of locales) {
+        if (resolveLocaleKey(locale.data, key) === undefined) {
+          missing.push(`${file}:${key}:${locale.file}`);
+        }
+      }
+    }
+  }
+
+  assert.deepEqual(missing, []);
+});
+
+test('install prompt waits for initial translations before rendering text', () => {
+  const i18n = read('./public/i18n.js');
+  const prompt = read('./public/components/oikos-install-prompt.js');
+
+  assert.match(i18n, /export function whenI18nReady/);
+  assert.match(prompt, /import \{ t,\s*whenI18nReady \} from '\/i18n\.js';/);
+  assert.match(prompt, /await whenI18nReady\(\)/);
 });
 
 test('date helpers produce local YYYY-MM-DD keys without toISOString slicing', async () => {

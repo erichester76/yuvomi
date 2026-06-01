@@ -34,7 +34,9 @@
     "errorForbidden": "Access denied. Please sign in again.",
     "errorNotFound": "The entry was not found.",
     "errorServer": "Server error. Please try again later.",
-    "errorTimeout": "The connection took too long. Please try again."
+    "errorTimeout": "The connection took too long. Please try again.",
+    "requiredFields": "Please fill in all required fields.",
+    "invalidInput": "Invalid input."
   },
   "nav": {
     "dashboard": "Overview",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Kitchen, {{section}} active",
     "section": {
       "household": "Household"
-    }
+    },
+    "reminders": "Reminders"
   },
   "dashboard": {
     "title": "Overview",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Loading..."
   },
   "login": {
     "tagline": "Family planning. Secure. Privacy-friendly. Open source.",

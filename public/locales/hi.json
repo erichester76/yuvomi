@@ -34,7 +34,9 @@
     "errorForbidden": "पहुँच अस्वीकृत। कृपया फिर से लॉग इन करें।",
     "errorNotFound": "प्रविष्टि नहीं मिली।",
     "errorServer": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
-    "errorTimeout": "कनेक्शन बहुत देर से हुआ। कृपया पुनः प्रयास करें।"
+    "errorTimeout": "कनेक्शन बहुत देर से हुआ। कृपया पुनः प्रयास करें।",
+    "requiredFields": "कृपया सभी आवश्यक फ़ील्ड भरें.",
+    "invalidInput": "अमान्य इनपुट."
   },
   "nav": {
     "dashboard": "डैशबोर्ड",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "रसोई, {{section}} सक्रिय",
     "section": {
       "household": "घरेलू"
-    }
+    },
+    "reminders": "रिमाइंडर"
   },
   "dashboard": {
     "title": "डैशबोर्ड",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "लोड हो रहा है..."
   },
   "login": {
     "tagline": "पारिवारिक योजना। सुरक्षित। गोपनीयता-अनुकूल। ओपन सोर्स।",

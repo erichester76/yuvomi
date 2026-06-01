@@ -34,7 +34,9 @@
     "errorForbidden": "Acceso denegado. Por favor, inicia sesión de nuevo.",
     "errorNotFound": "No se encontró el registro.",
     "errorServer": "Error del servidor. Por favor, inténtalo más tarde.",
-    "errorTimeout": "La conexión tardó demasiado. Por favor, inténtalo de nuevo."
+    "errorTimeout": "La conexión tardó demasiado. Por favor, inténtalo de nuevo.",
+    "requiredFields": "Completa todos los campos obligatorios.",
+    "invalidInput": "Entrada no válida."
   },
   "nav": {
     "dashboard": "Inicio",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Cocina, {{section}} activo",
     "section": {
       "household": "Hogar"
-    }
+    },
+    "reminders": "Recordatorios"
   },
   "dashboard": {
     "title": "Inicio",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Cargando..."
   },
   "login": {
     "tagline": "Planificación familiar. Segura. Privada. Código abierto.",

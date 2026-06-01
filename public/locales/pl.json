@@ -34,7 +34,9 @@
     "errorForbidden": "Odmowa dostępu. Zaloguj się ponownie.",
     "errorNotFound": "Wpis nie został znaleziony.",
     "errorServer": "Błąd serwera. Spróbuj ponownie później.",
-    "errorTimeout": "Połączenie trwało zbyt długo. Spróbuj ponownie."
+    "errorTimeout": "Połączenie trwało zbyt długo. Spróbuj ponownie.",
+    "requiredFields": "Wypełnij wszystkie wymagane pola.",
+    "invalidInput": "Nieprawidłowe dane."
   },
   "nav": {
     "dashboard": "Pulpit",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Kuchnia, {{section}} aktywne",
     "section": {
       "household": "Gospodarstwo"
-    }
+    },
+    "reminders": "Przypomnienia"
   },
   "search": {
     "title": "Szukaj",
@@ -1134,7 +1137,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Ładowanie..."
   },
   "login": {
     "tagline": "Planowanie rodziny. Bezpieczne. Chroniące prywatność. Open Source.",

@@ -34,7 +34,9 @@
     "errorForbidden": "Zugriff verweigert. Bitte erneut anmelden.",
     "errorNotFound": "Der Eintrag wurde nicht gefunden.",
     "errorServer": "Serverfehler. Bitte versuche es später erneut.",
-    "errorTimeout": "Die Verbindung hat zu lange gedauert. Bitte erneut versuchen."
+    "errorTimeout": "Die Verbindung hat zu lange gedauert. Bitte erneut versuchen.",
+    "requiredFields": "Bitte alle Pflichtfelder ausfüllen.",
+    "invalidInput": "Ungültige Eingabe."
   },
   "nav": {
     "dashboard": "Übersicht",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Küche, {{section}} aktiv",
     "section": {
       "household": "Haushalt"
-    }
+    },
+    "reminders": "Erinnerungen"
   },
   "search": {
     "title": "Suche",
@@ -1134,7 +1137,8 @@
     "modulesMenuDisabled": "Kein Menueeintrag",
     "modulesExternalBadge": "Extern",
     "modulesMoveUp": "Nach oben",
-    "modulesMoveDown": "Nach unten"
+    "modulesMoveDown": "Nach unten",
+    "loading": "Wird geladen..."
   },
   "login": {
     "tagline": "Familienplanung. Sicher. Datenschutzfreundlich. Open Source.",

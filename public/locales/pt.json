@@ -34,7 +34,9 @@
     "errorForbidden": "Acesso negado. Por favor, inicie sessão novamente.",
     "errorNotFound": "O registo não foi encontrado.",
     "errorServer": "Erro no servidor. Por favor, tente mais tarde.",
-    "errorTimeout": "A ligação demorou demasiado. Por favor, tente novamente."
+    "errorTimeout": "A ligação demorou demasiado. Por favor, tente novamente.",
+    "requiredFields": "Preencha todos os campos obrigatórios.",
+    "invalidInput": "Entrada inválida."
   },
   "nav": {
     "dashboard": "Painel",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Cozinha, {{section}} ativo",
     "section": {
       "household": "Casa"
-    }
+    },
+    "reminders": "Lembretes"
   },
   "dashboard": {
     "title": "Painel",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "Sem entrada no menu",
     "modulesExternalBadge": "Externo",
     "modulesMoveUp": "Mover para cima",
-    "modulesMoveDown": "Mover para baixo"
+    "modulesMoveDown": "Mover para baixo",
+    "loading": "Carregando..."
   },
   "login": {
     "tagline": "Planejamento familiar. Seguro. Privado. Código aberto.",

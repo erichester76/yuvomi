@@ -34,7 +34,9 @@
     "errorForbidden": "تم رفض الوصول. يرجى تسجيل الدخول مرة أخرى.",
     "errorNotFound": "لم يتم العثور على السجل.",
     "errorServer": "خطأ في الخادم. يرجى المحاولة لاحقاً.",
-    "errorTimeout": "استغرق الاتصال وقتاً طويلاً. يرجى المحاولة مجدداً."
+    "errorTimeout": "استغرق الاتصال وقتاً طويلاً. يرجى المحاولة مجدداً.",
+    "requiredFields": "يرجى ملء جميع الحقول المطلوبة.",
+    "invalidInput": "إدخال غير صالح."
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "المطبخ، {{section}} نشط",
     "section": {
       "household": "المنزل"
-    }
+    },
+    "reminders": "التذكيرات"
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "جارٍ التحميل..."
   },
   "login": {
     "tagline": "تخطيط عائلي. آمن. يحترم الخصوصية. مفتوح المصدر.",

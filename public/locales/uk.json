@@ -34,7 +34,9 @@
     "errorForbidden": "Доступ заборонено. Будь ласка, увійдіть знову.",
     "errorNotFound": "Запис не знайдено.",
     "errorServer": "Помилка сервера. Спробуйте пізніше.",
-    "errorTimeout": "З'єднання тривало занадто довго. Спробуйте ще раз."
+    "errorTimeout": "З'єднання тривало занадто довго. Спробуйте ще раз.",
+    "requiredFields": "Заповніть усі обов’язкові поля.",
+    "invalidInput": "Некоректне введення."
   },
   "nav": {
     "dashboard": "Огляд",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Кухня, {{section}} активно",
     "section": {
       "household": "Господарство"
-    }
+    },
+    "reminders": "Нагадування"
   },
   "dashboard": {
     "title": "Огляд",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Завантаження..."
   },
   "login": {
     "tagline": "Планування для родини. Безпечно. Конфіденційно. Відкритий код.",

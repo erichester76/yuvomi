@@ -34,7 +34,9 @@
     "errorForbidden": "Åtkomst nekad. Logga in igen.",
     "errorNotFound": "Posten hittades inte.",
     "errorServer": "Serverfel. Försök igen senare.",
-    "errorTimeout": "Anslutningen tog för lång tid. Försök igen."
+    "errorTimeout": "Anslutningen tog för lång tid. Försök igen.",
+    "requiredFields": "Fyll i alla obligatoriska fält.",
+    "invalidInput": "Ogiltig inmatning."
   },
   "nav": {
     "dashboard": "Översikt",
@@ -61,7 +63,8 @@
     "kitchenActiveLabel": "Kök, {{section}} aktivt",
     "section": {
       "household": "Hushåll"
-    }
+    },
+    "reminders": "Påminnelser"
   },
   "dashboard": {
     "title": "Översikt",
@@ -1128,7 +1131,8 @@
     "modulesMenuDisabled": "No menu entry",
     "modulesExternalBadge": "External",
     "modulesMoveUp": "Move up",
-    "modulesMoveDown": "Move down"
+    "modulesMoveDown": "Move down",
+    "loading": "Läser in..."
   },
   "login": {
     "tagline": "Familjeplanering. Säker. Sekretessvänlig. Öppen källkod.",

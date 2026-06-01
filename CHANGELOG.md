@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.12] - 2026-06-01
+
+### Fixed
+- Fixed unresolved frontend translation keys so the PWA install prompt and other UI labels render localized text instead of raw key names.
+
 ## [0.55.11] - 2026-06-01
 
 ### Changed
