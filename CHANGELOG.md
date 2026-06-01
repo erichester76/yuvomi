@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.13] - 2026-06-01
+
+### Fixed
+- Fixed Polish locale offline availability by including `pl.json` in the service worker locale precache and expanded frontend locale audits to cover dynamic keys, `labelKey` usage, and `data-i18n` attributes.
+
 ## [0.55.12] - 2026-06-01
 
 ### Fixed

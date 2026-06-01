@@ -17,8 +17,37 @@ function walkJsFiles(dir) {
   });
 }
 
+function walkFrontendFiles(dir) {
+  const entries = readdirSync(new URL(dir, import.meta.url), { withFileTypes: true });
+  return entries.flatMap((entry) => {
+    const path = `${dir}${entry.name}`;
+    if (entry.isDirectory()) return walkFrontendFiles(`${path}/`);
+    return entry.isFile() && /\.(html|js)$/.test(entry.name) ? [path] : [];
+  });
+}
+
 function resolveLocaleKey(obj, key) {
   return key.split('.').reduce((value, part) => (value != null ? value[part] : undefined), obj);
+}
+
+function assertKeysExistInEveryLocale(keys) {
+  const localeFiles = readdirSync(new URL('./public/locales/', import.meta.url))
+    .filter((file) => file.endsWith('.json'));
+  const locales = localeFiles.map((file) => ({
+    file,
+    data: JSON.parse(read(`./public/locales/${file}`)),
+  }));
+  const missing = [];
+
+  for (const key of keys) {
+    for (const locale of locales) {
+      if (resolveLocaleKey(locale.data, key) === undefined) {
+        missing.push(`${key}:${locale.file}`);
+      }
+    }
+  }
+
+  assert.deepEqual(missing, []);
 }
 
 function cssRuleBody(css, selector) {
@@ -48,27 +77,56 @@ test('audited frontend files do not assign innerHTML', () => {
 });
 
 test('static frontend translation keys exist in every locale', () => {
-  const localeFiles = readdirSync(new URL('./public/locales/', import.meta.url))
-    .filter((file) => file.endsWith('.json'));
-  const locales = localeFiles.map((file) => ({
-    file,
-    data: JSON.parse(read(`./public/locales/${file}`)),
-  }));
-  const missing = [];
+  const keys = new Set();
 
   for (const file of walkJsFiles('./public/')) {
     const source = read(file);
-    const keys = [...source.matchAll(/\bt\(\s*(['"])([^'"]+)\1/g)].map((match) => match[2]);
-    for (const key of keys) {
-      for (const locale of locales) {
-        if (resolveLocaleKey(locale.data, key) === undefined) {
-          missing.push(`${file}:${key}:${locale.file}`);
-        }
-      }
-    }
+    [...source.matchAll(/\bt\(\s*(['"])([^'"]+)\1/g)].forEach((match) => keys.add(match[2]));
+    [...source.matchAll(/labelKey:\s*['"]([^'"]+)['"]/g)].forEach((match) => keys.add(match[1]));
   }
 
-  assert.deepEqual(missing, []);
+  for (const file of walkFrontendFiles('./public/')) {
+    const source = read(file);
+    [...source.matchAll(/data-i18n=["']([^"']+)["']/g)].forEach((match) => keys.add(match[1]));
+  }
+
+  assertKeysExistInEveryLocale(keys);
+});
+
+test('dynamic frontend translation key domains exist in every locale', () => {
+  const familyRoles = ['dad', 'mom', 'parent', 'child', 'grandparent', 'relative', 'other'];
+  const documentCategories = ['medical', 'school', 'identity', 'insurance', 'finance', 'home', 'vehicle', 'legal', 'travel', 'pets', 'warranty', 'taxes', 'work', 'other'];
+  const documentVisibilities = ['family', 'restricted', 'private'];
+  const dashboardBudgetLabels = ['catHousing', 'catFood', 'catTransport', 'catPersonalHealth', 'catLeisure', 'catShoppingClothing', 'catEducation', 'catFinancialOther', 'catEarnedIncome', 'catInvestmentIncome', 'catTransferGiftIncome', 'catGovernmentBenefits', 'catOtherIncome'];
+  const splitGroupTypes = ['household', 'couple', 'travel', 'event', 'shopping', 'general'];
+  const splitMethods = ['equal', 'exact', 'percentage', 'shares'];
+  const splitActivityTypes = ['group_created', 'group_updated', 'group_archived', 'member_added', 'guest_created', 'expense_created', 'expense_edited', 'expense_deleted', 'comment_added', 'payment_registered', 'recurring_created', 'recurring_paused', 'recurring_resumed', 'recurring_generated'];
+
+  const keys = [
+    ...familyRoles.map((role) => `settings.familyRole${role.replace(/(^|_)([a-z])/g, (_, __, c) => c.toUpperCase())}`),
+    ...documentCategories.map((category) => `documents.category.${category}`),
+    ...documentVisibilities.map((visibility) => `documents.visibility.${visibility}`),
+    ...dashboardBudgetLabels.map((key) => `budget.${key}`),
+    ...splitGroupTypes.map((type) => `splitExpenses.groupType.${type}`),
+    ...splitMethods.map((method) => `splitExpenses.splitHint.${method}`),
+    ...splitActivityTypes.map((type) => `splitExpenses.activityType.${type}`),
+  ];
+
+  assertKeysExistInEveryLocale(keys);
+});
+
+test('service worker precaches every supported locale file', () => {
+  const i18n = read('./public/i18n.js');
+  const sw = read('./public/sw.js');
+  const supportedLocales = [...i18n.match(/SUPPORTED_LOCALES\s*=\s*\[([^\]]+)\]/)?.[1].matchAll(/'([^']+)'/g)].map((match) => match[1]);
+  const localeFiles = readdirSync(new URL('./public/locales/', import.meta.url))
+    .filter((file) => file.endsWith('.json'))
+    .map((file) => file.replace(/\.json$/, ''))
+    .sort();
+  const precachedLocales = [...sw.matchAll(/'\/locales\/([^']+)\.json'/g)].map((match) => match[1]).sort();
+
+  assert.deepEqual(supportedLocales.sort(), localeFiles, 'SUPPORTED_LOCALES must match public/locales/*.json');
+  assert.deepEqual(precachedLocales, supportedLocales.sort(), 'Service worker APP_LOCALES must precache every supported locale');
 });
 
 test('install prompt waits for initial translations before rendering text', () => {
