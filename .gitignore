@@ -57,6 +57,11 @@ docs/audit-report-*.md
 docs/claude-md-audit.md
 docs/repo-audit-*.md
 
+# Installer modernization working docs (internal audit/plan/prompts, not for contributors)
+docs/installer-audit.md
+docs/installer-modernization-plan.md
+docs/installer-phase-prompts.md
+
 # Text files with tokens/keys (safety net)
 *.txt
 !public/robots.txt
