@@ -126,6 +126,9 @@
         <p>How will you access Oikos?</p>
       </div>
       <div class="card-body">
+        <div class="info-banner" id="cfg-existing" style="display:none">
+          Existing configuration detected — your current <code>.env</code> will be backed up before saving.
+        </div>
         <div class="field">
           <label for="cfg-host">Domain or IP address</label>
           <input type="text" id="cfg-host" value="localhost" placeholder="localhost or 192.168.1.x">
@@ -390,6 +393,16 @@ const S = {
 
 S.tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 $('cfg-tz').value = S.tz;
+
+// Warn up front if a previous setup exists — save-env will back it up.
+(async () => {
+  try {
+    const r = await fetch('/api/preflight');
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.envExists) $('cfg-existing').style.display = 'block';
+  } catch { /* preflight is best-effort */ }
+})();
 
 function setProgress(n) {
   $('prog').style.width = `${n / (STEPS.length - 1) * 100}%`;
