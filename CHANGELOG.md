@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.60.5] - 2026-06-03
+
+### Fixed
+- Dashboard overview now shows today's calendar events throughout the day (#230). Events with a start time earlier than the current time were filtered out of the upcoming-events widget, so users with morning appointments saw "no events today" from noon onward. The widget now includes all events from midnight of the current day.
+
 ## [0.60.4] - 2026-06-03
 
 ### Security
