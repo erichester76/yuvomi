@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.59.0] - 2026-06-03
+
+### Added
+- Choose which Google calendar to sync. Google Calendar sync was previously hardcoded to the `primary` calendar, forcing families whose shared calendar is not their primary one to restructure their Google setup. After connecting, an admin can now pick the calendar to sync from a dropdown in Settings → Synchronization. The selection defaults to `primary` for existing installs; switching calendars resets the incremental sync token and re-imports events from the newly selected calendar.
+
 ## [0.58.2] - 2026-06-03
 
 ### Fixed
