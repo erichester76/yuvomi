@@ -96,7 +96,8 @@ function parseVTODO(ics) {
       const params  = dueM[1];
       const value   = dueM[2].trim();
       const tzMatch = params.match(/;TZID=([^;:]+)/i);
-      const dateOnly = /;VALUE=DATE\b/i.test(params) || /^\d{8}$/.test(value);
+      // (?![-\w]) verhindert, dass "VALUE=DATE-TIME" fälschlich als reines DATE gilt.
+      const dateOnly = /;VALUE=DATE(?![-\w])/i.test(params) || /^\d{8}$/.test(value);
       due = formatICSDate(value, dateOnly, tzMatch ? tzMatch[1].trim() : null);
     }
     const prioRaw = get('PRIORITY');

@@ -168,5 +168,22 @@ test('parseVTODO: gültige DUE mit mehreren Parametern wird weiter korrekt gepar
   assert(t.due === '2026-06-15T12:00:00Z', `due: ${t.due}`);  // 14:00 Berlin = 12:00 UTC
 });
 
+// --- VALUE=DATE-TIME darf nicht als reines DATE behandelt werden ---
+// Bug: /;VALUE=DATE\b/ matchte wegen der Wortgrenze auch "VALUE=DATE-TIME"
+// und verwarf so die Uhrzeit.
+test('parseVTODO: DUE mit VALUE=DATE-TIME behält die Uhrzeit', () => {
+  const ics = 'BEGIN:VCALENDAR\r\nBEGIN:VTODO\r\nUID:dt@x\r\nSUMMARY:X\r\n'
+    + 'DUE;TZID=Europe/Berlin;VALUE=DATE-TIME:20260615T140000\r\nEND:VTODO\r\nEND:VCALENDAR';
+  const [t] = parseVTODO(ics);
+  assert(t.due === '2026-06-15T12:00:00Z', `due: ${t.due}`);  // 14:00 Berlin = 12:00 UTC
+});
+
+test('parseVTODO: DUE mit VALUE=DATE bleibt reines Datum', () => {
+  const ics = 'BEGIN:VCALENDAR\r\nBEGIN:VTODO\r\nUID:do@x\r\nSUMMARY:X\r\n'
+    + 'DUE;VALUE=DATE:20260615\r\nEND:VTODO\r\nEND:VCALENDAR';
+  const [t] = parseVTODO(ics);
+  assert(t.due === '2026-06-15', `due: ${t.due}`);
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);
