@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "क्लाइंट ID",
     "googleSecretLabel": "क्लाइंट सीक्रेट",
+    "googleSelectNote": "कनेक्ट करने के बाद, आप ऐप सेटिंग्स में चुन सकते हैं कि कौन सा कैलेंडर सिंक हो (डिफ़ॉल्ट: प्राथमिक कैलेंडर)।",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "{{link}} पर ऐप-विशिष्ट पासवर्ड बनाएँ।",
     "appleLink": "appleid.apple.com",

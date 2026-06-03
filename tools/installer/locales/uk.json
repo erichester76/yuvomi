@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "Ідентифікатор клієнта",
     "googleSecretLabel": "Секрет клієнта",
+    "googleSelectNote": "Після підключення ви можете вибрати в налаштуваннях застосунку, який календар синхронізувати (за замовчуванням: основний календар).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "Створіть пароль для застосунку на {{link}}.",
     "appleLink": "appleid.apple.com",

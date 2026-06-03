@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "معرّف العميل",
     "googleSecretLabel": "سرّ العميل",
+    "googleSelectNote": "بعد الاتصال، يمكنك اختيار التقويم الذي تتم مزامنته من إعدادات التطبيق (الافتراضي: التقويم الأساسي).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "أنشئ كلمة مرور خاصة بالتطبيق على {{link}}.",
     "appleLink": "appleid.apple.com",

@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "Αναγνωριστικό πελάτη",
     "googleSecretLabel": "Μυστικό πελάτη",
+    "googleSelectNote": "Μετά τη σύνδεση, μπορείτε να επιλέξετε ποιο ημερολόγιο θα συγχρονίζεται στις ρυθμίσεις της εφαρμογής (προεπιλογή: κύριο ημερολόγιο).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "Δημιουργήστε έναν κωδικό πρόσβασης ειδικό για την εφαρμογή στο {{link}}.",
     "appleLink": "appleid.apple.com",

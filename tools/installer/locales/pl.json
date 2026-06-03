@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "Identyfikator klienta",
     "googleSecretLabel": "Sekret klienta",
+    "googleSelectNote": "Po połączeniu możesz wybrać w ustawieniach aplikacji, który kalendarz synchronizować (domyślnie: kalendarz główny).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "Utwórz hasło specyficzne dla aplikacji na {{link}}.",
     "appleLink": "appleid.apple.com",

@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "客户端 ID",
     "googleSecretLabel": "客户端密钥",
+    "googleSelectNote": "连接后，您可以在应用设置中选择要同步的日历（默认：主日历）。",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "在 {{link}} 创建 App 专用密码。",
     "appleLink": "appleid.apple.com",

@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "Client ID",
     "googleSecretLabel": "Client Secret",
+    "googleSelectNote": "After connecting, you can choose which calendar to sync in the app settings (default: primary calendar).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "Create an app-specific password at {{link}}.",
     "appleLink": "appleid.apple.com",
