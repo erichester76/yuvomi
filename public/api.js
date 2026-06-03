@@ -146,6 +146,7 @@ const auth = {
   login: (username, password) => api.post('/auth/login', { username, password }),
   logout: () => api.post('/auth/logout'),
   me: () => api.get('/auth/me'),
+  setup: (username, display_name, password) => api.post('/auth/setup', { username, display_name, password }),
   getUsers: () => api.get('/auth/users'),
   createUser: (data) => api.post('/auth/users', data),
   updateUser: (id, data) => api.patch(`/auth/users/${id}`, data),
