@@ -258,6 +258,24 @@ async function sync() {
   log.info(`Sync completed - ${localEvents.length} local → Google, inbound via syncToken.`);
 }
 
+// Google Calendar uses exclusive end dates for all-day events (RFC 5545).
+// A 2-day event Jan 1–2 is stored as end.date = "2026-01-03" (exclusive).
+// Subtract 1 day to convert to Oikos-style inclusive end date.
+function googleAllDayEndToInclusive(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+// Oikos stores inclusive end dates. Add 1 day when sending to Google (exclusive).
+function localAllDayEndToExclusive(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 // --------------------------------------------------------
 // Helfer: Google-Event in lokale DB upserten
 // --------------------------------------------------------
@@ -275,7 +293,9 @@ function upsertGoogleEvents(items, calRefId = null, calColor = GOOGLE_COLOR) {
 
     const allDay      = !!(item.start?.date && !item.start?.dateTime);
     const startDt     = allDay ? item.start.date : (item.start?.dateTime || item.start?.date);
-    const endDt       = allDay ? (item.end?.date || null) : (item.end?.dateTime || item.end?.date || null);
+    const endDt       = allDay
+      ? googleAllDayEndToInclusive(item.end?.date)
+      : (item.end?.dateTime || item.end?.date || null);
     const title       = item.summary || '(kein Titel)';
     const description = item.description || null;
     const location    = item.location    || null;
@@ -325,18 +345,24 @@ function localEventToGoogle(event) {
   };
 
   if (allDay) {
-    gEvent.start = { date: event.start_datetime.slice(0, 10) };
-    gEvent.end   = { date: event.end_datetime ? event.end_datetime.slice(0, 10) : event.start_datetime.slice(0, 10) };
+    const startDate = event.start_datetime.slice(0, 10);
+    const endDate   = event.end_datetime ? event.end_datetime.slice(0, 10) : startDate;
+    gEvent.start = { date: startDate };
+    gEvent.end   = { date: localAllDayEndToExclusive(endDate) };
   } else {
     gEvent.start = { dateTime: event.start_datetime, timeZone: 'Europe/Berlin' };
     gEvent.end   = { dateTime: event.end_datetime   || event.start_datetime, timeZone: 'Europe/Berlin' };
   }
 
   if (event.recurrence_rule) {
-    gEvent.recurrence = [event.recurrence_rule];
+    const rule = event.recurrence_rule.startsWith('RRULE:')
+      ? event.recurrence_rule
+      : `RRULE:${event.recurrence_rule}`;
+    gEvent.recurrence = [rule];
   }
 
   return gEvent;
 }
 
 export { getAuthUrl, handleCallback, getStatus, disconnect, sync };
+export const __test = { localEventToGoogle, googleAllDayEndToInclusive, localAllDayEndToExclusive };
