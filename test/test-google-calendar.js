@@ -1,0 +1,150 @@
+/**
+ * Modul: Google Calendar Sync – Unit-Tests
+ * Zweck: Validiert die Hilfsfunktionen für die Datumskonvertierung (RFC 5545
+ *        exklusive Enddaten) und das RRULE-Präfix beim Outbound-Sync.
+ * Ausführen: node test/test-google-calendar.js
+ */
+
+const { __test } = await import('../server/services/google-calendar.js');
+const { localEventToGoogle, googleAllDayEndToInclusive, localAllDayEndToExclusive } = __test;
+
+let passed = 0;
+let failed = 0;
+
+function test(name, fn) {
+  try { fn(); console.log(`  ✓ ${name}`); passed++; }
+  catch (err) { console.error(`  ✗ ${name}: ${err.message}`); failed++; }
+}
+function assert(cond, msg) { if (!cond) throw new Error(msg || 'Assertion fehlgeschlagen'); }
+function assertEqual(a, b, msg) {
+  if (a !== b) throw new Error(msg || `Expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`);
+}
+
+console.log('\n[Google Calendar Test] Datumskonvertierung + RRULE-Präfix\n');
+
+// --------------------------------------------------------
+// googleAllDayEndToInclusive – Google exklusiv → Oikos inklusiv
+// --------------------------------------------------------
+test('googleAllDayEndToInclusive: 2-Tage-Event (Jan 1–2)', () => {
+  assertEqual(googleAllDayEndToInclusive('2026-01-03'), '2026-01-02');
+});
+
+test('googleAllDayEndToInclusive: 1-Tage-Event (Jan 1)', () => {
+  assertEqual(googleAllDayEndToInclusive('2026-01-02'), '2026-01-01');
+});
+
+test('googleAllDayEndToInclusive: Monatsgrenze (Feb 28 → Feb 27)', () => {
+  assertEqual(googleAllDayEndToInclusive('2026-03-01'), '2026-02-28');
+});
+
+test('googleAllDayEndToInclusive: null → null', () => {
+  assertEqual(googleAllDayEndToInclusive(null), null);
+});
+
+// --------------------------------------------------------
+// localAllDayEndToExclusive – Oikos inklusiv → Google exklusiv
+// --------------------------------------------------------
+test('localAllDayEndToExclusive: Jan 2 → Jan 3', () => {
+  assertEqual(localAllDayEndToExclusive('2026-01-02'), '2026-01-03');
+});
+
+test('localAllDayEndToExclusive: Jahresgrenze (Dec 31 → Jan 1)', () => {
+  assertEqual(localAllDayEndToExclusive('2026-12-31'), '2027-01-01');
+});
+
+test('localAllDayEndToExclusive: null → null', () => {
+  assertEqual(localAllDayEndToExclusive(null), null);
+});
+
+test('Roundtrip: inklusiv → exklusiv → inklusiv', () => {
+  const inclusive = '2026-06-15';
+  const exclusive = localAllDayEndToExclusive(inclusive);
+  assertEqual(googleAllDayEndToInclusive(exclusive), inclusive);
+});
+
+// --------------------------------------------------------
+// localEventToGoogle – Ganztätige Events
+// --------------------------------------------------------
+test('localEventToGoogle: all-day end date wird um 1 Tag erhöht (exklusiv)', () => {
+  const event = {
+    title: 'Urlaub',
+    all_day: 1,
+    start_datetime: '2026-06-01',
+    end_datetime:   '2026-06-07',
+    recurrence_rule: null,
+  };
+  const g = localEventToGoogle(event);
+  assertEqual(g.start.date, '2026-06-01', 'start.date korrekt');
+  assertEqual(g.end.date,   '2026-06-08', 'end.date muss +1 Tag sein (exklusiv)');
+});
+
+test('localEventToGoogle: all-day single-day (kein end_datetime)', () => {
+  const event = {
+    title: 'Feiertag',
+    all_day: 1,
+    start_datetime: '2026-12-25',
+    end_datetime:   null,
+    recurrence_rule: null,
+  };
+  const g = localEventToGoogle(event);
+  assertEqual(g.start.date, '2026-12-25');
+  assertEqual(g.end.date,   '2026-12-26', 'Eintägiges Event: end = start + 1');
+});
+
+// --------------------------------------------------------
+// localEventToGoogle – RRULE-Präfix
+// --------------------------------------------------------
+test('localEventToGoogle: RRULE-Präfix wird hinzugefügt (ohne Präfix)', () => {
+  const event = {
+    title: 'Wöchentlicher Termin',
+    all_day: 0,
+    start_datetime: '2026-06-01T10:00',
+    end_datetime:   '2026-06-01T11:00',
+    recurrence_rule: 'FREQ=WEEKLY;INTERVAL=2;UNTIL=20260620T235959Z',
+  };
+  const g = localEventToGoogle(event);
+  assert(Array.isArray(g.recurrence), 'recurrence ist Array');
+  assertEqual(g.recurrence[0], 'RRULE:FREQ=WEEKLY;INTERVAL=2;UNTIL=20260620T235959Z');
+});
+
+test('localEventToGoogle: RRULE-Präfix wird nicht doppelt hinzugefügt', () => {
+  const event = {
+    title: 'Import-Event',
+    all_day: 0,
+    start_datetime: '2026-06-01T10:00',
+    end_datetime:   '2026-06-01T11:00',
+    recurrence_rule: 'RRULE:FREQ=WEEKLY;INTERVAL=1',
+  };
+  const g = localEventToGoogle(event);
+  assertEqual(g.recurrence[0], 'RRULE:FREQ=WEEKLY;INTERVAL=1', 'Kein doppeltes RRULE:');
+});
+
+test('localEventToGoogle: kein recurrence_rule → kein recurrence-Feld', () => {
+  const event = {
+    title: 'Einmalig',
+    all_day: 0,
+    start_datetime: '2026-06-01T10:00',
+    end_datetime:   '2026-06-01T11:00',
+    recurrence_rule: null,
+  };
+  const g = localEventToGoogle(event);
+  assert(!g.recurrence, 'recurrence-Feld darf nicht vorhanden sein');
+});
+
+test('localEventToGoogle: biweekly mit UNTIL wird korrekt gesendet', () => {
+  const event = {
+    title: 'Mehrtägig + Wiederholung',
+    all_day: 1,
+    start_datetime: '2026-06-01',
+    end_datetime:   '2026-06-03',
+    recurrence_rule: 'FREQ=WEEKLY;INTERVAL=2;UNTIL=20260831T235959Z',
+  };
+  const g = localEventToGoogle(event);
+  assertEqual(g.start.date,    '2026-06-01');
+  assertEqual(g.end.date,      '2026-06-04', 'Mehrtägiges all-day end exklusiv');
+  assertEqual(g.recurrence[0], 'RRULE:FREQ=WEEKLY;INTERVAL=2;UNTIL=20260831T235959Z');
+});
+
+// --------------------------------------------------------
+console.log(`\n  ${passed} passed, ${failed} failed\n`);
+if (failed > 0) process.exit(1);
