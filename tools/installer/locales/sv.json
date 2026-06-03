@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "Klient-ID",
     "googleSecretLabel": "Klienthemlighet",
+    "googleSelectNote": "Efter anslutning kan du välja vilken kalender som ska synkroniseras i appens inställningar (standard: primär kalender).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "Skapa ett appspecifikt lösenord på {{link}}.",
     "appleLink": "appleid.apple.com",

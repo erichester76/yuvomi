@@ -52,6 +52,7 @@
     "googleLink": "console.cloud.google.com",
     "googleIdLabel": "İstemci kimliği",
     "googleSecretLabel": "İstemci gizli anahtarı",
+    "googleSelectNote": "Bağlandıktan sonra, hangi takvimin senkronize edileceğini uygulama ayarlarından seçebilirsiniz (varsayılan: birincil takvim).",
     "apple": "Apple iCloud CalDAV",
     "appleHint": "{{link}} adresinde uygulamaya özel bir parola oluşturun.",
     "appleLink": "appleid.apple.com",
