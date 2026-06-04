@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.60.10] - 2026-06-04
+
+### Added
+- Add read-only mode for Google Calendar sync (#236). A new checkbox in Settings → Synchronization → Google Calendar lets admins prevent Oikos from pushing local events back to Google Calendar while still reading incoming events normally. The flag is stored in `sync_config` and cleared automatically when the Google Calendar connection is disconnected.
+
 ## [0.60.9] - 2026-06-04
 
 ### Fixed
