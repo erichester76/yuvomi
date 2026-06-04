@@ -853,6 +853,8 @@
     "googleCalendarSelect": "要同步的日历",
     "googleCalendarSelectHint": "切换日历会重新加载已同步的事件。",
     "googleCalendarPrimary": "主日历",
+    "googleReadonly": "只读",
+    "googleReadonlyHint": "Oikos 从 Google 日历读取事件，但不写回任何事件。",
     "calendarSwitched": "已切换日历 – 正在同步…",
     "appleCalendar": "Apple 日历（iCloud）",
     "syncNow": "立即同步",

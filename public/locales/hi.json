@@ -853,6 +853,8 @@
     "googleCalendarSelect": "सिंक करने के लिए कैलेंडर",
     "googleCalendarSelectHint": "कैलेंडर बदलने पर सिंक किए गए इवेंट फिर से लोड होते हैं।",
     "googleCalendarPrimary": "प्राथमिक",
+    "googleReadonly": "केवल पढ़ें",
+    "googleReadonlyHint": "Oikos Google Calendar से इवेंट पढ़ता है लेकिन कोई भी वापस नहीं लिखता।",
     "calendarSwitched": "कैलेंडर बदला गया – सिंक हो रहा है…",
     "appleCalendar": "Apple कैलेंडर (iCloud)",
     "syncNow": "अभी सिंक करें",

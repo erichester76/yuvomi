@@ -853,6 +853,8 @@
     "googleCalendarSelect": "Ημερολόγιο για συγχρονισμό",
     "googleCalendarSelectHint": "Η αλλαγή ημερολογίου επαναφορτώνει τα συγχρονισμένα συμβάντα.",
     "googleCalendarPrimary": "Κύριο",
+    "googleReadonly": "Μόνο ανάγνωση",
+    "googleReadonlyHint": "Το Oikos διαβάζει γεγονότα από το Google Calendar αλλά δεν γράφει κανένα πίσω.",
     "calendarSwitched": "Το ημερολόγιο άλλαξε – συγχρονισμός…",
     "appleCalendar": "Apple Calendar (iCloud)",
     "syncNow": "Συγχρονισμός τώρα",

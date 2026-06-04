@@ -859,6 +859,8 @@
     "googleCalendarSelect": "Te synchroniseren kalender",
     "googleCalendarSelectHint": "Bij het wisselen van kalender worden de gesynchroniseerde evenementen opnieuw geladen.",
     "googleCalendarPrimary": "Primair",
+    "googleReadonly": "Alleen-lezen",
+    "googleReadonlyHint": "Oikos leest gebeurtenissen van Google Calendar maar schrijft er geen terug.",
     "calendarSwitched": "Kalender gewisseld – synchroniseren…",
     "appleCalendar": "Apple Agenda (iCloud)",
     "syncNow": "Nu synchroniseren",

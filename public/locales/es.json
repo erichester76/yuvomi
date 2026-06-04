@@ -853,6 +853,8 @@
     "googleCalendarSelect": "Calendario a sincronizar",
     "googleCalendarSelectHint": "Al cambiar de calendario se recargan los eventos sincronizados.",
     "googleCalendarPrimary": "Principal",
+    "googleReadonly": "Solo lectura",
+    "googleReadonlyHint": "Oikos lee eventos de Google Calendar pero no los escribe de vuelta.",
     "calendarSwitched": "Calendario cambiado – sincronizando…",
     "appleCalendar": "Apple Calendar (iCloud)",
     "syncNow": "Sincronizar ahora",

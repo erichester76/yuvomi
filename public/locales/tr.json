@@ -853,6 +853,8 @@
     "googleCalendarSelect": "Senkronize edilecek takvim",
     "googleCalendarSelectHint": "Takvimi değiştirmek senkronize edilen etkinlikleri yeniden yükler.",
     "googleCalendarPrimary": "Birincil",
+    "googleReadonly": "Salt okunur",
+    "googleReadonlyHint": "Oikos, Google Takvim'den etkinlikleri okur ancak hiçbirini geri yazmaz.",
     "calendarSwitched": "Takvim değiştirildi – senkronize ediliyor…",
     "appleCalendar": "Apple Takvim (iCloud)",
     "syncNow": "Şimdi senkronize et",

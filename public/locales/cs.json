@@ -871,6 +871,8 @@
     "googleCalendarSelect": "Kalendář k synchronizaci",
     "googleCalendarSelectHint": "Při změně kalendáře se synchronizované události znovu načtou.",
     "googleCalendarPrimary": "Primární",
+    "googleReadonly": "Pouze pro čtení",
+    "googleReadonlyHint": "Oikos čte události z Google Kalendáře, ale žádné nezapisuje zpět.",
     "calendarSwitched": "Kalendář přepnut – probíhá synchronizace…",
     "appleCalendar": "Apple Calendar (iCloud)",
     "syncNow": "Synchronizovat nyní",

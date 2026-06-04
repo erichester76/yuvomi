@@ -853,6 +853,8 @@
     "googleCalendarSelect": "同期するカレンダー",
     "googleCalendarSelectHint": "カレンダーを切り替えると、同期されたイベントが再読み込みされます。",
     "googleCalendarPrimary": "メイン",
+    "googleReadonly": "読み取り専用",
+    "googleReadonlyHint": "Oikos は Google カレンダーのイベントを読み取りますが、書き戻しません。",
     "calendarSwitched": "カレンダーを切り替えました – 同期中…",
     "appleCalendar": "Apple カレンダー (iCloud)",
     "syncNow": "今すぐ同期",

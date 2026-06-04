@@ -853,6 +853,8 @@
     "googleCalendarSelect": "Календарь для синхронизации",
     "googleCalendarSelectHint": "При смене календаря синхронизированные события загружаются заново.",
     "googleCalendarPrimary": "Основной",
+    "googleReadonly": "Только чтение",
+    "googleReadonlyHint": "Oikos читает события из Google Календаря, но не записывает их обратно.",
     "calendarSwitched": "Календарь изменён – синхронизация…",
     "appleCalendar": "Apple Calendar (iCloud)",
     "syncNow": "Синхронизировать сейчас",

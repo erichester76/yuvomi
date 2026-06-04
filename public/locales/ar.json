@@ -853,6 +853,8 @@
     "googleCalendarSelect": "التقويم المراد مزامنته",
     "googleCalendarSelectHint": "تغيير التقويم يعيد تحميل الأحداث المتزامنة.",
     "googleCalendarPrimary": "أساسي",
+    "googleReadonly": "للقراءة فقط",
+    "googleReadonlyHint": "يقرأ Oikos الأحداث من تقويم Google لكنه لا يكتب أيًا منها مرة أخرى.",
     "calendarSwitched": "تم تغيير التقويم – جارٍ المزامنة…",
     "appleCalendar": "تقويم Apple (iCloud)",
     "syncNow": "المزامنة الآن",

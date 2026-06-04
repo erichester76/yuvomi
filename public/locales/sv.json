@@ -853,6 +853,8 @@
     "googleCalendarSelect": "Kalender att synkronisera",
     "googleCalendarSelectHint": "Att byta kalender läser om de synkroniserade händelserna.",
     "googleCalendarPrimary": "Primär",
+    "googleReadonly": "Skrivskyddad",
+    "googleReadonlyHint": "Oikos läser händelser från Google Kalender men skriver inte tillbaka några.",
     "calendarSwitched": "Kalender bytt – synkroniserar…",
     "appleCalendar": "Apple Calendar (iCloud)",
     "syncNow": "Synkronisera nu",
