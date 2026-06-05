@@ -757,7 +757,7 @@ Skeleton loading instead of spinners (skeleton renders all 9 widgets at their co
 
 **Features:**
 - CRUD + subtasks (max 2 levels, checkbox list, progress bar)
-- **Multi-person assignment:** tasks can be assigned to multiple family members simultaneously via `UserMultiSelect` checkbox dropdown; stacked avatars (up to 3 visible + `+N` overflow badge) shown on task cards and Kanban
+- **Multi-person assignment:** tasks can be assigned to multiple family members simultaneously via `UserMultiSelect` checkbox dropdown; stacked avatar circles (up to 3 visible + `+N` overflow badge) shown on task cards and Kanban — each circle shows the member's profile photo if set, otherwise coloured initials
 - Priorities shown visually via color/icon
 - Recurring: automatically create next instance on completion
 - Archive: completed tasks can be archived (status = 'archived'); visible in a separate Archived filter
@@ -829,7 +829,7 @@ Masonry grid with colored sticky notes.
 
 - CRUD: title (optional), content, color
 - Pin → appears at top + on dashboard
-- Creator shown (avatar color)
+- Creator shown (profile photo if set, else coloured avatar with initials)
 - Markdown-light: bold, italic, lists (regex-based)
 - Full-text search: client-side filter bar, filters instantly by title + content
 
@@ -913,7 +913,7 @@ User management and app configuration. Logged-in users only.
 - **Tab navigation:** Settings is organized in nine tabs (General, Meals, Budget, Shopping, Synchronization, Family, API Tokens, Backup, Account). Admin-only tabs: Family, API Tokens, Backup. Active tab persists in sessionStorage, Synchronization tab auto-activates after OAuth callbacks. On desktop the shared sub-tab bar becomes a sticky local navigation column; on mobile it remains horizontally scrollable with gradient scroll affordances and keyboard-accessible tab behavior.
 - **Information architecture (v0.55.10):** major settings areas use distinct card modifiers for theme, app info, localization/date-time, modules, account, family, API tokens, sync, and backup sections while preserving existing form IDs and API behavior.
 - **Family management (admin):** assign a `family_role` (Dad, Mom, Parent, Child, Grandparent, Relative, Other) to each user, and set per-member phone, email, and birthday — automatically synced to Contacts and Birthdays. Displayed in the family member list and profile views.
-- **Profile picture:** users can upload a personal avatar (PNG/JPEG/WebP/GIF, ≤ 5 MB), stored as a Base64 data URL in `avatar_data`. Displayed alongside display name across the app.
+- **Profile picture:** users can upload a personal avatar (PNG/JPEG/WebP/GIF, ≤ 5 MB), stored as a Base64 data URL in `avatar_data`. Shown in all avatar circles throughout the app — task cards, calendar agenda, user assignment picker, dashboard task widget, and notes creator badge — with coloured initials as fallback when no photo is set.
 - **App info:** version, license
 
 ### Budget (`/budget`)
