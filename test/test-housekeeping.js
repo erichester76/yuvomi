@@ -139,3 +139,13 @@ test('staff login: blocked for housekeeping worker accounts', () => {
   const notStaff = db.prepare('SELECT 1 FROM housekeeping_workers WHERE user_id = ?').get(normalId);
   assert.equal(notStaff, undefined, 'regular user should not be staff');
 });
+
+test('hourly rate: schema has rate_type/hourly_rate columns', () => {
+  const wCols = db.prepare(`PRAGMA table_info(housekeeping_workers)`).all().map((c) => c.name);
+  assert.ok(wCols.includes('rate_type'), 'housekeeping_workers should have rate_type');
+  assert.ok(wCols.includes('hourly_rate'), 'housekeeping_workers should have hourly_rate');
+  const sCols = db.prepare(`PRAGMA table_info(housekeeping_work_sessions)`).all().map((c) => c.name);
+  assert.ok(sCols.includes('rate_type'), 'housekeeping_work_sessions should have rate_type');
+  assert.ok(sCols.includes('hourly_rate'), 'housekeeping_work_sessions should have hourly_rate');
+  assert.ok(sCols.includes('minutes_worked'), 'housekeeping_work_sessions should have minutes_worked');
+});
