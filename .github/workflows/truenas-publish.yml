@@ -1,6 +1,8 @@
 name: TrueNAS Catalog Publish
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       bump:
@@ -23,16 +25,7 @@ jobs:
       - name: Checkout Oikos
         uses: actions/checkout@v4
         with:
-          ref: main          # nicht den Tag-Commit (detached HEAD) — sonst kein sauberer Push auf main
-          fetch-depth: 0
-
-      - name: Checkout TrueNAS fork
-        uses: actions/checkout@v4
-        with:
-          repository: ulsklyc/apps
-          ref: master          # community/oikos wird unten frisch aus upstream gebaut (nach Merge gelöscht)
-          token: ${{ secrets.TRUENAS_FORK_TOKEN }}
-          path: truenas-apps
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node
@@ -40,44 +33,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Prepare community/oikos branch from upstream
-        working-directory: truenas-apps
-        run: |
-          git remote add upstream https://github.com/truenas/apps.git
-          git fetch upstream master --depth=1
-          git checkout -B community/oikos upstream/master
-
-      - name: Generate TrueNAS files
+      - name: Generate TrueNAS files & bump catalog version
         id: gen
         env:
           BUMP_INPUT: ${{ github.event.inputs.bump }}
         run: |
           BUMP="${BUMP_INPUT:-patch}"
+          mkdir -p /tmp/truenas-out
           node tools/truenas/generate.mjs --bump="$BUMP" \
-            --out "$GITHUB_WORKSPACE/truenas-apps/ix-dev/community/oikos"
-          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+            --out "/tmp/truenas-out/ix-dev/community/oikos"
           echo "catalog=$(node -p "require('./deploy/truenas/catalog-version.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Push fork branch
-        id: push
-        working-directory: truenas-apps
-        env:
-          VERSION: ${{ steps.gen.outputs.version }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ix-dev/community/oikos
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Keine Änderungen — nichts zu veröffentlichen."
-            exit 0
-          fi
-          git commit -m "fix(oikos): bump to v$VERSION"
-          git push --force origin community/oikos   # Branch wird pro Lauf frisch aus upstream gebaut
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-
       - name: Commit catalog-version.json back to Oikos
-        if: steps.push.outputs.changed == 'true'
         env:
           CATALOG: ${{ steps.gen.outputs.catalog }}
         run: |
@@ -88,4 +55,3 @@ jobs:
             git commit -m "chore(truenas): bump catalog version to $CATALOG [skip ci]"
             git push origin HEAD:main
           fi
-
