@@ -70,6 +70,7 @@ npm run test:caldav
 npm run test:carddav
 npm run test:split-expenses
 npm run test:backup-scheduler
+npm run test:housekeeping
 npm run test:mobile-scroll-layout
 npm run test:frontend-audit
 ```

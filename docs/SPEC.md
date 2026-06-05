@@ -503,12 +503,14 @@ Individual payment records for a budget loan. Each installment number is unique 
 | created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
 
 ### Housekeeping Workers
-Staff profiles for the Housekeeping module (migration v34).
+Staff profiles for the Housekeeping module (migrations v34, v48).
 
 | Column | Type | Constraint |
 |--------|------|-----------|
 | user_id | INTEGER | FK → Users (CASCADE delete), NOT NULL UNIQUE |
 | daily_rate | REAL | NOT NULL DEFAULT 0 CHECK(>= 0) |
+| rate_type | TEXT | 'daily' (default) or 'hourly' CHECK(rate_type IN ('daily','hourly')) |
+| hourly_rate | REAL | NOT NULL DEFAULT 0 CHECK(>= 0) |
 | payment_schedule | TEXT | 'daily', 'twice_monthly', 'monthly' (default) |
 | calendar_color | TEXT | HEX, default '#7C3AED' |
 | notes | TEXT | nullable |
@@ -516,7 +518,7 @@ Staff profiles for the Housekeeping module (migration v34).
 | updated_at | TEXT | ISO 8601 |
 
 ### Housekeeping Work Sessions
-Individual check-in/check-out sessions (migrations v33, v34, v35, v36, v37).
+Individual check-in/check-out sessions (migrations v33, v34, v35, v36, v37, v48).
 
 | Column | Type | Constraint |
 |--------|------|-----------|
@@ -524,6 +526,9 @@ Individual check-in/check-out sessions (migrations v33, v34, v35, v36, v37).
 | check_out | TEXT | DATETIME, nullable (open session when NULL) |
 | daily_rate | REAL | NOT NULL DEFAULT 0 |
 | extras | REAL | NOT NULL DEFAULT 0 |
+| rate_type | TEXT | 'daily' (default) or 'hourly'; snapshotted from worker at check-in |
+| hourly_rate | REAL | NOT NULL DEFAULT 0; snapshotted from worker at check-in |
+| minutes_worked | INTEGER | nullable; computed from check_in/check_out diff on check-out |
 | worker_id | INTEGER | FK → Housekeeping Workers (SET NULL on delete), nullable |
 | calendar_event_id | INTEGER | FK → Calendar Events (SET NULL on delete), nullable |
 | payment_task_id | INTEGER | FK → Tasks (SET NULL on delete), nullable |
@@ -858,13 +863,15 @@ Upload and manage family files with per-document access control.
 
 Module for managing household staff workflows. Navigation uses violet accent theming.
 
-- **Staff profiles:** each worker is linked to a user account; configurable daily rate, payment schedule (daily / twice monthly / monthly), calendar color, and notes
+- **Staff profiles:** each worker is linked to a user account; configurable billing model (daily flat rate or hourly), payment schedule (daily / twice monthly / monthly), calendar color, and notes; staff accounts are hidden from task assignment, dashboard member avatars, and the family contact list — their birthdays remain visible in the calendar and birthday list; staff accounts cannot log in to the app (login blocked at authentication layer)
 - **Work sessions:** check-in/check-out with timestamps; open sessions shown prominently; automatic local calendar event created on check-in; optional payment task created on check-in (toggle in Settings → Housekeeping)
-- **Payment tracking:** mark sessions as paid; monthly visit log with payment summaries and paid/unpaid breakdown
-- **Recurring chores (`housekeeping_decay_tasks`):** define chores by name, area, and frequency in days; urgency level computed from elapsed time since `last_completed`; visual decay indicator
+- **Hourly billing:** workers with `rate_type = 'hourly'` have their `hourly_rate` and `rate_type` snapshotted at check-in; on check-out the server computes `minutes_worked` from the session duration, rounds to the nearest 15 minutes, and stores the resulting amount in `daily_rate`; the visit editor lets staff adjust `minutes_worked` directly with a live recalculation preview
+- **Payment tracking:** mark sessions as paid; monthly visit log with payment summaries and paid/unpaid breakdown; visits can be edited from the housekeeping dashboard (recent visits section) or directly from a calendar event tap (deep-links via `?editVisit=<id>`)
+- **Recurring chores (`housekeeping_decay_tasks`):** define chores by name, area, and frequency in days; urgency level computed from elapsed time since `last_completed`; visual decay indicator; chores can be edited, deleted, or undone (clear `last_completed`) directly from the chore list
 - **Supply requests:** request supplies with optional quantity; supplies can be linked directly to shopping lists
-- **Dashboard integration:** housekeeping widgets show today's open sessions and upcoming chores
+- **Dashboard integration:** housekeeping widgets show today's open sessions, upcoming chores, and a recent-visits strip with inline edit access
 - **Document folder:** a "Hausreinigung" folder in Documents is auto-created on first worker creation; receipts can be linked to individual work sessions
+- **API:** `GET /api/v1/housekeeping/visits/:id` returns a single work session with worker name, task list, and linked document
 
 ### First-run setup (`/setup`) (v0.58.0)
 

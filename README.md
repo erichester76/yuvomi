@@ -48,7 +48,7 @@ Each module is independent. Use what fits, skip what doesn't.
 | **Calendar** | Google Calendar (OAuth) and CalDAV sync (iCloud, Nextcloud, Radicale). ICS subscriptions, recurring events, file attachments, and readable month/agenda views. |
 | **Documents** | Upload and organize family files. Folders, tags, per-document visibility, drag-and-drop. |
 | **Budget** | Income, expenses, recurring entries, trends, CSV export. Split Expenses for shared costs with automatic debt simplification. |
-| **Housekeeping** | Manage household staff — schedules, check-in/out, payments, chores, supply requests. |
+| **Housekeeping** | Manage household staff — schedules, check-in/out, daily or hourly billing, chores, supply requests. |
 | **Notes & Contacts** | Colored sticky notes with Markdown. Contact directory with CardDAV sync. |
 | **Birthdays** | Birthday tracker with automatic calendar events, age display, and custom reminders. |
 | **Family** | Member profiles with roles, photos, phone, email, and birthday — synced to Contacts and Birthdays. |

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.63.0] - 2026-06-05
+
+### Added
+- Workers can now use either a **daily flat rate** or an **hourly rate** (`rate_type = 'hourly'`) (#239). The worker form has a rate-type selector; check-out computes `minutes_worked` from the session duration, rounds to the nearest 15 minutes, and stores the resulting amount. The visit editor shows a live recalculation preview when adjusting worked minutes.
+- Decay tasks (recurring chores) can now be **edited, deleted, and undone** directly from the chore list (#244). Undo clears `last_completed`, resetting the urgency indicator to "not yet done".
+- Housekeeping visits can be **edited from the dashboard** (recent-visits strip) and **from the calendar** — tapping a housekeeping calendar event opens the visit editor via a deep-link (`?editVisit=<id>`) (#245).
+- Staff accounts (users with a `housekeeping_workers` row) are now **hidden** from task-assignment pickers, dashboard member avatars, and the family contact list; their birthday entries remain visible in the calendar and birthday list (#243).
+
+### Security
+- Accounts linked to a housekeeping worker row are now **blocked from logging in** (#243). The login endpoint returns HTTP 403 for such accounts, preventing staff from accessing family data.
+
 ## [0.62.4] - 2026-06-05
 
 ### Fixed
