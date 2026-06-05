@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.63.1] - 2026-06-05
+
+### Fixed
+- Input fields in the Settings page (and throughout the app) were missing their visible border. `glass.css` was overriding `.form-input` `border-color` with `--glass-border-subtle`, which resolves to `rgba(255,255,255,0.35)` in light mode — effectively invisible on white backgrounds. Changed to `--color-border` (#253).
+
 ## [0.63.0] - 2026-06-05
 
 ### Added
