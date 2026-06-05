@@ -182,6 +182,20 @@ export function parseDateInput(value) {
   const isoMatch = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) return isValidDateParts(isoMatch[1], isoMatch[2], isoMatch[3]) ? raw : '';
 
+  if (/^\d{8}$/.test(raw)) {
+    const pref = getDateFormatPreference();
+    let year, month, day;
+    if (pref.startsWith('ymd')) {
+      year = raw.slice(0, 4); month = raw.slice(4, 6); day = raw.slice(6, 8);
+    } else if (pref.startsWith('dmy')) {
+      day = raw.slice(0, 2); month = raw.slice(2, 4); year = raw.slice(4, 8);
+    } else {
+      month = raw.slice(0, 2); day = raw.slice(2, 4); year = raw.slice(4, 8);
+    }
+    if (!isValidDateParts(year, month, day)) return '';
+    return `${year}-${month}-${day}`;
+  }
+
   const ymdSeparatorMatch = raw.match(/^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);
   if (ymdSeparatorMatch && getDateFormatPreference().startsWith('ymd')) {
     const [, year, month, day] = ymdSeparatorMatch;

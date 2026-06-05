@@ -127,3 +127,25 @@ test('formatTimeInput: bare hour (12 h) formats with AM/PM', () => {
   assert.equal(formatTimeInput('15'), '3:00 PM');
   localStorage.setItem('oikos-time-format', '24h');
 });
+
+test('parseDateInput: 8 raw digits (DMY)', () => {
+  localStorage.setItem('oikos-date-format', 'dmy');
+  assert.equal(parseDateInput('09062026'), '2026-06-09');
+  assert.equal(parseDateInput('01012000'), '2000-01-01');
+});
+
+test('parseDateInput: 8 raw digits (MDY)', () => {
+  localStorage.setItem('oikos-date-format', 'mdy');
+  assert.equal(parseDateInput('09062026'), '2026-09-06');
+});
+
+test('parseDateInput: 8 raw digits (YMD)', () => {
+  localStorage.setItem('oikos-date-format', 'ymd');
+  assert.equal(parseDateInput('20260609'), '2026-06-09');
+});
+
+test('parseDateInput: 8 raw digits — invalid date returns empty string', () => {
+  localStorage.setItem('oikos-date-format', 'dmy');
+  assert.equal(parseDateInput('99992026'), '');
+  assert.equal(parseDateInput('00000000'), '');
+});
