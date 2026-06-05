@@ -1507,6 +1507,7 @@
     "pendingPayments": "Väntande betalningar",
     "monthlyPayments": "Månadsbetalningar",
     "noPaymentData": "Inga betalningsdata ännu.",
+    "recentVisits": "Senaste besök",
     "noVisits": "Inga besök ännu",
     "noWorkerTitle": "Ingen städprofil",
     "noWorkerHint": "Skapa profilen för kontakt, dagspris och betalningsschema.",

@@ -268,6 +268,23 @@ function renderDashboard(content) {
     `;
   }).join('');
 
+  const recentVisits = (state.reports || []).slice(0, 5);
+  const recentRows = recentVisits.map((visit) => `
+    <article class="housekeeping-staff-log-row">
+      <div>
+        <strong>${esc(formatDate(visit.check_in))}</strong>
+        <span>${esc(visit.worker_name || t('housekeeping.staff'))} · ${esc(money(visit.total_amount))} · ${esc(visit.paid_at ? t('housekeeping.paymentPaid') : t('housekeeping.paymentPending'))}</span>
+      </div>
+      <div class="housekeeping-staff-log-row__actions">
+        <button class="btn btn--secondary housekeeping-log-action" type="button" data-edit-visit="${esc(visit.id)}"
+                aria-label="${esc(t('housekeeping.editVisit'))}">
+          <i data-lucide="edit-2" aria-hidden="true"></i>
+          <span>${esc(t('housekeeping.editVisit'))}</span>
+        </button>
+      </div>
+    </article>
+  `).join('');
+
   content.insertAdjacentHTML('beforeend', `
     ${renderWorkerSummary()}
     <section class="housekeeping-metrics">
@@ -297,9 +314,24 @@ function renderDashboard(content) {
         ${bars || `<p class="housekeeping-muted">${esc(t('housekeeping.noPaymentData'))}</p>`}
       </div>
     </section>
+    <section class="housekeeping-card">
+      <div class="housekeeping-section-heading">
+        <h2>${esc(t('housekeeping.recentVisits'))}</h2>
+      </div>
+      <div class="housekeeping-staff-log-list">
+        ${recentRows || `<p class="housekeeping-muted">${esc(t('housekeeping.noVisits'))}</p>`}
+      </div>
+    </section>
   `);
+  if (window.lucide) window.lucide.createIcons({ el: content });
   content.querySelectorAll('[data-worker-check]').forEach((btn) => {
     btn.addEventListener('click', () => toggleSession(document.querySelector('.page-transition') || document.body, btn.dataset.workerCheck));
+  });
+  content.querySelectorAll('[data-edit-visit]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const visit = (state.reports || []).find((v) => String(v.id) === btn.dataset.editVisit);
+      if (visit) openVisitEditModal(visit, content, { onDone: renderDashboard });
+    });
   });
 }
 
@@ -757,7 +789,7 @@ function openTaskEditModal(task, content) {
   });
 }
 
-function openVisitEditModal(visit, content) {
+function openVisitEditModal(visit, content, { onDone } = {}) {
   const worker = state.workers.find((item) => String(item.id) === String(visit.worker_id)) || null;
   openModal({
     title: t('housekeeping.editVisit'),
@@ -839,7 +871,7 @@ function openVisitEditModal(visit, content) {
           state.staffLogMonth = dateValue.slice(0, 7);
           await loadStaffVisits();
           closeModal({ force: true });
-          renderStaff(content);
+          (onDone || renderStaff)(content);
         } catch (err) {
           window.oikos?.showToast(err.message, 'danger');
         }

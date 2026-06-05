@@ -1507,6 +1507,7 @@
     "pendingPayments": "Pending payments",
     "monthlyPayments": "Monthly payments",
     "noPaymentData": "No payment data yet.",
+    "recentVisits": "Son ziyaretler",
     "noVisits": "No visits yet",
     "noWorkerTitle": "No housekeeper profile",
     "noWorkerHint": "Create the worker profile to define contacts, rate, and payment schedule.",

@@ -1511,6 +1511,7 @@
     "pendingPayments": "Offene Zahlungen",
     "monthlyPayments": "Monatliche Zahlungen",
     "noPaymentData": "Noch keine Zahlungsdaten.",
+    "recentVisits": "Letzte Besuche",
     "noVisits": "Noch keine Besuche",
     "noWorkerTitle": "Kein Hauspflege-Profil",
     "noWorkerHint": "Profil anlegen, um Kontakte, Tagessatz und Zahlungsrhythmus festzulegen.",

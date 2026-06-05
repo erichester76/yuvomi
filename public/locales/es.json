@@ -1507,6 +1507,7 @@
     "pendingPayments": "Pagos pendientes",
     "monthlyPayments": "Pagos mensuales",
     "noPaymentData": "Aún no hay datos de pago.",
+    "recentVisits": "Últimas visitas",
     "noVisits": "Sin visitas todavía",
     "noWorkerTitle": "Sin perfil de limpieza",
     "noWorkerHint": "Crea el perfil para definir contactos, tarifa y calendario de pago.",
