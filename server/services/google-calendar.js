@@ -373,17 +373,11 @@ async function sync() {
       }
       let role = roleCache.get(targetId);
       if (role === undefined) {
-        try {
-          const meta = await calendar.calendarList.get({ calendarId: targetId });
-          role = meta.data.accessRole;
-        } catch (err) {
-          log.warn(`Access role for ${targetId} not retrievable: ${err.message}`);
-          role = null;
-        }
-        roleCache.set(targetId, role);
+        // Inbound metadata fetch failed for this calendar; treat as not writable.
+        role = null;
       }
       if (!isWritableRole(role)) {
-        log.warn(`Target calendar ${targetId} is read-only, skipping event ${event.id}.`);
+        log.warn(`Target calendar ${targetId} has no writable role (role=${role}), skipping event ${event.id}.`);
         continue;
       }
       try {
