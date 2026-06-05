@@ -51,6 +51,11 @@ sync targets below and update **only** what the change actually affects.
 | `docs/installation.md` | Env-var tables, install options, HTTPS/reverse-proxy, backup/restore, troubleshooting |
 | `.env.example` | Every env var with a sensible comment/default — keep in lockstep with `tools/installer/env-schema.js` |
 | `docker-compose.yml` | Port mapping, env passthrough, volumes (only when deployment behavior changed) |
+| `podman-compose.yml` | Mirror `docker-compose.yml`: port mapping, env passthrough, volumes |
+| `tools/quadlet/oikos.container` | Podman Quadlet — ports, env, volumes (mirror compose) |
+| `templates/oikos.xml` | Unraid CA template — **every** env var/port/volume is a hand-written `<Config>` (no fallback). Add/edit/remove the matching entry; mask secrets (`Mask="true"`), put optional integrations on `Display="advanced"` |
+| `ca_profile.xml` | Unraid CA profile blurb — only when the app overview / module list changed |
+| `deploy/truenas/questions.yaml` + `deploy/truenas/templates/docker-compose.yaml` | TrueNAS source. Required secrets / new ports / new volumes only — optional env vars are covered by the generic `additional_envs` list. The published catalog files are generated from here by `tools/truenas/generate.mjs`; never hand-edit the fork |
 | `tools/installer/README.md` | Installer steps, requirements, endpoints, localization, design |
 | `docs/index.html` | Version badge (hero + footer), feature showcase/grid, social-proof counts. **EN + DE i18n in lockstep** |
 | `docs/install.html` | Install options/cards, optional-integration cards. **EN + DE i18n in lockstep** |
@@ -71,6 +76,10 @@ sync targets below and update **only** what the change actually affects.
 - **Never touch historical/working docs:** `docs/archive/**`, `docs/design/**`,
   `docs/UI-UX-AUDIT-2026-05.md`, `docs/installer-*.md`, `BACKLOG.md`, `SECURITY_RESEARCH.md`.
 - `CHANGELOG.md` is read-only here — it is the source of truth, maintained by `release-prep`.
+- **Deploy descriptors are primarily kept in sync *during implementation*** by the `deploy-targets`
+  rule (`.claude/rules/deploy-targets.md`), which fires whenever the env schema, Compose/Podman,
+  Unraid, or TrueNAS files are edited and treats those updates as part of the task's definition of
+  done. This skill is the release-time backstop — still verify each deploy descriptor row above.
 - **`CLAUDE.md` is scoped:** edit **only** the `## Commands` test-script list and the
   `## Environment` env-var list (see sync targets). Everything else in `CLAUDE.md` — architecture,
   hard constraints, key locations, conventions — belongs to its own maintenance process and is
