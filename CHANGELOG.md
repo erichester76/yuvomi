@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.62.1] - 2026-06-05
+
+### Fixed
+- Changing an event's start date in the calendar dialog now moves the end date by the same number of days, preserving the event's duration. Previously the end date stayed put, so moving the start into the future could leave the end on an earlier day and the event was saved with an end before its start. Saving an event whose end is before its start is now rejected with a clear message.
+
 ## [0.62.0] - 2026-06-05
 
 ### Added
