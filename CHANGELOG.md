@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.62.4] - 2026-06-05
+
+### Fixed
+- CalDAV outbound sync now generates RFC 5545-compliant datetime strings. Previously, `parseTimeInput` returned `HH:MM` (no seconds), and the ICS builder produced a 4-digit time (`HHMM`) instead of the required 6-digit `HHMMSS` format. Strict CalDAV servers such as mailbox.org rejected the invalid value and defaulted the event time to 00:00 (#246).
+- All-day events synced to CalDAV now use `DTSTART;VALUE=DATE` and an exclusive `DTEND` per RFC 5545, instead of being treated as timed events at midnight (#246).
+- Outbound CalDAV ICS now includes `DTSTAMP`, `LOCATION`, and `RRULE` fields, and handles missing `end_datetime` gracefully (#246).
+
 ## [0.62.3] - 2026-06-05
 
 ### Fixed
