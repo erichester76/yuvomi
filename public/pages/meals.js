@@ -729,6 +729,11 @@ function openMealModal(opts) {
         applyRecipe(presetRecipeId);
       }
       panel.querySelectorAll('.js-date-input').forEach((input) => {
+        input.addEventListener('keydown', (e) => {
+          if (e.ctrlKey || e.metaKey || e.altKey) return;
+          if (e.key.length !== 1) return;
+          if (!/[\d./\-]/.test(e.key)) e.preventDefault();
+        });
         input.addEventListener('blur', () => {
           const parsed = parseDateInput(input.value);
           if (parsed) input.value = formatDateInput(parsed);
