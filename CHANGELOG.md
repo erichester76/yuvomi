@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.63.4] - 2026-06-05
+
+### Fixed
+- Filter chip remove buttons now display a properly centred Lucide `x` SVG icon instead of a `×` text character, which was rendered off-centre due to font metrics (#265).
+
 ## [0.63.3] - 2026-06-05
 
 ### Added
