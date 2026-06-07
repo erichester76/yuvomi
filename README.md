@@ -21,9 +21,9 @@
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dashboard-dark-desktop.png">
-    <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/dashboard-light-desktop.png">
-    <img src="docs/screenshots/dashboard-light-desktop.png" alt="Oikos Dashboard" width="800">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dashboard-dark-web.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/dashboard-light-web.png">
+    <img src="docs/screenshots/dashboard-light-web.png" alt="Oikos Dashboard" width="800">
   </picture>
   <br>
   <sub>Toggle GitHub light/dark mode to see both themes &nbsp;·&nbsp; <a href="https://ulsklyc.github.io/oikos/">View all screenshots</a></sub>
