@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.15] - 2026-06-07
+
+### Fixed
+- Loading screen ("Oikos" spinner) is now correctly centered on desktop viewports. Previously, `.app-loading` shrank to its content width when `.app-shell` switched to `flex-direction: row` at ≥1024 px, pushing the spinner to the far left.
+
 ## [0.65.14] - 2026-06-07
 
 ### Fixed
