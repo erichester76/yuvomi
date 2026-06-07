@@ -31,7 +31,7 @@ async function startApp({ env = {}, db = {}, fetchFn } = {}) {
 }
 
 const OM_FETCH = async (url) => {
-  if (!String(url).includes('open-meteo.com')) throw new Error('unexpected URL: ' + url);
+  if (new URL(String(url)).hostname !== 'api.open-meteo.com') throw new Error('unexpected URL: ' + url);
   return {
     ok: true,
     json: async () => ({

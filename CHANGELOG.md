@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.2] - 2026-06-07
+
+### Security
+- Hardened the Open-Meteo weather test's upstream URL assertion to parse the URL and match the exact host (`api.open-meteo.com`) instead of a substring check, resolving a CodeQL "incomplete URL substring sanitization" alert (CWE-20).
+
 ## [0.65.1] - 2026-06-07
 
 ### Fixed
