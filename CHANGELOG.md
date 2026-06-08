@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.19] - 2026-06-08
+
+### Added
+- Assigned-user avatars now appear on the **Upcoming Events** dashboard widget, consistent with the Tasks widget. Each event card shows a stacked avatar row (profile photo if set, coloured initials otherwise) on the right side of the card.
+
 ## [0.65.18] - 2026-06-08
 
 ### Changed
