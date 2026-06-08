@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.20] - 2026-06-08
+
+### Added
+- Calendar events are now **coloured by their assignee's avatar colour**. When a single user is assigned the event background uses their avatar colour; when multiple users are assigned a diagonal CSS gradient (135 °) blends all their colours in equal segments. Events without assignees continue to use the manually set event colour, the calendar's colour, or a neutral grey fallback.
+- The event colour picker is visually disabled (greyed out with a hint text) while an assignee is set, reflecting that the assignee colour takes priority. Removing all assignees re-enables the picker.
+- Added `colorOverriddenByAssignee` i18n key to all 18 supported locales.
+
 ## [0.65.19] - 2026-06-08
 
 ### Added
