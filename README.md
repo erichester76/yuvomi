@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="docs/logo.svg" alt="Oikos" width="92" />
+  <img src="docs/logo.svg" alt="Yuvomi" width="92" />
 
-  <h1>Oikos</h1>
+  <h1>Yuvomi</h1>
   <p><strong>The self-hosted family planner. Private, offline-capable, and beautiful.</strong></p>
 
   <p>
@@ -51,14 +51,14 @@
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dashboard-dark-web.png">
           <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/dashboard-light-web.png">
-          <img src="docs/screenshots/dashboard-light-web.png" alt="Oikos dashboard — tasks, calendar events, meals and shopping at a glance" width="680">
+          <img src="docs/screenshots/dashboard-light-web.png" alt="Yuvomi dashboard — tasks, calendar events, meals and shopping at a glance" width="680">
         </picture>
       </td>
       <td width="28%" align="center" valign="middle">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dashboard-dark-mobile.png">
           <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/dashboard-light-mobile.png">
-          <img src="docs/screenshots/dashboard-light-mobile.png" alt="Oikos on mobile" width="148">
+          <img src="docs/screenshots/dashboard-light-mobile.png" alt="Yuvomi on mobile" width="148">
         </picture>
         <br>
         <sub>Mobile PWA</sub>
@@ -70,7 +70,7 @@
 
 <br>
 
-Oikos keeps your household organized — tasks, groceries, meals, calendar, budget, and more — in one private place, without cloud accounts or subscriptions. Runs as a Docker or Podman container on any home server or NAS, including rootless Podman on SELinux-enabled RHEL/Fedora/CentOS Stream systems. A polished, mobile-first PWA makes it feel native on every device.
+Yuvomi keeps your household organized — tasks, groceries, meals, calendar, budget, and more — in one private place, without cloud accounts or subscriptions. Runs as a Docker or Podman container on any home server or NAS, including rootless Podman on SELinux-enabled RHEL/Fedora/CentOS Stream systems. A polished, mobile-first PWA makes it feel native on every device.
 
 Each module is independent. Use what fits, skip what doesn't.
 
@@ -213,17 +213,17 @@ Open `http://localhost:3000`. The first visit walks you through creating your ad
 <table>
   <tr>
     <td><b>TrueNAS SCALE</b></td>
-    <td>Apps → Discover Apps → search <b>Oikos</b> → Install</td>
+    <td>Apps → Discover Apps → search <b>Yuvomi</b> → Install</td>
     <td>No terminal required. Community Apps Catalog. Version updates via Renovate.</td>
   </tr>
   <tr>
     <td><b>Umbrel</b></td>
-    <td>App Store → search <b>Oikos</b> → Install</td>
+    <td>App Store → search <b>Yuvomi</b> → Install</td>
     <td>One-click install. Everything stays on your Umbrel.</td>
   </tr>
   <tr>
     <td><b>Unraid</b></td>
-    <td>Apps → search <b>Oikos</b> → Apply</td>
+    <td>Apps → search <b>Yuvomi</b> → Apply</td>
     <td>Community Applications template. Set <code>SESSION_SECRET</code> during install.</td>
   </tr>
 </table>
