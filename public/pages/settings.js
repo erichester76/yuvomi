@@ -2400,6 +2400,7 @@ function bindEvents(container, user, users, categories, icsSubscriptions, apiTok
       container.querySelector('#add-member-form-card').classList.add('settings-card--hidden');
       container.querySelector('#add-member-btn').hidden = false;
       container.querySelector('#add-member-form').reset();
+      container.querySelector('#new-avatar-color').value = randomAvatarColor();
       container.querySelector('#member-error').hidden = true;
     });
   }
@@ -2436,6 +2437,7 @@ function bindEvents(container, user, users, categories, icsSubscriptions, apiTok
         users.push(res.user);
         list.insertAdjacentHTML('beforeend', memberHtml(res.user));
         addMemberForm.reset();
+        container.querySelector('#new-avatar-color').value = randomAvatarColor();
         container.querySelector('#add-member-form-card').classList.add('settings-card--hidden');
         container.querySelector('#add-member-btn').hidden = false;
         window.oikos?.showToast(t('settings.memberAddedToast', { name: res.user.display_name }), 'success');
