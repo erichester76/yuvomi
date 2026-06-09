@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.66.4] - 2026-06-09
+
+### Fixed
+- Sidebar navigation is now consistently aligned: the brand logomark and the icon wells of all nav items share the same horizontal center axis, the active/hover indicator pill is inset as a floating shape and vertically centered within its item, and the logo header has a fixed height so it no longer jumps when collapsing or expanding the sidebar.
+
 ## [0.66.3] - 2026-06-09
 
 ### Fixed

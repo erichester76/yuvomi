@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 
-const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8').replace(/\r/g, '');
 
 function walkJsFiles(dir) {
   const entries = readdirSync(new URL(dir, import.meta.url), { withFileTypes: true });
