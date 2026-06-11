@@ -259,7 +259,7 @@ function bindAddButton(container, user) {
           </div>
           <div class="form-group">
             <label class="form-label" for="cardav-username">${t('settings.cardavUsernameLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>
-            <input class="form-input" type="text" id="cardav-username" required autocomplete="username" />
+            <input class="form-input" type="text" id="cardav-username" required autocomplete="off" />
           </div>
           <div class="form-group">
             <label class="form-label" for="cardav-password">${t('settings.cardavPasswordLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>

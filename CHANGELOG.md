@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.2] - 2026-06-11
+
+### Fixed
+- **Settings credentials inputs**: replaced incorrect `autocomplete="new-password"` with `current-password` on external-service password fields (WebDAV document storage, DMS token), and replaced `autocomplete="username"` with `off` on external-service username fields (WebDAV backup, CalDAV, CardDAV, document storage) to prevent browsers from auto-filling app login credentials into unrelated service forms.
+
 ## [0.71.1] - 2026-06-11
 
 ### Fixed

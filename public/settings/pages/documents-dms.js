@@ -29,7 +29,7 @@ function buildAddForm(container) {
     </div>
     <div class="form-group">
       <label class="form-label" for="dms-token">${t('settings.dmsToken')}</label>
-      <input class="form-input" type="password" id="dms-token" required autocomplete="new-password" />
+      <input class="form-input" type="password" id="dms-token" required autocomplete="current-password" />
     </div>
     <div id="dms-form-error-host"></div>
     <div class="settings-form-actions">

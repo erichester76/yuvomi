@@ -332,7 +332,7 @@ function bindCalDAVAddButton(container, user) {
           </div>
           <div class="form-group">
             <label class="form-label" for="caldav-username">${t('settings.caldavUsernameLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>
-            <input class="form-input" type="text" id="caldav-username" required autocomplete="username" />
+            <input class="form-input" type="text" id="caldav-username" required autocomplete="off" />
           </div>
           <div class="form-group">
             <label class="form-label" for="caldav-password">${t('settings.caldavPasswordLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>

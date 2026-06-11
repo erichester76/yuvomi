@@ -84,7 +84,7 @@ function renderPage(container) {
           </div>
           <div class="form-group">
             <label class="form-label" for="webdav-username">${t('settings.backupWebdavUsername')}</label>
-            <input class="form-input" type="text" id="webdav-username" name="username" autocomplete="username" />
+            <input class="form-input" type="text" id="webdav-username" name="username" autocomplete="off" />
           </div>
           <div class="form-group">
             <label class="form-label" for="webdav-password">${t('settings.backupWebdavPassword')}</label>
