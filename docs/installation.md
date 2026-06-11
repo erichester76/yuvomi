@@ -508,7 +508,7 @@ Enable single sign-on via any OpenID Connect provider (Authentik, Keycloak, Goog
 | `OIDC_CLIENT_SECRET` | Client secret for the registered application | - | No |
 | `OIDC_REDIRECT_URI` | OAuth callback URL — must be registered with the provider (e.g. `https://oikos.example.com/api/v1/auth/oidc/callback`) | - | No |
 
-When all four variables are set, a **"Sign in with SSO"** button appears on the login page. The flow uses Authorization Code + PKCE (S256) with a nonce. A matching Yuvomi user account (same `oidc_sub`) must already exist — automatic provisioning is not supported.
+When all four variables are set, a **"Sign in with SSO"** button appears on the login page. The flow uses Authorization Code + PKCE (S256) with a nonce. On first login, the user is matched by their OIDC `sub`. If no match exists, an existing local account is linked automatically **only when the provider reports a verified email (`email_verified: true`) and exactly one local account holds that email address**; otherwise a new account is provisioned. Unverified or ambiguous emails never take over an existing account.
 
 ### Automated Backups (Optional)
 

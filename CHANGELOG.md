@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.5] - 2026-06-11
+
+### Fixed
+- **SSO account matching**: signing in via OIDC no longer always creates a new account (e.g. `username-1`) when one with the same email already exists. An existing local account is now linked automatically when the provider reports a verified email (`email_verified: true`) and exactly one account holds that address. Unverified or ambiguous emails still get a separate account, preventing account takeover.
+
 ## [0.71.4] - 2026-06-11
 
 ### Changed
