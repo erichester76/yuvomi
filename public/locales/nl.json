@@ -1083,7 +1083,7 @@
     "backupWebdavPassword": "Wachtwoord",
     "backupWebdavPasswordPlaceholder": "Voer in om opgeslagen wachtwoord te wijzigen",
     "backupWebdavPath": "Extern pad",
-    "backupWebdavPathPlaceholder": "/oikos/backups/",
+    "backupWebdavPathPlaceholder": "/yuvomi/backups/",
     "backupWebdavKeep": "Externe back-ups bewaren",
     "backupWebdavTestBtn": "Verbinding testen",
     "backupWebdavSaveBtn": "Opslaan",

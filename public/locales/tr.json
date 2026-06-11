@@ -1107,7 +1107,7 @@
     "backupWebdavPassword": "Şifre",
     "backupWebdavPasswordPlaceholder": "Kayıtlı şifreyi değiştirmek için girin",
     "backupWebdavPath": "Uzak yol",
-    "backupWebdavPathPlaceholder": "/oikos/backups/",
+    "backupWebdavPathPlaceholder": "/yuvomi/backups/",
     "backupWebdavKeep": "Tutulacak uzak yedek sayısı",
     "backupWebdavTestBtn": "Bağlantıyı test et",
     "backupWebdavSaveBtn": "Kaydet",

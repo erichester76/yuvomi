@@ -301,7 +301,7 @@ async function loadWebdavConfig(container) {
     setVal('webdav-url', d.url ?? '');
     setVal('webdav-username', d.username ?? '');
     setVal('webdav-password', d.password ?? '');
-    setVal('webdav-path', d.remotePath ?? '/oikos/backups/');
+    setVal('webdav-path', d.remotePath ?? '/yuvomi/backups/');
     setVal('webdav-keep', d.keep ?? 7);
 
     if (d.envControlled) {
@@ -393,7 +393,7 @@ function bindWebdavBackupEvents(container) {
       enabled: form.querySelector('#webdav-enabled')?.checked ?? false,
       url: form.querySelector('#webdav-url')?.value?.trim() || null,
       username: form.querySelector('#webdav-username')?.value?.trim() || null,
-      remotePath: form.querySelector('#webdav-path')?.value?.trim() || '/oikos/backups/',
+      remotePath: form.querySelector('#webdav-path')?.value?.trim() || '/yuvomi/backups/',
       keep: Number(form.querySelector('#webdav-keep')?.value) || 7,
     };
     if (password && password !== '****') payload.password = password;

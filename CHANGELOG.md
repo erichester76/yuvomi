@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.3] - 2026-06-11
+
+### Changed
+- **WebDAV backup default path**: changed from `/oikos/backups/` to `/yuvomi/backups/` to reflect the app rename. Existing installations with a saved or explicitly configured path are not affected.
+
 ## [0.71.2] - 2026-06-11
 
 ### Fixed
