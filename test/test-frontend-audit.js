@@ -803,11 +803,11 @@ test('responsive settings shell defines desktop and mobile navigation layouts', 
 
   assert.match(
     source,
-    /@media \(min-width:\s*960px\)[\s\S]*\.settings-shell__navigation\s*\{[\s\S]*position:\s*sticky/,
+    /@media \(min-width:\s*1024px\)[\s\S]*\.settings-shell__navigation\s*\{[\s\S]*position:\s*sticky/,
   );
   assert.match(
     source,
-    /@media \(max-width:\s*959px\)[\s\S]*\.settings-mobile-overview\s*\{/,
+    /@media \(max-width:\s*1023px\)[\s\S]*\.settings-mobile-overview\s*\{/,
   );
 });
 
@@ -1449,17 +1449,17 @@ test('phase 2 mobile dashboard cockpit uses wider important cards with tokenized
 
   assert.match(
     dashboard,
-    /@media \(max-width:\s*520px\)[\s\S]*\.today-cockpit-card\s*\{[\s\S]*min-height:\s*calc\(var\(--target-lg\)\s*\+\s*var\(--space-4\)\)/,
+    /@media \(max-width:\s*640px\)[\s\S]*\.today-cockpit-card\s*\{[\s\S]*min-height:\s*calc\(var\(--target-lg\)\s*\+\s*var\(--space-4\)\)/,
     'mobile cockpit cards should keep stable tokenized min-height'
   );
   assert.match(
     dashboard,
-    /@media \(max-width:\s*520px\)[\s\S]*\.today-cockpit-card--task,\s*\n\s*\.today-cockpit-card--event\s*\{[\s\S]*grid-column:\s*1\s*\/\s*-1/,
+    /@media \(max-width:\s*640px\)[\s\S]*\.today-cockpit-card--task,\s*\n\s*\.today-cockpit-card--event\s*\{[\s\S]*grid-column:\s*1\s*\/\s*-1/,
     'task and event cards should span the mobile cockpit grid for wider text'
   );
   assert.match(
     dashboard,
-    /@media \(max-width:\s*520px\)[\s\S]*\.dashboard-action\s*\{[\s\S]*width:\s*var\(--target-base\)[\s\S]*height:\s*var\(--target-base\)/,
+    /@media \(max-width:\s*640px\)[\s\S]*\.dashboard-action\s*\{[\s\S]*width:\s*var\(--target-base\)[\s\S]*height:\s*var\(--target-base\)/,
     'mobile quick actions should keep tokenized icon-button dimensions'
   );
 });
@@ -1472,7 +1472,7 @@ test('phase 2 dashboard FAB uses tokenized position and reserved mobile scroll r
   assert.doesNotMatch(fabRule, /\b24px\b/, 'FAB position should use spacing tokens');
   assert.match(
     dashboard,
-    /@media \(max-width:\s*520px\)[\s\S]*\.dashboard-shell\s*\{[\s\S]*padding-bottom:\s*calc\(var\(--target-lg\)\s*\+\s*var\(--space-8\)\)/,
+    /@media \(max-width:\s*640px\)[\s\S]*\.dashboard-shell\s*\{[\s\S]*padding-bottom:\s*calc\(var\(--target-lg\)\s*\+\s*var\(--space-8\)\)/,
     'mobile dashboard should reserve scroll room for the fixed FAB'
   );
 });

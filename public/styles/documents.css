@@ -414,7 +414,7 @@
   font-size: var(--text-sm);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 767px) {
   .documents-toolbar {
     flex-wrap: wrap;
   }

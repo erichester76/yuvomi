@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.16] - 2026-06-12
+
+### Changed
+- **Container-query responsive layout**: component-internal grids now reflow by their own available width instead of the viewport. The notes board, meal-day slots, budget summary cards, modal two-column forms, and the dashboard "today at a glance" strip and overview header all use CSS `@container` queries. Sidebar-aware result: a narrow modal on a wide desktop, or a panel squeezed by the sidebar, collapses based on its real width rather than the window size.
+- **Canonical breakpoints**: roughly 33 ad-hoc viewport breakpoints (900/820/780/720/700/680/600/599/560/520/480/420/959/960/980/1100/1180/1200/1280px) were consolidated onto the four documented boundaries (640/768/1024/1440px), so layout transitions are consistent across modules.
+
+### Fixed
+- **Side-stripe accents removed**: the colored left-border stripes on the dashboard "today at a glance" cards and on calendar holiday chips are gone; module/holiday identity is now carried by the full border, background tint, and icon for a cleaner, more consistent look.
+
+### Removed
+- **Dead dashboard CSS**: eight unused responsive blocks for never-rendered layout-generation classes were removed.
+
 ## [0.71.15] - 2026-06-12
 
 ### Changed

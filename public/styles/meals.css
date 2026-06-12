@@ -69,6 +69,8 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* Container für die Slot-Raster: reflowt nach eigenem Platz, nicht Viewport. */
+  container: week-grid / inline-size;
 }
 
 .mobile-meal-section {
@@ -119,13 +121,13 @@
   padding: 0 var(--space-4) var(--space-3);
 }
 
-@media (min-width: 600px) {
+@container week-grid (min-width: 600px) {
   .day-slots {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@media (max-width: 599px) {
+@media (max-width: 640px) {
   .week-grid {
     padding-bottom: var(--space-8);
   }

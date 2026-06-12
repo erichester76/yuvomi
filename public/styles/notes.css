@@ -21,6 +21,9 @@
   /* overflow:clip inside overflow:auto (.app-content) triggers iOS WebKit blank-screen on scroll.
    * overflow:hidden provides identical clipping without the compositor bug. */
   overflow: hidden;
+  /* Container für das Masonry-Grid: Spaltenzahl reflowt nach EIGENEM Platz
+   * (Sidebar-bewusst), nicht nach Viewport. Siehe tokens.css §11c. */
+  container: notes-page / inline-size;
 }
 
 @media (min-width: 1024px) {
@@ -83,15 +86,15 @@
   column-gap: var(--space-3);
 }
 
-@media (min-width: 600px) {
+@container notes-page (min-width: 600px) {
   .notes-grid { columns: 3; }
 }
 
-@media (min-width: 900px) {
+@container notes-page (min-width: 900px) {
   .notes-grid { columns: 4; }
 }
 
-@media (min-width: 1200px) {
+@container notes-page (min-width: 1200px) {
   .notes-grid { columns: 5; }
 }
 

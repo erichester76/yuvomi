@@ -1165,7 +1165,6 @@
   margin-bottom: 2px;
   color: #fff;
   background: color-mix(in srgb, var(--holi-color) 90%, transparent);
-  border-left: 3px solid var(--holi-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1191,7 +1190,6 @@
   border-radius: var(--radius-xs);
   color: #fff;
   background: color-mix(in srgb, var(--holi-color) 88%, transparent);
-  border-left: 3px solid var(--holi-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

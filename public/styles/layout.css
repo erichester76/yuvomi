@@ -1212,6 +1212,10 @@ html.fab-anim-done .page-fab {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  /* Container für Formular-Raster: 2-Spalten-Felder collabieren nach
+   * MODALBREITE (sm 400 / md 520 / lg 680), nicht Viewport. Ein sm-Modal
+   * auf großem Desktop bleibt so einspaltig statt gequetscht. */
+  container: modal-body / inline-size;
 }
 
 /* Modal-Content-Grids (z. B. 2 Spalten in Formularen) */
@@ -1245,7 +1249,7 @@ html.fab-anim-done .page-fab {
   flex-direction: column;
 }
 
-@media (max-width: 640px) {
+@container modal-body (max-width: 480px) {
   .modal-grid--2 {
     grid-template-columns: 1fr;
   }
@@ -1766,7 +1770,7 @@ html.fab-anim-done .page-fab {
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 640px) {
   .grid--2 { grid-template-columns: repeat(2, 1fr); }
 }
 
