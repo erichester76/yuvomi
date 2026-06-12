@@ -9,6 +9,7 @@ import { openModal as openSharedModal, closeModal, btnError } from '/components/
 import { stagger, vibrate } from '/utils/ux.js';
 import { t } from '/i18n.js';
 import { esc } from '/utils/html.js';
+import { getReadableTextColor } from '/utils/color.js';
 import { renderSkeletonList } from '/utils/skeleton.js';
 
 // --------------------------------------------------------
@@ -174,7 +175,9 @@ function renderNoteCard(note) {
     ? note.creator_name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
     : '?';
 
-  const textColor = isLightColor(note.color) ? 'rgba(0,0,0,0.8)' : '#ffffff';
+  const textColor = getReadableTextColor(note.color);
+  const avatarColor = note.creator_color || '#8E8E93';
+  const avatarTextColor = getReadableTextColor(avatarColor);
 
   return `
     <div class="note-card ${note.pinned ? 'note-card--pinned' : ''}"
@@ -189,7 +192,7 @@ function renderNoteCard(note) {
       <div class="note-card__footer">
         <div class="note-card__creator">
           <span class="note-card__avatar"
-                style="background-color:${esc(note.creator_color || '#8E8E93')}">
+                style="background-color:${esc(avatarColor)};color:${avatarTextColor}">
             ${note.creator_avatar
               ? `<img src="${esc(note.creator_avatar)}" alt="${esc(note.creator_name || '')}" loading="lazy">`
               : initials}
@@ -556,16 +559,4 @@ async function deleteNote(id) {
       window.oikos?.showToast(err.data?.error ?? t('common.unknownError'), 'danger');
     }
   }, 5000);
-}
-
-// --------------------------------------------------------
-// Hilfsfunktionen
-// --------------------------------------------------------
-
-function isLightColor(hex) {
-  if (!hex) return true;
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 > 150;
 }

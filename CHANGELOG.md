@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.34] - 2026-06-13
+
+### Fixed
+- **PWA updates and final interface details now remain current, readable, and consistent**: release-bound service-worker caches deliver every published UI revision, the early locale bootstrap remains available offline, colored Notes choose WCAG-safe text automatically, Dashboard quick actions use native controls with one clear page heading, mobile customization keeps a 48 px touch target, and rounded Dashboard and Housekeeping cards use quieter full borders instead of heavy accent caps.
+- **Docker publishing no longer reports a failed release after images were pushed successfully**: transient GitHub Actions cache-export errors are treated as failures of an optional optimization, while image builds and registry pushes remain strict.
+
 ## [0.71.33] - 2026-06-12
 
 ### Fixed

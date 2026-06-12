@@ -72,7 +72,7 @@
 }
 
 .housekeeping-card {
-  border-top: 3px solid var(--module-accent);
+  border-color: color-mix(in srgb, var(--module-accent) 24%, var(--glass-border-subtle));
   border-radius: var(--radius-glass-card);
   box-shadow: var(--glass-shadow-sm);
   padding: var(--space-4);

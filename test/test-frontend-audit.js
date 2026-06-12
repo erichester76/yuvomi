@@ -175,6 +175,17 @@ test('service worker precaches every supported locale file', () => {
   assert.deepEqual(precachedLocales, supportedLocales.sort(), 'Service worker APP_LOCALES must precache every supported locale');
 });
 
+test('service worker release caches track package version and include the early locale bootstrap', () => {
+  const pkg = JSON.parse(read('../package.json'));
+  const sw = read('../public/sw.js');
+  const release = sw.match(/const APP_RELEASE\s*=\s*['"]([^'"]+)['"]/)?.[1];
+
+  assert.equal(release, pkg.version, 'Service worker APP_RELEASE must match package.json');
+  assert.match(sw, /const SHELL_CACHE\s*=\s*`oikos-shell-\$\{APP_RELEASE\}`/);
+  assert.match(sw, /const PAGES_CACHE\s*=\s*`oikos-pages-\$\{APP_RELEASE\}`/);
+  assert.match(sw, /['"]\/lang-init\.js['"]/, 'early lang/dir bootstrap must be available offline');
+});
+
 test('runtime locale changes keep language and writing direction synchronized', () => {
   const i18n = read('../public/i18n.js');
   const router = read('../public/router.js');
@@ -1140,6 +1151,42 @@ test('responsive adaptation removes duplicate Birthday creation action on phones
   );
 });
 
+test('dashboard polish keeps one page heading and native quick-action controls', () => {
+  const dashboard = read('../public/pages/dashboard.js');
+  const css = read('../public/styles/dashboard.css');
+
+  assert.equal((dashboard.match(/<h1\b/g) || []).length, 1, 'dashboard must expose one h1');
+  assert.match(dashboard, /<h2 class="dashboard-overview__title">/);
+  assert.match(dashboard, /<button type="button" class="fab-action"/);
+  assert.doesNotMatch(dashboard, /class="fab-action"[^>]*role="button"/);
+  assert.doesNotMatch(dashboard, /<button class="fab-action__btn"/);
+  assert.match(css, /\.dashboard-icon-btn\s*\{[\s\S]*width:\s*var\(--target-lg\);[\s\S]*height:\s*var\(--target-lg\)/);
+  assert.doesNotMatch(
+    css,
+    /@media \(max-width:\s*640px\)[\s\S]*\.dashboard-icon-btn\s*\{[\s\S]*width:\s*var\(--target-base\);[\s\S]*height:\s*var\(--target-base\)/,
+    'mobile dashboard controls must keep the large touch target through the final cascade'
+  );
+  assert.match(
+    css,
+    /@media \(min-width:\s*1024px\)[\s\S]*\.dashboard-icon-btn\s*\{[\s\S]*width:\s*var\(--target-md\);[\s\S]*height:\s*var\(--target-md\)/,
+  );
+});
+
+test('polished rounded cards use subtle full borders instead of thick accent caps', () => {
+  const dashboard = read('../public/styles/dashboard.css');
+  const housekeeping = read('../public/styles/housekeeping.css');
+
+  const overview = dashboard.match(/\.dashboard-overview\s*\{[\s\S]*?\n\}/)?.[0] ?? '';
+  const cockpit = dashboard.match(/\.today-cockpit\s*\{[\s\S]*?\n\}/)?.[0] ?? '';
+  const widget = dashboard.match(/\.dashboard \.widget::before\s*\{[\s\S]*?\n\}/)?.[0] ?? '';
+  const housekeepingCard = housekeeping.match(/\.housekeeping-card\s*\{[\s\S]*?\n\}/)?.[0] ?? '';
+
+  assert.doesNotMatch(overview, /border-top:\s*(?:3px|var\(--space-1\))/);
+  assert.doesNotMatch(cockpit, /border-top:\s*(?:3px|var\(--space-1\))/);
+  assert.match(widget, /height:\s*1px/);
+  assert.doesNotMatch(housekeepingCard, /border-top:\s*3px/);
+});
+
 test('hardening keeps Birthday cards bounded with extreme localized content', () => {
   const birthdays = read('../public/styles/birthdays.css');
 
@@ -1192,6 +1239,24 @@ test('route failures expose a localized recoverable alert instead of raw technic
   assert.match(router, /return t\(['"]common\.errorServer['"]\)/);
   assert.match(router, /err\?\.name === ['"]TypeError['"][\s\S]*return t\(['"]common\.unexpectedError['"]\)/);
   assert.match(notesPage, /catch \(err\)\s*\{[\s\S]*console\.error\([\s\S]*throw err;/);
+});
+
+test('Notes uses the shared WCAG contrast helper without dimming readable content', () => {
+  const notesPage = read('../public/pages/notes.js');
+  const notesCss = read('../public/styles/notes.css');
+
+  assert.match(notesPage, /import \{ getReadableTextColor \} from '\/utils\/color\.js'/);
+  assert.doesNotMatch(notesPage, /function isLightColor/);
+  assert.match(notesPage, /getReadableTextColor\(note\.color\)/);
+  assert.match(notesPage, /const avatarColor\s*=\s*note\.creator_color[\s\S]*getReadableTextColor\(avatarColor\)/);
+  assert.doesNotMatch(
+    notesCss.match(/\.note-card__content\s*\{[\s\S]*?\n\}/)?.[0] ?? '',
+    /opacity:/,
+  );
+  assert.match(
+    notesCss.match(/\.note-card__footer\s*\{[\s\S]*?\n\}/)?.[0] ?? '',
+    /color:\s*inherit/,
+  );
 });
 
 test('phase 3 Tasks bulk actions stay de-emphasized until tasks are selected', () => {

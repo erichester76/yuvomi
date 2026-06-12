@@ -655,7 +655,7 @@ function renderDashboardOverview(user, editing = false) {
       <div class="dashboard-overview__header${editing ? ' dashboard-overview__header--editing' : ''}">
         <div class="dashboard-overview__heading">
           <span class="dashboard-overview__date">${dateLabel}</span>
-          <h1 class="dashboard-overview__title">${greeting(user.display_name)}</h1>
+          <h2 class="dashboard-overview__title">${greeting(user.display_name)}</h2>
         </div>
         <div class="dashboard-overview__tools">
           ${editing ? `
@@ -897,13 +897,13 @@ const FAB_ACTIONS = () => [
 
 function renderFab() {
   const actionsHtml = FAB_ACTIONS().map((a) => `
-    <div class="fab-action" data-route="${a.route}" role="button" tabindex="-1"
-         aria-label="${a.label}">
+    <button type="button" class="fab-action" data-route="${a.route}" tabindex="-1"
+            aria-label="${a.label}">
       <span class="fab-action__label">${a.label}</span>
-      <button class="fab-action__btn" tabindex="-1" aria-hidden="true">
+      <span class="fab-action__btn" aria-hidden="true">
         <i data-lucide="${a.icon}" aria-hidden="true"></i>
-      </button>
-    </div>
+      </span>
+    </button>
   `).join('');
 
   return `
@@ -942,7 +942,7 @@ function initFab(container, signal) {
     fabActions.classList.toggle('fab-actions--visible', open);
     fabActions.setAttribute('aria-hidden', String(!open));
     fabBackdrop?.classList.toggle('fab-backdrop--visible', open);
-    fabActions.querySelectorAll('[role="button"]').forEach((el) => {
+    fabActions.querySelectorAll('.fab-action').forEach((el) => {
       el.tabIndex = open ? 0 : -1;
     });
     if (window.lucide) window.lucide.createIcons({ el: container });
