@@ -1653,6 +1653,42 @@ html.fab-anim-done .page-fab {
   100% { background-position: -200% 0; }
 }
 
+/* Reduced-Motion: Shimmer aus, statische Fläche bleibt sichtbar. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
+
+/* ── Geteilte Skeleton-Liste (alle Module) ──
+ * EINE Lade-Sprache statt modul-eigener „Lädt…"-Texte. Global definiert,
+ * damit die Breiten-Varianten auf JEDER Seite greifen (zuvor lagen sie nur
+ * in dashboard.css und waren außerhalb des Dashboards wirkungslos).
+ * Markup-Hilfe: public/utils/skeleton.js → renderSkeletonList(). */
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: var(--radius-xs);
+}
+
+.skeleton-line--title  { height: 18px; width: 45%; }
+.skeleton-line--short  { width: 35%; }
+.skeleton-line--medium { width: 60%; }
+.skeleton-line--full   { width: 100%; }
+
 /* --------------------------------------------------------
  * Leer-Zustände (Empty States)
  * -------------------------------------------------------- */
@@ -2438,7 +2474,7 @@ html.fab-anim-done .page-fab {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: var(--z-skip-link);
   width: auto;
   height: auto;
   padding: var(--space-2) var(--space-4);

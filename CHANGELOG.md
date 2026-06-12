@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Konsistentes Lade-Feedback**: eine geteilte Skeleton-Lade-Sprache (`public/utils/skeleton.js` → `renderSkeletonList()`) ersetzt die modul-eigenen „Lädt…"-Texte in Budget, Mahlzeiten und Haushalt. Die Skeleton-Klassen (`.skeleton-list`/`.skeleton-card`/`.skeleton-line`) liegen jetzt global in `layout.css` statt nur in `dashboard.css`.
+- **Z-Index-Disziplin**: die zwei verbliebenen Magic-Number-Z-Indizes (`9999` Skip-Link, `1000` Kanban-Drag-Ghost) sind auf neue semantische Tokens (`--z-skip-link`, `--z-drag`) der dokumentierten Skala gemappt.
+
+### Fixed
+- **Skeleton-Breiten außerhalb des Dashboards**: die `.skeleton-line--short/medium/full`-Varianten lagen nur in `dashboard.css` und blieben auf anderen Seiten (Tasks, Shopping) wirkungslos, weil CSS pro Modul dynamisch geladen wird; sie sind jetzt global verfügbar.
+- **Skeleton & Reduced-Motion**: der Skeleton-Shimmer respektiert nun `prefers-reduced-motion: reduce` (statische Fläche statt Animation).
+
 ## [0.71.14] - 2026-06-12
 
 ### Changed

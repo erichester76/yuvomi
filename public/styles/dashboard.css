@@ -1187,15 +1187,13 @@ svg.weather-forecast__icon {
   padding: var(--space-3) var(--space-4);
 }
 
-.skeleton-line {
+/* Dashboard-Widget-Override: engere Zeilen + margin-basiertes Spacing für das
+ * bestehende Widget-Skeleton-Markup. Breiten-Varianten (--short/medium/full)
+ * leben jetzt global in layout.css. */
+.dashboard .widget-skeleton .skeleton-line {
   height: 12px;
   margin-bottom: var(--space-2);
-  border-radius: var(--radius-xs);
 }
-
-.skeleton-line--short  { width: 35%; }
-.skeleton-line--medium { width: 60%; }
-.skeleton-line--full   { width: 100%; }
 
 /* --------------------------------------------------------
  * FAB Speed-Dial

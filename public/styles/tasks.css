@@ -790,7 +790,7 @@
 
 .kanban-card--ghost {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--z-drag);
   pointer-events: none;
   opacity: 0.88;
   box-shadow: var(--shadow-xl);

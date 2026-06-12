@@ -10,6 +10,7 @@ import { openModal as openSharedModal, closeModal, confirmModal } from '/compone
 import { stagger, vibrate } from '/utils/ux.js';
 import { t, formatDate, getLocale } from '/i18n.js';
 import { esc } from '/utils/html.js';
+import { renderSkeletonList } from '/utils/skeleton.js';
 import { render as renderSplitExpenses } from '/pages/split-expenses.js';
 import { toLocalDateKey } from '/utils/date.js';
 import { budgetCategoryLabel } from '/utils/category-labels.js';
@@ -237,7 +238,7 @@ export async function render(container, { user }) {
         </button>
       </div>
       <div id="budget-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
-        <div style="padding:2rem;text-align:center;color:var(--color-text-disabled);">${t('budget.loadingIndicator')}</div>
+        ${renderSkeletonList({ rows: 6, lines: 2 })}
       </div>
       <button class="page-fab" id="fab-new-budget" aria-label="${t('budget.newEntryFabLabel')}">
         <i data-lucide="plus" class="icon-xl" aria-hidden="true"></i>

@@ -446,7 +446,9 @@
   --z-dropdown: 50;
   --z-nav:     100;
   --z-modal:   200;
+  --z-drag:    250;   /* Drag-Ghost (z.B. Kanban) — über Modal, unter Toast */
   --z-toast:   300;
+  --z-skip-link: 400; /* Skip-Link im Keyboard-Fokus — bewusst über allem */
 
   /* --------------------------------------------------------
    * 16. Glass-Design-System (Liquid Glass Layer)
