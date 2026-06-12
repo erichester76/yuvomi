@@ -175,6 +175,21 @@ test('service worker precaches every supported locale file', () => {
   assert.deepEqual(precachedLocales, supportedLocales.sort(), 'Service worker APP_LOCALES must precache every supported locale');
 });
 
+test('runtime locale changes keep language and writing direction synchronized', () => {
+  const i18n = read('../public/i18n.js');
+  const router = read('../public/router.js');
+
+  assert.match(i18n, /const RTL_LOCALES\s*=\s*new Set\(\[['"]ar['"]\]\)/);
+  assert.match(i18n, /function applyDocumentLocale\(locale\)/);
+  assert.match(i18n, /document\.documentElement\.lang\s*=\s*locale/);
+  assert.match(i18n, /document\.documentElement\.dir\s*=\s*RTL_LOCALES\.has\(locale\)\s*\?\s*['"]rtl['"]\s*:\s*['"]ltr['"]/);
+  assert.equal((i18n.match(/applyDocumentLocale\(/g) || []).length, 3);
+  assert.match(
+    router,
+    /window\.addEventListener\(['"]locale-changed['"],\s*\(\)\s*=>\s*\{[\s\S]*rebuildNavigation\(\);[\s\S]*refreshCurrentRoute\(\);[\s\S]*\}\);/
+  );
+});
+
 test('install prompt waits for initial translations before rendering text', () => {
   const i18n = read('../public/i18n.js');
   const prompt = read('../public/components/oikos-install-prompt.js');
@@ -1073,6 +1088,12 @@ test('responsive adaptation keeps Notes vertical and prevents intrinsic-width ov
     dashboard,
     /\.notes-grid-widget\s*\{[\s\S]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/
   );
+  assert.match(notes, /\.note-card\s*\{[\s\S]*min-width:\s*0/);
+  assert.match(notes, /\.note-card__title\s*\{[\s\S]*overflow-wrap:\s*anywhere/);
+  assert.match(
+    notes,
+    /\.note-card__title,[\s\S]*\.note-card__content\s*\{[\s\S]*unicode-bidi:\s*plaintext/
+  );
 });
 
 test('responsive adaptation keeps all three Kitchen tabs visible on narrow phones', () => {
@@ -1117,6 +1138,60 @@ test('responsive adaptation removes duplicate Birthday creation action on phones
     birthdays,
     /@media \(max-width:\s*640px\)[\s\S]*\.birthdays-header__action\s*\{[\s\S]*display:\s*none/
   );
+});
+
+test('hardening keeps Birthday cards bounded with extreme localized content', () => {
+  const birthdays = read('../public/styles/birthdays.css');
+
+  assert.match(birthdays, /\.birthdays-panel\s*\{[\s\S]*min-width:\s*0/);
+  assert.match(
+    birthdays,
+    /@media \(max-width:\s*1023px\)[\s\S]*\.birthdays-grid\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/
+  );
+  assert.match(
+    birthdays,
+    /\.birthday-card__name,[\s\S]*\.birthday-item__notes\s*\{[\s\S]*overflow-wrap:\s*anywhere/
+  );
+  assert.match(
+    birthdays,
+    /\.birthday-card__name,[\s\S]*\.birthday-item__notes\s*\{[\s\S]*unicode-bidi:\s*plaintext/
+  );
+  assert.match(
+    birthdays,
+    /@media \(max-width:\s*640px\)[\s\S]*\.birthday-card__top,[\s\S]*\.birthday-item__row\s*\{[\s\S]*flex-wrap:\s*wrap/
+  );
+});
+
+test('hardening uses logical alignment for RTL-sensitive adapted controls', () => {
+  const notes = read('../public/styles/notes.css');
+  const documents = read('../public/styles/documents.css');
+  const birthdays = read('../public/styles/birthdays.css');
+  const tasks = read('../public/styles/tasks.css');
+
+  assert.match(notes, /margin-inline-start:\s*auto/);
+  assert.match(notes, /\.notes-toolbar__search-icon\s*\{[\s\S]*inset-inline-start:/);
+  assert.match(notes, /\.note-card__pin\s*\{[\s\S]*inset-inline-end:/);
+  assert.match(documents, /\.documents-toolbar__search-icon\s*\{[\s\S]*inset-inline-start:/);
+  assert.match(tasks, /\.tasks-toolbar__secondary-panel\s*\{[\s\S]*inset-inline-end:\s*0/);
+  assert.match(
+    tasks,
+    /\[dir=['"]rtl['"]\] \.tasks-toolbar__secondary-panel\s*\{[\s\S]*inset-inline-start:\s*0;[\s\S]*inset-inline-end:\s*auto/
+  );
+  assert.match(birthdays, /\.birthdays-toolbar__search-icon\s*\{[\s\S]*inset-inline-start:/);
+  assert.match(birthdays, /\.birthdays-autocomplete\s*\{[\s\S]*inset-inline:\s*0/);
+});
+
+test('route failures expose a localized recoverable alert instead of raw technical errors', () => {
+  const router = read('../public/router.js');
+  const notesPage = read('../public/pages/notes.js');
+
+  assert.match(router, /function renderError\(container,\s*err\)[\s\S]*state\.setAttribute\(['"]role['"],\s*['"]alert['"]\)/);
+  assert.match(router, /desc\.textContent\s*=\s*friendlyError\(err\)/);
+  assert.match(router, /state\.focus\(\{\s*preventScroll:\s*true\s*\}\)/);
+  assert.match(router, /Failed to fetch\|NetworkError\|Load failed/i);
+  assert.match(router, /return t\(['"]common\.errorServer['"]\)/);
+  assert.match(router, /err\?\.name === ['"]TypeError['"][\s\S]*return t\(['"]common\.unexpectedError['"]\)/);
+  assert.match(notesPage, /catch \(err\)\s*\{[\s\S]*console\.error\([\s\S]*throw err;/);
 });
 
 test('phase 3 Tasks bulk actions stay de-emphasized until tasks are selected', () => {

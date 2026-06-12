@@ -1824,12 +1824,14 @@ function updateNav(path) {
 function renderError(container, err) {
   const state = document.createElement('div');
   state.className = 'empty-state';
+  state.tabIndex = -1;
+  state.setAttribute('role', 'alert');
   const title = document.createElement('div');
   title.className = 'empty-state__title';
   title.textContent = t('common.errorOccurred');
   const desc = document.createElement('div');
   desc.className = 'empty-state__description';
-  desc.textContent = err.message;
+  desc.textContent = friendlyError(err);
   const btn = document.createElement('button');
   btn.className = 'btn btn--primary';
   btn.id = 'error-reload-btn';
@@ -1837,6 +1839,7 @@ function renderError(container, err) {
   btn.addEventListener('click', () => location.reload());
   state.append(title, desc, btn);
   container.replaceChildren(state);
+  state.focus({ preventScroll: true });
 }
 
 // --------------------------------------------------------
@@ -1966,6 +1969,8 @@ function friendlyError(err) {
   if (status === 404) return t('common.errorNotFound');
   if (status >= 500) return t('common.errorServer');
   if (err?.name === 'AbortError' || err?.name === 'TimeoutError') return t('common.errorTimeout');
+  if (/Failed to fetch|NetworkError|Load failed/i.test(err?.message || '')) return t('common.errorServer');
+  if (err?.name === 'TypeError') return t('common.unexpectedError');
   return err?.data?.error || err?.message || t('common.errorGeneric');
 }
 
@@ -2071,8 +2076,11 @@ function rebuildNavigation({ updateLabels = true } = {}) {
   updateBranding(currentPath || '/');
 }
 
-// Sprache geändert: Navigation neu rendern damit Labels aktualisiert werden
-window.addEventListener('locale-changed', () => rebuildNavigation());
+// Sprache geändert: Navigation und aktuelle Seite gemeinsam neu rendern.
+window.addEventListener('locale-changed', () => {
+  rebuildNavigation();
+  refreshCurrentRoute();
+});
 
 window.addEventListener('app-name-changed', () => {
   updateBranding(currentPath || '/');

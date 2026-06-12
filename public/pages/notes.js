@@ -89,8 +89,7 @@ export async function render(container, { user }) {
     state.notes = res.data;
   } catch (err) {
     console.error('[Notes] Laden fehlgeschlagen:', err);
-    state.notes = [];
-    window.oikos?.showToast(t('notes.loadError'), 'danger');
+    throw err;
   }
   const grid = container.querySelector('#notes-grid');
   grid.addEventListener('click', async (e) => {

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.33] - 2026-06-12
+
+### Fixed
+- **RTL, extreme-content, and route-error resilience are hardened across the responsive UI**: Arabic now applies RTL before first paint and re-renders the active page when languages change; mixed-script and unbroken Notes and Birthdays content stays within its layout; adapted search and overflow controls align logically; and failed page loads show a localized, focused recovery state instead of raw network errors or false empty data.
+
 ## [0.71.32] - 2026-06-12
 
 ### Changed

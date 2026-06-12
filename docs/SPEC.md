@@ -1216,6 +1216,8 @@ Source of truth: `public/styles/tokens.css`. Key values (as of v0.55.10):
 - Tablet layouts (768–1023px) may wrap dense toolbars and use two-column overview grids while retaining the mobile navigation model.
 - Desktop composition starts at 1024px. Full secondary toolbars and persistent local navigation return only when their labels and controls fit without compression.
 - Grid tracks that contain variable text use `minmax(0, 1fr)` so long localized content cannot enlarge the page beyond the viewport.
+- Cards, rows, and controls that display user-generated text must contain unbroken strings and mixed scripts without creating page-level horizontal overflow. Text blocks use per-paragraph bidirectional resolution where user content can mix RTL and LTR scripts.
+- Route-level load failures replace the page with a localized recovery state. The state uses `role="alert"`, receives focus without scrolling, and offers a reload action; modules must not convert failed initial loads into misleading empty states.
 
 ### Glass Layer (`public/styles/glass.css`)
 
@@ -1334,4 +1336,4 @@ All UI strings are managed via `public/i18n.js`. No hardcoded text in JS files o
 
 ### Locale Switching
 
-`setLocale(locale)` saves the selection, loads the new locale file, and fires the `locale-changed` custom event. All page modules and web components listen to this event and re-render - no page reload required.
+The early language bootstrap applies both `lang` and writing direction before the app renders (`ar` uses `dir="rtl"`; all other supported locales use `dir="ltr"`). `setLocale(locale)` saves the selection, loads the new locale file, updates both document attributes, and fires the `locale-changed` custom event. The router rebuilds shared navigation and re-renders the active route so every visible label changes without a page reload.

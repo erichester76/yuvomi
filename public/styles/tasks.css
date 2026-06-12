@@ -81,7 +81,7 @@
   .tasks-toolbar__secondary-panel {
     position: absolute;
     top: calc(100% + var(--space-2));
-    right: 0;
+    inset-inline-end: 0;
     display: none;
     flex-direction: column;
     align-items: stretch;
@@ -94,6 +94,11 @@
     background-color: var(--color-surface-raised);
     box-shadow: var(--shadow-lg);
     z-index: var(--z-dropdown);
+  }
+
+  [dir='rtl'] .tasks-toolbar__secondary-panel {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
   }
 
   .tasks-toolbar__secondary[open] .tasks-toolbar__secondary-panel {

@@ -34,14 +34,14 @@
  * Header / Toolbar
  * -------------------------------------------------------- */
 /* Gerüst (Shell + Titel) jetzt geteilt via .page-toolbar in layout.css.
- * margin-left:auto drängt die Suche an den rechten Rand (ersetzt das frühere
+ * margin-inline-start:auto drängt die Suche ans logische Zeilenende (ersetzt das frühere
  * justify-content:space-between des bespoke Toolbars). */
 .notes-toolbar__search {
   position: relative;
   flex: 1 1 0;
   max-width: 280px;
   min-width: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .notes-toolbar .page-toolbar__title {
@@ -50,7 +50,7 @@
 
 .notes-toolbar__search-icon {
   position: absolute;
-  left: var(--space-2);
+  inset-inline-start: var(--space-2);
   top: 50%;
   transform: translateY(-50%);
   width: 16px;
@@ -121,6 +121,7 @@
  * Notiz-Karte
  * -------------------------------------------------------- */
 .note-card {
+  min-width: 0;
   border-radius: var(--radius-md);
   padding: var(--space-3);
   cursor: pointer;
@@ -141,7 +142,7 @@
 .note-card__pin {
   position: absolute;
   top: var(--space-2);
-  right: var(--space-2);
+  inset-inline-end: var(--space-2);
   width: var(--target-base);
   height: var(--target-base);
   border-radius: var(--radius-full);
@@ -180,7 +181,13 @@
 .note-card__title {
   margin-bottom: var(--space-1);
   color: inherit;
-  padding-right: var(--target-base);
+  padding-inline-end: var(--target-base);
+  overflow-wrap: anywhere;
+}
+
+.note-card__title,
+.note-card__content {
+  unicode-bidi: plaintext;
 }
 
 .note-card__content {
