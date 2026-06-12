@@ -652,7 +652,7 @@ function renderDashboardOverview(user, editing = false) {
 
   return `
     <section class="dashboard-overview">
-      <div class="dashboard-overview__header">
+      <div class="dashboard-overview__header${editing ? ' dashboard-overview__header--editing' : ''}">
         <div class="dashboard-overview__heading">
           <span class="dashboard-overview__date">${dateLabel}</span>
           <h1 class="dashboard-overview__title">${greeting(user.display_name)}</h1>

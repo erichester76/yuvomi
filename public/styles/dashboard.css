@@ -34,30 +34,6 @@
   }
 }
 
-.dashboard-hero {
-  display: grid;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-}
-
-@media (min-width: 1024px) {
-  .dashboard-hero {
-    grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
-    align-items: stretch;
-  }
-}
-
-.dashboard-hero .widget-greeting {
-  box-shadow: var(--glass-shadow-md);
-  min-height: 100%;
-}
-
-.dashboard-hero__rail {
-  display: grid;
-  gap: var(--space-3);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .dashboard-metric {
   display: flex;
   align-items: center;
@@ -1644,87 +1620,6 @@ svg.weather-forecast__icon {
   gap: var(--space-6);
 }
 
-.dashboard-hero {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.dashboard-hero__panel {
-  position: relative;
-  overflow: hidden;
-  border-radius: clamp(22px, 3vw, 34px);
-  padding: clamp(1.25rem, 2vw, 2rem);
-  border: 1px solid color-mix(in srgb, var(--color-border) 30%, transparent);
-  box-shadow: 0 18px 60px color-mix(in srgb, var(--color-shadow) 22%, transparent);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.dashboard-hero__panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--module-dashboard) 20%, transparent), transparent 42%),
-    radial-gradient(circle at bottom left, color-mix(in srgb, var(--module-calendar) 14%, transparent), transparent 38%);
-  opacity: 0.9;
-  pointer-events: none;
-}
-
-.dashboard-hero__panel > * {
-  position: relative;
-  z-index: 1;
-}
-
-.dashboard-hero__panel--intro {
-  background:
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--module-dashboard) 20%, var(--color-surface)) 0%,
-      color-mix(in srgb, var(--module-calendar) 10%, var(--color-surface)) 48%,
-      color-mix(in srgb, var(--module-shopping) 8%, var(--color-surface)) 100%);
-}
-
-.dashboard-hero__panel--summary {
-  background:
-    linear-gradient(180deg,
-      color-mix(in srgb, var(--color-surface) 90%, transparent) 0%,
-      color-mix(in srgb, var(--color-surface-2) 78%, transparent) 100%);
-}
-
-.dashboard-hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
-  color: var(--color-accent);
-  font-size: var(--text-xs);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-}
-
-.dashboard-hero__title {
-  margin: var(--space-3) 0 0;
-  /* Feste Token-Stufe statt fluidem clamp (Produkt-Register + Token-Disziplin).
-   * --text-4xl (36px) ist die DESIGN.md-Display-Stufe — der frühere 69px-Hero „schrie". */
-  max-width: 18ch;
-}
-
-.dashboard-hero__subtitle {
-  margin: var(--space-3) 0 0;
-  color: var(--color-text-secondary);
-  font-size: var(--text-base);
-}
-
-.dashboard-hero__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
-}
-
 .dashboard-chip {
   display: inline-flex;
   align-items: center;
@@ -1750,13 +1645,6 @@ svg.weather-forecast__icon {
 .dashboard-chip--accent {
   background: color-mix(in srgb, var(--module-dashboard) 16%, transparent);
   color: var(--module-dashboard);
-}
-
-.dashboard-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-5);
 }
 
 .today-cockpit {
@@ -1879,31 +1767,6 @@ svg.weather-forecast__icon {
   }
 }
 
-.dashboard-hero__summary-head {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.dashboard-hero__summary-label {
-  color: var(--color-text-secondary);
-}
-
-.dashboard-hero__summary-value {
-  margin-top: var(--space-1);
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-}
-
-.dashboard-hero__summary-grid {
-  display: grid;
-  gap: var(--space-3);
-  grid-template-columns: 1fr;
-  margin-top: var(--space-4);
-}
-
 .dashboard-stat {
   display: flex;
   align-items: center;
@@ -1997,35 +1860,6 @@ svg.weather-forecast__icon {
     color-mix(in srgb, var(--color-surface-2) 40%, transparent));
   background-size: 200% 100%;
   animation: dashboard-sheen 1.8s ease-in-out infinite;
-}
-
-.dashboard-layout {
-  display: grid;
-  gap: var(--space-5);
-}
-
-.dashboard-layout__main,
-.dashboard-layout__side {
-  min-width: 0;
-}
-
-.dashboard-layout__grid {
-  display: grid;
-  gap: var(--space-4);
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.dashboard-layout__stack {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.dashboard-tile {
-  min-width: 0;
-}
-
-.dashboard-tile--wide {
-  grid-column: 1 / -1;
 }
 
 .dashboard .widget {
@@ -2142,12 +1976,22 @@ svg.weather-forecast__icon {
 
 .dashboard-overview__header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--space-3);
 }
 
+/* Bearbeiten-Modus: die Customize-Toolbar braucht volle Breite, daher mobil unter
+ * die Begrüßung umbrechen; ab Container-Breite wieder einzeilig. Der schlanke
+ * Normalzustand bleibt einzeilig (Icon rechts, vertikal zur Begrüßung zentriert). */
+.dashboard-overview__header--editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 @container dashboard-overview (min-width: 640px) {
-  .dashboard-overview__header {
+  .dashboard-overview__header--editing {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -2467,34 +2311,6 @@ svg.weather-forecast__icon {
   animation: dashboard-sheen 1.6s ease-in-out infinite;
 }
 
-.dashboard-workspace {
-  display: grid;
-  gap: var(--space-4);
-  align-items: start;
-}
-
-.dashboard-workspace__main,
-.dashboard-workspace__side {
-  min-width: 0;
-}
-
-.dashboard-widget-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-  align-items: start;
-}
-
-.dashboard-side-stack {
-  display: grid;
-  gap: var(--space-4);
-  align-items: start;
-}
-
-.dashboard-tile {
-  min-width: 0;
-}
-
 .dashboard .widget,
 .dashboard .widget-skeleton {
   border-radius: var(--radius-sm);
@@ -2788,9 +2604,6 @@ svg.weather-forecast__icon {
 
   .dashboard-overview__header {
     gap: var(--space-2);
-  }
-
-  .dashboard-overview__title {
   }
 
   .dashboard-overview__tools {

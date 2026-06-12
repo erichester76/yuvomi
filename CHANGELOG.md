@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.21] - 2026-06-12
+
+### Changed
+- **Slimmer dashboard header on mobile**: the home dashboard header used to stack three rows on phones (date, greeting, then the customize button on its own line). The customize button now sits on the greeting row, right-aligned and vertically centered, so the header takes less vertical space and "Today at a glance" appears sooner. The desktop layout and the edit-mode toolbar (which still wraps below on narrow screens) are unchanged.
+
+### Removed
+- **Dead dashboard styles and a deprecated token**: removed unused CSS for the previous dashboard layout system (hero, layout, workspace, tile, side-stack, and the `dashboard-widget-grid` class) that was left behind when the current widget grid replaced it, and dropped the deprecated `--text-md` font-size alias. Internal cleanup only, no visible change.
+
 ## [0.71.20] - 2026-06-12
 
 ### Changed

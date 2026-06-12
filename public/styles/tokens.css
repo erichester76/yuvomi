@@ -321,7 +321,6 @@
   --text-xs:   0.75rem;    /* 12px - Minimum, Captions, Badges, Nav-Labels */
   --text-sm:   0.8125rem;  /* 13px - Small/Secondary */
   --text-base: 1rem;       /* 16px - Body, Inputs */
-  --text-md:   var(--text-base); /* DEPRECATED: Alias auf --text-base. Nicht neu verwenden; bestehende Nutzer auf --text-base migrieren. */
   --text-lg:   1.125rem;   /* 18px - Section-Title */
   --text-xl:   1.25rem;    /* 20px - Subtitle */
   --text-2xl:  1.5rem;     /* 24px - Page-Title (Mobile) */
