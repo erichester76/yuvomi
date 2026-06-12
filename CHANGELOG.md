@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.19] - 2026-06-12
+
+### Fixed
+- **No false translation prompt on non-German devices** (#353): the app shipped a hardcoded `<html lang="de">`, so Chromium-based browsers (e.g. Brave) repeatedly offered to translate the already-localized interface from German on non-German systems. The document language is now set to the resolved user locale before the page renders, so the declared language matches the displayed content.
+
 ## [0.71.18] - 2026-06-12
 
 ### Changed
