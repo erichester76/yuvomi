@@ -1735,7 +1735,7 @@ test('phase 2 dashboard primary titles do not split words mid-token', () => {
   }
 });
 
-test('phase 2 mobile dashboard cockpit uses wider important cards with tokenized stable sizing', () => {
+test('phase 2 mobile dashboard cockpit uses a 2x2 glance grid with tokenized stable sizing', () => {
   const dashboard = read('../public/styles/dashboard.css');
 
   assert.match(
@@ -1743,10 +1743,23 @@ test('phase 2 mobile dashboard cockpit uses wider important cards with tokenized
     /@media \(max-width:\s*640px\)[\s\S]*\.today-cockpit-card\s*\{[\s\S]*min-height:\s*calc\(var\(--target-lg\)\s*\+\s*var\(--space-4\)\)/,
     'mobile cockpit cards should keep stable tokenized min-height'
   );
+  // 2×2-Glance-Raster: zwei Spalten auf Mobil, halbe Höhe ggü. 1×4
   assert.match(
     dashboard,
-    /@media \(max-width:\s*640px\)[\s\S]*\.today-cockpit-card--task,\s*\n\s*\.today-cockpit-card--event\s*\{[\s\S]*grid-column:\s*1\s*\/\s*-1/,
-    'task and event cards should span the mobile cockpit grid for wider text'
+    /@media \(max-width:\s*640px\)[\s\S]*\.today-cockpit__grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/,
+    'mobile cockpit should use a two-column glance grid'
+  );
+  // Karten erzwingen keine Vollbreite mehr — sonst entsteht wieder ein 1×4-Stapel
+  assert.doesNotMatch(
+    dashboard,
+    /\.today-cockpit-card--task,\s*\n\s*\.today-cockpit-card--event\s*\{[\s\S]*?grid-column:\s*1\s*\/\s*-1/,
+    'task/event cards must not force full-width on mobile (breaks the 2×2 grid)'
+  );
+  // Sehr schmale Container fallen auf eine Spalte zurück (Container-Query, kein Viewport-BP)
+  assert.match(
+    dashboard,
+    /@container today-cockpit \(max-width:\s*270px\)[\s\S]*grid-template-columns:\s*1fr/,
+    'very narrow cockpit container should fall back to a single column'
   );
 });
 

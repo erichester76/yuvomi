@@ -378,6 +378,8 @@ function buildTodayHighlights(data) {
     nextEvent,
     openShoppingCount,
     dinner,
+    taskCount: tasks.length,
+    eventCount: events.length,
   };
 }
 
@@ -616,11 +618,14 @@ function renderBudgetWidget(budget, currency) {
   </div>`;
 }
 
-function renderTodayCard(icon, label, value, route, tone) {
+function renderTodayCard(icon, label, value, route, tone, count = null) {
+  const badge = Number.isFinite(count) && count > 0
+    ? `<span class="today-cockpit-card__count">${count}</span>`
+    : '';
   return `
     <button type="button" class="today-cockpit-card today-cockpit-card--${tone}" data-route="${route}">
       <span class="today-cockpit-card__icon"><i data-lucide="${icon}" aria-hidden="true"></i></span>
-      <span class="today-cockpit-card__label">${esc(label)}</span>
+      <span class="today-cockpit-card__label">${esc(label)}${badge}</span>
       <strong class="today-cockpit-card__value">${esc(value)}</strong>
     </button>
   `;
@@ -638,8 +643,8 @@ function renderTodayCockpit(data) {
         <h2 id="today-cockpit-title">${esc(t('dashboard.todayTitle'))}</h2>
       </div>
       <div class="today-cockpit__grid">
-        ${!window.oikos?.isModuleDisabled('tasks')    ? renderTodayCard('check-square',   t('dashboard.todayTask'),     taskTitle, '/tasks', 'task') : ''}
-        ${!window.oikos?.isModuleDisabled('calendar') ? renderTodayCard('calendar',        t('dashboard.todayEvent'),    eventTitle, '/calendar', 'event') : ''}
+        ${!window.oikos?.isModuleDisabled('tasks')    ? renderTodayCard('check-square',   t('dashboard.todayTask'),     taskTitle, '/tasks', 'task', highlights.taskCount) : ''}
+        ${!window.oikos?.isModuleDisabled('calendar') ? renderTodayCard('calendar',        t('dashboard.todayEvent'),    eventTitle, '/calendar', 'event', highlights.eventCount) : ''}
         ${!window.oikos?.isModuleDisabled('shopping') ? renderTodayCard('shopping-cart',   t('dashboard.todayShopping'), t('dashboard.todayShoppingCount', { count: highlights.openShoppingCount }), '/shopping', 'shopping') : ''}
         ${!window.oikos?.isModuleDisabled('meals')    ? renderTodayCard('utensils',        t('dashboard.todayDinner'),   dinnerTitle, '/meals', 'dinner') : ''}
       </div>

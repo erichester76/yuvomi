@@ -1710,9 +1710,9 @@ svg.weather-forecast__icon {
   min-height: calc(var(--target-lg) + var(--space-12));
   height: 100%;
   padding: var(--space-3);
-  border: 1px solid color-mix(in srgb, var(--today-card-accent) 34%, var(--color-border));
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--today-card-accent) 5%, var(--color-surface));
+  background: color-mix(in srgb, var(--today-card-accent) 4%, var(--color-surface));
   color: var(--color-text-primary);
   text-align: left;
   cursor: pointer;
@@ -1756,13 +1756,31 @@ svg.weather-forecast__icon {
   -webkit-line-clamp: 2;
   overflow: hidden;
   align-self: start;
-  color: var(--today-card-accent);
+  color: var(--color-text-primary);
   font-size: var(--type-secondary);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-snug);
   overflow-wrap: normal;
   word-break: normal;
   hyphens: manual;
+}
+
+/* Aggregat-Count: macht die Karte zur Zusammenfassung statt zum Echo der
+ * ersten Widget-Zeile. Getönt in der Domänenfarbe, klein und ruhig. */
+.today-cockpit-card__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--space-4);
+  height: var(--space-4);
+  margin-left: var(--space-1);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--today-card-accent) 16%, var(--color-surface-elevated));
+  color: var(--today-card-accent);
+  font-size: var(--type-micro);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
 }
 
 .today-cockpit-card--task {
@@ -1784,6 +1802,14 @@ svg.weather-forecast__icon {
 @container today-cockpit (min-width: 680px) {
   .today-cockpit__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Sehr schmale Container (iPhone-SE-Klasse): 2×2 würde zu eng — auf 1 Spalte
+ * zurückfallen. Container-Query statt Viewport-Breakpoint (Token-Doktrin §11c). */
+@container today-cockpit (max-width: 270px) {
+  .today-cockpit__grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2650,23 +2676,19 @@ svg.weather-forecast__icon {
     gap: var(--space-2);
   }
 
+  /* 2×2-Glance-Raster: halbe Höhe ggü. 1×4, damit die Aufgabenliste
+   * above the fold rückt. Karten belegen je eine Spalte (kein 1/-1-Span). */
   .today-cockpit__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: auto;
+    grid-auto-rows: 1fr;
     gap: var(--space-2);
   }
 
   .today-cockpit-card {
-    grid-column: 1 / -1;
     min-height: calc(var(--target-lg) + var(--space-4));
-    height: auto;
+    height: 100%;
     padding: var(--space-2) var(--space-3);
     gap: var(--space-1) var(--space-2);
-  }
-
-  .today-cockpit-card--task,
-  .today-cockpit-card--event {
-    grid-column: 1 / -1;
   }
 
   .today-cockpit-card__value {
