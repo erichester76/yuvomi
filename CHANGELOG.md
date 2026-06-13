@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.41] - 2026-06-13
+
+### Changed
+- **Consistent module headers across the app**: every module now shows a same-sized page title and a shared, slot-based toolbar — the title sits left, search or date navigation in the centre, and view switchers and actions grouped on the right — so the header no longer changes size or layout when moving between Tasks, Documents, Notes, Housekeeping, Contacts, Budget, Kitchen, Calendar, and Birthdays. On phones the centre slot (search/date navigation) drops to its own row as a cohesive group.
+- **Kitchen shows a "Küche" title**: the Meals/Recipes/Shopping tab bar now carries the module title beside the tabs.
+- **Calendar view switcher matches Budget**: the active Month/Week/Day/Agenda tab now uses the module-accent fill instead of a neutral pill, giving segmented switchers one consistent active style.
+
+### Fixed
+- **Single way to add in Documents and Birthdays**: these modules previously showed both a toolbar button and a floating action button to create an item; the floating action button — in the module's own colour — is now the only one.
+- **No more duplicated search label**: the search field in Documents, Contacts, and Birthdays no longer repeats its placeholder text as a visible label above the box.
+- **No stray focus outline on settings titles**: opening a settings page no longer draws an accent box around the page title.
+
 ## [0.71.40] - 2026-06-13
 
 ### Fixed
