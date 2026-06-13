@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.38] - 2026-06-13
+
+### Fixed
+- **All-day events now appear in the dashboard's upcoming events widget**: events stored with a date-only timestamp (no time component) were excluded by an off-by-one string comparison; they are now handled correctly.
+- **Birthdays set to "no notification" no longer appear as calendar events**: selecting "keine Benachrichtigung" now removes the associated calendar event so the birthday is no longer shown in upcoming events or the calendar view.
+
 ## [0.71.37] - 2026-06-13
 
 ### Changed
