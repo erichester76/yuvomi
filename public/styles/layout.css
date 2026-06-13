@@ -2405,7 +2405,8 @@ html.fab-anim-done .page-fab {
   gap: var(--space-1);
 }
 
-.shortcuts-row {
+.shortcuts-row,
+.help-row {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -2413,8 +2414,15 @@ html.fab-anim-done .page-fab {
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.shortcuts-row:last-child {
+.shortcuts-row:last-child,
+.help-row:last-child {
   border-bottom: none;
+}
+
+/* Mobile-Hilfe-Zeilen tragen ein Lucide-Icon statt einer Taste. */
+.help-row__icon {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
 }
 
 .shortcut-kbd {
