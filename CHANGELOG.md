@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.42] - 2026-06-13
+
+### Changed
+- **Contact category icons** now use Lucide line icons (stethoscope, graduation cap, landmark, shield, wrench, …) instead of emoji, matching the line-icon style used across the rest of the app.
+- **Calendar event colour shown as a dot**: the agenda list and the dashboard calendar widget now mark an event's calendar colour with a small dot instead of a coloured bar on the card's edge, using the same vocabulary as the task list's status dots.
+- **Tasks filter row uses the module accent**: the active filter chip, the clear badge, and the filter toggle now use the Tasks green instead of the global violet, so the filter row matches the rest of the module.
+
+### Fixed
+- **Single way to add a recipe**: Recipes no longer shows a toolbar "Add recipe" button next to the floating action button; the floating action button is now the only create action, consistent with every other module.
+- **Calendar names with "&" display correctly**: external calendar names that arrived HTML-entity-encoded (e.g. an imported Google calendar shown as "Termine &amp; Verabredungen") are now stored and displayed as plain text; existing names are repaired automatically.
+
 ## [0.71.41] - 2026-06-13
 
 ### Changed
