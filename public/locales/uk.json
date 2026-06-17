@@ -817,7 +817,8 @@
     "categoryHealth": "Здоров'я",
     "categoryFamily": "Сім’я",
     "categoryHome": "Дім",
-    "categoryClothing": "Одяг"
+    "categoryClothing": "Одяг",
+    "manageCategories": "Керування категоріями"
   },
   "settings": {
     "title": "Налаштування",

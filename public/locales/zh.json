@@ -817,7 +817,8 @@
     "categoryHealth": "健康",
     "categoryFamily": "家庭",
     "categoryHome": "家",
-    "categoryClothing": "服装"
+    "categoryClothing": "服装",
+    "manageCategories": "管理类别"
   },
   "settings": {
     "title": "设置",

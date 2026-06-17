@@ -474,9 +474,19 @@ router.get('/categories', (req, res) => {
       FROM budget_categories
       ORDER BY type DESC, sort_order ASC, name COLLATE NOCASE ASC
     `).all();
+    const subRows = db.get().prepare(`
+      SELECT key, category_key, name, sort_order
+      FROM budget_subcategories
+      ORDER BY sort_order ASC, name COLLATE NOCASE ASC
+    `).all();
 
     res.json({
-      data: categories.map((category) => localizedCategory(category, lang)),
+      data: categories.map((category) => ({
+        ...localizedCategory(category, lang),
+        subcategories: subRows
+          .filter((s) => s.category_key === category.key)
+          .map((s) => localizedSubcategory(s, lang)),
+      })),
       lang,
     });
   } catch (err) {

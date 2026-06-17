@@ -817,7 +817,8 @@
     "categoryHealth": "الصحة",
     "categoryFamily": "العائلة",
     "categoryHome": "المنزل",
-    "categoryClothing": "الملابس"
+    "categoryClothing": "الملابس",
+    "manageCategories": "إدارة الفئات"
   },
   "settings": {
     "title": "الإعدادات",

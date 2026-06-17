@@ -817,7 +817,8 @@
     "categoryHealth": "Sức khỏe",
     "categoryFamily": "Gia đình",
     "categoryHome": "Nhà",
-    "categoryClothing": "Quần áo"
+    "categoryClothing": "Quần áo",
+    "manageCategories": "Quản lý danh mục"
   },
   "settings": {
     "title": "Cài đặt",

@@ -817,7 +817,8 @@
     "categoryHealth": "स्वास्थ्य",
     "categoryFamily": "परिवार",
     "categoryHome": "घर",
-    "categoryClothing": "कपड़े"
+    "categoryClothing": "कपड़े",
+    "manageCategories": "श्रेणियाँ प्रबंधित करें"
   },
   "settings": {
     "title": "सेटिंग्स",

@@ -823,7 +823,8 @@
     "categoryHealth": "Gesundheit",
     "categoryFamily": "Familie",
     "categoryHome": "Zuhause",
-    "categoryClothing": "Kleidung"
+    "categoryClothing": "Kleidung",
+    "manageCategories": "Kategorien verwalten"
   },
   "settings": {
     "title": "Einstellungen",

@@ -817,7 +817,8 @@
     "categoryHealth": "医療",
     "categoryFamily": "家族",
     "categoryHome": "家",
-    "categoryClothing": "衣服"
+    "categoryClothing": "衣服",
+    "manageCategories": "カテゴリーを管理"
   },
   "settings": {
     "title": "設定",

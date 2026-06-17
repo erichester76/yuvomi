@@ -817,7 +817,8 @@
     "categoryHealth": "Zdraví",
     "categoryFamily": "Rodina",
     "categoryHome": "Domov",
-    "categoryClothing": "Oblečení"
+    "categoryClothing": "Oblečení",
+    "manageCategories": "Spravovat kategorie"
   },
   "settings": {
     "title": "Nastavení",

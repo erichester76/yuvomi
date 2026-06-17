@@ -817,7 +817,8 @@
     "categoryHealth": "Health",
     "categoryFamily": "Family",
     "categoryHome": "Home",
-    "categoryClothing": "Clothing"
+    "categoryClothing": "Clothing",
+    "manageCategories": "Manage categories"
   },
   "settings": {
     "title": "Settings",

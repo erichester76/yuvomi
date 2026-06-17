@@ -817,7 +817,8 @@
     "categoryHealth": "Υγεία",
     "categoryFamily": "Οικογένεια",
     "categoryHome": "Σπίτι",
-    "categoryClothing": "Ρουχισμός"
+    "categoryClothing": "Ρουχισμός",
+    "manageCategories": "Διαχείριση κατηγοριών"
   },
   "settings": {
     "title": "Ρυθμίσεις",

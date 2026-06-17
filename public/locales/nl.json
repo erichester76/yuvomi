@@ -817,7 +817,8 @@
     "categoryHealth": "Gezondheid",
     "categoryFamily": "Familie",
     "categoryHome": "Thuis",
-    "categoryClothing": "Kleding"
+    "categoryClothing": "Kleding",
+    "manageCategories": "Categorieën beheren"
   },
   "settings": {
     "title": "Instellingen",

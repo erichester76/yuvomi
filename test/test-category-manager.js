@@ -51,5 +51,19 @@ test('Unterstützt Subkategorien unter basePath/:key/subcategories', () => {
   assert(/this\._supportsSub/.test(comp), 'supportsSubcategories muss ausgewertet werden');
 });
 
+const budgetPage = readFileSync(new URL('../public/pages/budget.js', import.meta.url), 'utf8');
+test('Budget importiert die generische Komponente', () => {
+  assert(/components\/category-manager\.js/.test(budgetPage), 'budget.js muss die Komponente importieren');
+  assert(/oikos-category-manager/.test(budgetPage), 'budget.js muss das Element verwenden');
+});
+test('Budget konfiguriert basePath /budget/categories und Gruppen', () => {
+  assert(/configure\(/.test(budgetPage), 'configure() muss aufgerufen werden');
+  assert(/\/budget\/categories/.test(budgetPage), 'basePath /budget/categories nötig');
+  assert(/supportsSubcategories:\s*true/.test(budgetPage), 'Subkategorien müssen aktiviert sein');
+});
+test('Budget reagiert auf category-manager-changed', () => {
+  assert(/category-manager-changed/.test(budgetPage), 'Listener auf category-manager-changed nötig');
+});
+
 console.log(`\n${passed} passed, ${failed} failed\n`);
 if (failed > 0) process.exit(1);

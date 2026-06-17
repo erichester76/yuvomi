@@ -817,7 +817,8 @@
     "categoryHealth": "Salute",
     "categoryFamily": "Famiglia",
     "categoryHome": "Casa",
-    "categoryClothing": "Abbigliamento"
+    "categoryClothing": "Abbigliamento",
+    "manageCategories": "Gestisci categorie"
   },
   "settings": {
     "title": "Impostazioni",

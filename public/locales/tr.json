@@ -817,7 +817,8 @@
     "categoryHealth": "Sağlık",
     "categoryFamily": "Aile",
     "categoryHome": "Ev",
-    "categoryClothing": "Giyim"
+    "categoryClothing": "Giyim",
+    "manageCategories": "Kategorileri yönet"
   },
   "settings": {
     "title": "Ayarlar",

@@ -817,7 +817,8 @@
     "categoryHealth": "Hälsa",
     "categoryFamily": "Familj",
     "categoryHome": "Hem",
-    "categoryClothing": "Kläder"
+    "categoryClothing": "Kläder",
+    "manageCategories": "Hantera kategorier"
   },
   "settings": {
     "title": "Inställningar",
