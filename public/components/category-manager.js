@@ -206,8 +206,9 @@ class CategoryManagerElement extends HTMLElement {
     const cat = this._cats.find((c) => String(c.key) === key);
     if (!cat) return;
     const { promptModal } = await import('/components/modal.js');
-    const newName = await promptModal(t('category.renamePrompt'), this._labelResolver(cat));
-    if (!newName || newName === cat.name) return;
+    const current = this._labelResolver(cat);
+    const newName = await promptModal(t('category.renamePrompt'), current);
+    if (!newName || newName === current) return;
     try {
       const res = await api.put(`${this._basePath}/${encodeURIComponent(key)}`, { name: newName });
       const idx = this._cats.findIndex((c) => String(c.key) === key);
@@ -286,8 +287,9 @@ class CategoryManagerElement extends HTMLElement {
     const found = this._findSub(parent, subKey);
     if (!found) return;
     const { promptModal } = await import('/components/modal.js');
-    const newName = await promptModal(t('category.renamePrompt'), this._labelResolver(found.sub));
-    if (!newName || newName === found.sub.name) return;
+    const current = this._labelResolver(found.sub);
+    const newName = await promptModal(t('category.renamePrompt'), current);
+    if (!newName || newName === current) return;
     try {
       await api.put(
         `${this._basePath}/${encodeURIComponent(parent)}/subcategories/${encodeURIComponent(subKey)}`,
