@@ -5,7 +5,7 @@
 
 import { api } from '/api.js';
 import { t } from '/i18n.js';
-import { openModal as openSharedModal, closeModal as closeSharedModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal as closeSharedModal, advancedSection } from '/components/modal.js';
 import { DEFAULT_CATEGORY_NAME, categoryLabel } from '/utils/shopping-categories.js';
 import { renderKitchenTabsBar } from '/utils/kitchen-tabs.js';
 import { renderSkeletonList } from '/utils/skeleton.js';
@@ -299,18 +299,20 @@ function openRecipeModal(mode, recipe = null) {
         <input id="recipe-title" class="form-input" type="text" placeholder="${t('recipes.titlePlaceholder')}">
       </div>
       <div class="form-group">
-        <label class="form-label" for="recipe-notes">${t('recipes.notesLabel')}</label>
-        <textarea id="recipe-notes" class="form-input" rows="3" placeholder="${t('recipes.notesPlaceholder')}"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="recipe-url">${t('recipes.urlLabel')}</label>
-        <input id="recipe-url" class="form-input" type="url" placeholder="${t('recipes.urlPlaceholder')}">
-      </div>
-      <div class="form-group">
         <label class="form-label">${t('recipes.ingredientsLabel')}</label>
         <div class="recipe-ingredient-list" id="recipe-ingredient-list"></div>
         <button class="btn btn--secondary recipe-add-ingredient" type="button" id="recipe-add-ingredient">${t('meals.addIngredient')}</button>
       </div>
+      ${advancedSection(`
+        <div class="form-group">
+          <label class="form-label" for="recipe-notes">${t('recipes.notesLabel')}</label>
+          <textarea id="recipe-notes" class="form-input" rows="3" placeholder="${t('recipes.notesPlaceholder')}"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="recipe-url">${t('recipes.urlLabel')}</label>
+          <input id="recipe-url" class="form-input" type="url" placeholder="${t('recipes.urlPlaceholder')}">
+        </div>`,
+        { open: isEdit && (!!recipe.notes || !!recipe.recipe_url) })}
       <div class="modal-panel__footer" style="border:none;padding:0;margin-top:var(--space-4)">
         <button class="btn btn--secondary" id="recipe-cancel">${t('common.cancel')}</button>
         <button class="btn btn--primary" id="recipe-save">${isEdit ? t('common.save') : t('common.add')}</button>

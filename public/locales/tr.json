@@ -1457,7 +1457,8 @@
         "closeLabel": "Kapat",
         "overlayLabel": "Modal iletişim kutusu arka planı",
         "unsavedChanges": "Değişiklikler iptal edilsin mi?",
-        "discardChanges": "İptal et"
+        "discardChanges": "İptal et",
+        "moreSettings": "Diğer ayarlar"
     },
     "rrule": {
         "freqNone": "Tekrar yok",

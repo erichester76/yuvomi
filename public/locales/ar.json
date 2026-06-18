@@ -1457,7 +1457,8 @@
         "closeLabel": "إغلاق",
         "overlayLabel": "خلفية مربع الحوار",
         "unsavedChanges": "تجاهل التغييرات؟",
-        "discardChanges": "تجاهل"
+        "discardChanges": "تجاهل",
+        "moreSettings": "المزيد من الإعدادات"
     },
     "rrule": {
         "freqNone": "بدون تكرار",

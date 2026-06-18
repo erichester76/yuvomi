@@ -1463,7 +1463,8 @@
         "closeLabel": "Schließen",
         "overlayLabel": "Modaler Dialog-Hintergrund",
         "unsavedChanges": "Änderungen verwerfen?",
-        "discardChanges": "Verwerfen"
+        "discardChanges": "Verwerfen",
+        "moreSettings": "Weitere Einstellungen"
     },
     "rrule": {
         "freqNone": "Keine Wiederholung",

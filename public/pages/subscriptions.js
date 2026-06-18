@@ -4,7 +4,7 @@
  */
 
 import { api } from '/api.js';
-import { closeModal, confirmModal, openModal } from '/components/modal.js';
+import { closeModal, confirmModal, openModal, advancedSection } from '/components/modal.js';
 import {
   formatDate,
   getLocale,
@@ -652,6 +652,60 @@ export function openSubscriptionModal(subscription = null) {
   ];
   const initialLogo = subscription?.logo_data || '';
   const initialName = subscription?.name || '';
+
+  // Sekundärfelder: Organisation + Service hinter „Weitere Einstellungen".
+  // Beim Bearbeiten automatisch geöffnet, falls bereits Werte abseits der Defaults gesetzt sind.
+  const advancedOpen = edit && (
+    !!subscription.category_id
+    || !!subscription.payment_method_id
+    || (!!subscription.brand_color && subscription.brand_color !== '#0F766E')
+    || !!subscription.notes
+    || subscription.enabled === false
+  );
+
+  const advancedFieldsHtml = `
+      <section class="subscription-form__section">
+        <h3><i data-lucide="tags" aria-hidden="true"></i>${t('subscriptions.organizationDetails')}</h3>
+        <div class="subscription-form__organization-grid">
+          ${comboboxMarkup({
+            id: 'subscription-category',
+            label: t('subscriptions.categoryLabel'),
+            items: categoryItems,
+            value: subscription?.category_id || '',
+            placeholder: t('subscriptions.categorySearchPlaceholder'),
+          })}
+          ${comboboxMarkup({
+            id: 'subscription-method',
+            label: t('subscriptions.paymentMethodLabel'),
+            items: methodItems,
+            value: subscription?.payment_method_id || '',
+            placeholder: t('subscriptions.paymentMethodSearchPlaceholder'),
+          })}
+          <div class="form-group subscription-form__color">
+            <label class="form-label" for="subscription-color">${t('subscriptions.brandColorLabel')}</label>
+            <input class="form-input form-input--color" id="subscription-color" type="color" value="${esc(subscription?.brand_color || '#0F766E')}">
+          </div>
+        </div>
+      </section>
+
+      <section class="subscription-form__section">
+        <h3><i data-lucide="panel-top" aria-hidden="true"></i>${t('subscriptions.serviceDetails')}</h3>
+        <div class="form-group">
+          <label class="form-label" for="subscription-notes">${t('subscriptions.notesLabel')}</label>
+          <textarea class="form-input" id="subscription-notes" rows="3">${esc(subscription?.notes || '')}</textarea>
+        </div>
+        <div class="subscriptions-enabled-row">
+          <div>
+            <strong>${t('subscriptions.enabledLabel')}</strong>
+            <small>${t('subscriptions.enabledHint')}</small>
+          </div>
+          <label class="toggle">
+            <input id="subscription-enabled" type="checkbox" ${subscription?.enabled === false ? '' : 'checked'}>
+            <span class="toggle__track"></span>
+          </label>
+        </div>
+      </section>`;
+
   const content = `
     <form id="subscription-form" class="subscription-form">
       <section class="subscription-form__section subscription-form__identity">
@@ -724,47 +778,7 @@ export function openSubscriptionModal(subscription = null) {
         </div>
       </section>
 
-      <section class="subscription-form__section">
-        <h3><i data-lucide="tags" aria-hidden="true"></i>${t('subscriptions.organizationDetails')}</h3>
-        <div class="subscription-form__organization-grid">
-          ${comboboxMarkup({
-            id: 'subscription-category',
-            label: t('subscriptions.categoryLabel'),
-            items: categoryItems,
-            value: subscription?.category_id || '',
-            placeholder: t('subscriptions.categorySearchPlaceholder'),
-          })}
-          ${comboboxMarkup({
-            id: 'subscription-method',
-            label: t('subscriptions.paymentMethodLabel'),
-            items: methodItems,
-            value: subscription?.payment_method_id || '',
-            placeholder: t('subscriptions.paymentMethodSearchPlaceholder'),
-          })}
-          <div class="form-group subscription-form__color">
-            <label class="form-label" for="subscription-color">${t('subscriptions.brandColorLabel')}</label>
-            <input class="form-input form-input--color" id="subscription-color" type="color" value="${esc(subscription?.brand_color || '#0F766E')}">
-          </div>
-        </div>
-      </section>
-
-      <section class="subscription-form__section">
-        <h3><i data-lucide="panel-top" aria-hidden="true"></i>${t('subscriptions.serviceDetails')}</h3>
-        <div class="form-group">
-          <label class="form-label" for="subscription-notes">${t('subscriptions.notesLabel')}</label>
-          <textarea class="form-input" id="subscription-notes" rows="3">${esc(subscription?.notes || '')}</textarea>
-        </div>
-        <div class="subscriptions-enabled-row">
-          <div>
-            <strong>${t('subscriptions.enabledLabel')}</strong>
-            <small>${t('subscriptions.enabledHint')}</small>
-          </div>
-          <label class="toggle">
-            <input id="subscription-enabled" type="checkbox" ${subscription?.enabled === false ? '' : 'checked'}>
-            <span class="toggle__track"></span>
-          </label>
-        </div>
-      </section>
+      ${advancedSection(advancedFieldsHtml, { open: advancedOpen })}
       <div class="modal-panel__footer subscriptions-modal-footer">
         <button class="btn btn--secondary" type="button" id="subscription-cancel">${t('common.cancel')}</button>
         <button class="btn btn--primary" type="submit">${edit ? t('common.save') : t('common.add')}</button>

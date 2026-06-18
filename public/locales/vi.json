@@ -1457,7 +1457,8 @@
         "closeLabel": "Đóng",
         "overlayLabel": "Nền hộp thoại",
         "unsavedChanges": "Bỏ qua các thay đổi?",
-        "discardChanges": "Bỏ qua"
+        "discardChanges": "Bỏ qua",
+        "moreSettings": "Cài đặt khác"
     },
     "rrule": {
         "freqNone": "Không lặp lại",

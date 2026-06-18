@@ -1463,7 +1463,8 @@
         "closeLabel": "Zamknij",
         "overlayLabel": "Tło dialogu modalnego",
         "unsavedChanges": "Odrzucić zmiany?",
-        "discardChanges": "Odrzuć"
+        "discardChanges": "Odrzuć",
+        "moreSettings": "Więcej ustawień"
     },
     "rrule": {
         "freqNone": "Bez powtarzania",

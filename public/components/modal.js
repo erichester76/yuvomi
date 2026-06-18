@@ -657,3 +657,37 @@ export function btnError(btn) {
   btn.classList.add('btn--shaking');
   btn.addEventListener('animationend', () => btn.classList.remove('btn--shaking'), { once: true });
 }
+
+// --------------------------------------------------------
+// Progressive Disclosure: „Weitere Einstellungen"
+// --------------------------------------------------------
+
+/**
+ * Kapselt Sekundärfelder eines Formulars in einem einklappbaren <details>.
+ * Häufigste Felder bleiben oben sichtbar, seltene wandern hinter einen
+ * „Weitere Einstellungen"-Aufklapper. Gibt einen HTML-String zurück, der in
+ * den `content` von openModal() eingesetzt wird (Injektion via
+ * insertAdjacentHTML in openModal — kein innerHTML).
+ *
+ * Die enthaltenen Felder bleiben unabhängig vom Auf-/Zuklappen im DOM, sodass
+ * bestehende querySelector-Verdrahtung, Dirty-Check und Validierung
+ * unverändert funktionieren.
+ *
+ * @param {string} innerHtml        - Markup der Sekundärfelder (bereits esc-sicher)
+ * @param {Object} [opts]
+ * @param {string} [opts.label]     - Aufklapper-Beschriftung (Default: t('modal.moreSettings'))
+ * @param {boolean} [opts.open=false] - Initial geöffnet (z. B. wenn Sekundärfelder bereits befüllt sind)
+ * @returns {string} HTML-String
+ */
+export function advancedSection(innerHtml, { label, open = false } = {}) {
+  return `
+    <details class="form-advanced"${open ? ' open' : ''}>
+      <summary class="form-advanced__summary">
+        <span>${esc(label ?? t('modal.moreSettings'))}</span>
+        <i data-lucide="chevron-down" class="form-advanced__chevron" aria-hidden="true"></i>
+      </summary>
+      <div class="form-advanced__body">
+        ${innerHtml}
+      </div>
+    </details>`;
+}

@@ -1457,7 +1457,8 @@
         "closeLabel": "Закрыть",
         "overlayLabel": "Фон модального диалога",
         "unsavedChanges": "Отменить изменения?",
-        "discardChanges": "Отменить"
+        "discardChanges": "Отменить",
+        "moreSettings": "Дополнительные настройки"
     },
     "rrule": {
         "freqNone": "Без повтора",

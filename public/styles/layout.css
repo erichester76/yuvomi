@@ -1165,7 +1165,14 @@ html.fab-anim-done .page-fab {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: var(--color-overlay);
+  /* Modul-getönter, leicht geblurter Backdrop: das Modul bleibt als
+   * weiches, eingefärbtes Bild hinter dem Panel sichtbar statt durch eine
+   * flache Dim-Fläche ersetzt zu werden. --blur-xs wird unter
+   * prefers-reduced-transparency/-contrast automatisch zu blur(0) — der
+   * Fallback unten stellt dann ein volldeckenderes Overlay wieder her. */
+  background-color: color-mix(in srgb, var(--active-module-accent, var(--color-accent)) 10%, var(--color-overlay-glass));
+  backdrop-filter: var(--blur-xs) saturate(120%);
+  -webkit-backdrop-filter: var(--blur-xs) saturate(120%);
   z-index: var(--z-modal);
   display: flex;
   align-items: center;
@@ -1189,14 +1196,19 @@ html.fab-anim-done .page-fab {
 .modal-panel {
   background-color: var(--color-surface);
   width: 100%;
-  max-height: calc(100dvh - (2 * var(--space-3)) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  /* Mobile: bewusst auf ~88dvh gedeckelt, damit oben ein Streifen des
+   * geblurten Moduls sichtbar bleibt — das Sheet wirkt als Karte über dem
+   * Modul, nicht als Vollbild-Takeover. Safe-Areas bleiben respektiert. */
+  max-height: min(88dvh, calc(100dvh - (2 * var(--space-3)) - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
   overflow: hidden;
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-subtle);
   box-shadow: var(--shadow-lg);
-  animation: modal-slide-up 0.25s var(--ease-out) forwards;
+  /* Dezentes Einfahren: kurzer Hub + leichte Skalierung statt vollem
+   * translateY(100%)-Vollhub. Wirkt leichter und weniger einnehmend. */
+  animation: modal-sheet-in 0.28s var(--ease-out) forwards;
   /* Cursor vom Overlay zurücksetzen */
   cursor: default;
 }
@@ -1224,7 +1236,7 @@ html.fab-anim-done .page-fab {
 }
 
 .modal-panel__title {
-  font-size: var(--text-base);
+  font-size: var(--type-section-title);
   font-weight: var(--font-weight-semibold);
   text-wrap: balance;
 }
@@ -1305,6 +1317,68 @@ html.fab-anim-done .page-fab {
   gap: var(--space-4);
 }
 
+/* --------------------------------------------------------
+ * Progressive Disclosure: „Weitere Einstellungen"
+ * Einklappbarer Block für Sekundärfelder in Modal-Formularen.
+ * -------------------------------------------------------- */
+.form-advanced {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.form-advanced__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--target-base);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--type-secondary);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--transition-fast);
+}
+
+/* Default-Disclosure-Dreieck entfernen (Cross-Browser) */
+.form-advanced__summary::-webkit-details-marker { display: none; }
+.form-advanced__summary::marker { content: ''; }
+
+.form-advanced__summary:hover {
+  color: var(--color-text-primary);
+}
+
+.form-advanced__summary:focus-visible {
+  outline: 2px solid var(--active-module-accent, var(--color-accent));
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.form-advanced__chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform var(--transition-base);
+}
+
+.form-advanced[open] .form-advanced__chevron {
+  transform: rotate(180deg);
+}
+
+.form-advanced__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-advanced__chevron { transition: none; }
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -1340,8 +1414,20 @@ html.fab-anim-done .page-fab {
   to   { opacity: 1; transform: scale(1); }
 }
 
+/* Mobile-Sheet: sanfter kurzer Hub + leichte Skalierung (kein Vollhub). */
+@keyframes modal-sheet-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
 /* ── Bottom Sheet: Handle + Closing Animation (Mobile < 768px) ── */
 @media (max-width: 767px) {
+  /* Sheet am unteren Rand verankern: oben bleibt ein Streifen des geblurten
+   * Moduls sichtbar (Karte über dem Modul statt zentrierter Vollbild-Dialog). */
+  .modal-overlay {
+    align-items: flex-end;
+  }
+
   .modal-panel {
     /* Extra top padding for the drag handle */
     padding-top: calc(var(--space-4) + 20px);
@@ -2391,6 +2477,14 @@ html.fab-anim-done .page-fab {
 
   .sticky-header {
     background-color: var(--color-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* Ohne Blur braucht der Modal-Backdrop wieder volle Deckkraft, damit das
+   * dahinterliegende Modul nicht unscharf-frei durchscheint. */
+  .modal-overlay {
+    background-color: var(--color-overlay);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }

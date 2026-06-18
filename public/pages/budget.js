@@ -6,7 +6,7 @@
  */
 
 import { api } from '/api.js';
-import { openModal as openSharedModal, closeModal, confirmModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, confirmModal, advancedSection } from '/components/modal.js';
 import { stagger, vibrate } from '/utils/ux.js';
 import { t, formatDate, getLocale } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -967,41 +967,45 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
       <select class="form-input" id="bm-category">${catOpts}</select>
     </div>
 
-    <div class="form-group js-entry-field" id="bm-subcategory-group" ${isExpense ? '' : 'hidden'}>
-      <div class="budget-field-header">
-        <label class="form-label" for="bm-subcategory">${t('budget.subcategoryLabel')}</label>
-        <button class="btn btn--secondary budget-inline-add" type="button" id="bm-add-subcategory">${t('budget.addSubcategory')}</button>
-      </div>
-      <select class="form-input" id="bm-subcategory">${subcatOpts}</select>
-    </div>
-
     <div class="form-group js-entry-field">
       <label class="form-label" for="bm-date">${t('budget.dateLabel')}</label>
       <input type="date" class="form-input" id="bm-date"
              value="${isEdit ? entry.date : today}">
     </div>
 
-    <div class="form-group js-entry-field">
-      <label class="toggle">
-        <input type="checkbox" id="bm-recurring" ${isEdit && entry.is_recurring ? 'checked' : ''}>
-        <span class="toggle__track"></span>
-        <span>${t('budget.recurringLabel')}</span>
-      </label>
-    </div>
+    <div class="js-entry-field">
+      ${advancedSection(`
+        <div class="form-group" id="bm-subcategory-group" ${isExpense ? '' : 'hidden'}>
+          <div class="budget-field-header">
+            <label class="form-label" for="bm-subcategory">${t('budget.subcategoryLabel')}</label>
+            <button class="btn btn--secondary budget-inline-add" type="button" id="bm-add-subcategory">${t('budget.addSubcategory')}</button>
+          </div>
+          <select class="form-input" id="bm-subcategory">${subcatOpts}</select>
+        </div>
 
-    <div class="form-group js-entry-field" id="bm-recurrence-options" ${isEdit && entry.is_recurring ? '' : 'hidden'}>
-      <label class="form-label" for="bm-interval">${t('budget.recurringIntervalLabel')}</label>
-      <select class="form-input" id="bm-interval">
-        ${intervalOption('monthly', 'budget.intervalMonthly')}
-        ${intervalOption('half_year', 'budget.intervalHalfYear')}
-        ${intervalOption('yearly', 'budget.intervalYearly')}
-      </select>
-      <label class="toggle" style="margin-top:var(--space-3)">
-        <input type="checkbox" id="bm-virtual" ${isEdit && entry.recurrence_virtual ? 'checked' : ''}>
-        <span class="toggle__track"></span>
-        <span>${t('budget.virtualBudgetLabel')}</span>
-      </label>
-      <p style="color:var(--color-text-secondary);font-size:var(--text-sm);margin-top:var(--space-1)">${t('budget.virtualBudgetHint')}</p>
+        <div class="form-group">
+          <label class="toggle">
+            <input type="checkbox" id="bm-recurring" ${isEdit && entry.is_recurring ? 'checked' : ''}>
+            <span class="toggle__track"></span>
+            <span>${t('budget.recurringLabel')}</span>
+          </label>
+        </div>
+
+        <div class="form-group" id="bm-recurrence-options" ${isEdit && entry.is_recurring ? '' : 'hidden'}>
+          <label class="form-label" for="bm-interval">${t('budget.recurringIntervalLabel')}</label>
+          <select class="form-input" id="bm-interval">
+            ${intervalOption('monthly', 'budget.intervalMonthly')}
+            ${intervalOption('half_year', 'budget.intervalHalfYear')}
+            ${intervalOption('yearly', 'budget.intervalYearly')}
+          </select>
+          <label class="toggle" style="margin-top:var(--space-3)">
+            <input type="checkbox" id="bm-virtual" ${isEdit && entry.recurrence_virtual ? 'checked' : ''}>
+            <span class="toggle__track"></span>
+            <span>${t('budget.virtualBudgetLabel')}</span>
+          </label>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-sm);margin-top:var(--space-1)">${t('budget.virtualBudgetHint')}</p>
+        </div>`,
+        { open: isEdit && (entry.is_recurring || !!entry.subcategory) })}
     </div>
 
     <div id="bm-loan-fields" hidden>

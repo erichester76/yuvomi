@@ -1457,7 +1457,8 @@
         "closeLabel": "Sluiten",
         "overlayLabel": "Achtergrond modaal dialoogvenster",
         "unsavedChanges": "Wijzigingen verwerpen?",
-        "discardChanges": "Verwerpen"
+        "discardChanges": "Verwerpen",
+        "moreSettings": "Meer instellingen"
     },
     "rrule": {
         "freqNone": "Geen herhaling",

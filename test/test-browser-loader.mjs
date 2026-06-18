@@ -50,6 +50,7 @@ const STUBS = {
     export const openModal = () => {};
     export const closeModal = () => {};
     export const selectModal = async () => null;
+    export const advancedSection = (inner = '') => String(inner);
   `,
   '/utils/ux.js': `
     export const stagger = () => {};

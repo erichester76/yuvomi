@@ -1457,7 +1457,8 @@
         "closeLabel": "Close",
         "overlayLabel": "Modal dialog background",
         "unsavedChanges": "Discard changes?",
-        "discardChanges": "Discard"
+        "discardChanges": "Discard",
+        "moreSettings": "More settings"
     },
     "rrule": {
         "freqNone": "No recurrence",

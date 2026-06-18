@@ -1457,7 +1457,8 @@
         "closeLabel": "Fechar",
         "overlayLabel": "Fundo do diálogo modal",
         "unsavedChanges": "Descartar alterações?",
-        "discardChanges": "Descartar"
+        "discardChanges": "Descartar",
+        "moreSettings": "Mais definições"
     },
     "rrule": {
         "freqNone": "Sem repetição",

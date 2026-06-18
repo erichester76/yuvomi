@@ -1457,7 +1457,8 @@
         "closeLabel": "关闭",
         "overlayLabel": "模态对话框背景",
         "unsavedChanges": "放弃更改？",
-        "discardChanges": "放弃"
+        "discardChanges": "放弃",
+        "moreSettings": "更多设置"
     },
     "rrule": {
         "freqNone": "不重复",

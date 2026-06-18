@@ -6,7 +6,7 @@
 
 import { api } from '/api.js';
 import { renderRRuleFields, bindRRuleEvents, getRRuleValues } from '/rrule-ui.js';
-import { openModal as openSharedModal, closeModal, wireBlurValidation, validateAll, btnSuccess, btnError, promptModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, wireBlurValidation, validateAll, btnSuccess, btnError, promptModal, advancedSection } from '/components/modal.js';
 import { stagger, vibrate } from '/utils/ux.js';
 import { t, formatDate, formatTime, dateInputPlaceholder, formatDateInput, parseDateInput, isDateInputValid, formatTimeInput, parseTimeInput, timeInputPlaceholder } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -326,26 +326,16 @@ function renderModalContent({ task = null, users = [], reminder = null } = {}) {
     `<option value="${p.value}" ${(task?.priority ?? 'none') === p.value ? 'selected' : ''}>${p.label}</option>`
   ).join('');
 
-  return `
-    <form id="task-form" novalidate>
-      <input type="hidden" id="task-id" value="${task?.id ?? ''}">
+  // Sekundärfelder: hinter „Weitere Einstellungen". Beim Bearbeiten automatisch
+  // geöffnet, falls bereits Werte abseits der Defaults gesetzt sind.
+  const advancedFieldsOpen = isEdit && (
+    !!task.description
+    || (!!task.priority && task.priority !== 'none')
+    || (!!task.category && task.category !== 'Sonstiges')
+    || !!task.start_date
+  );
 
-      <div class="form-group">
-        <div class="form-field">
-          <label class="label" for="task-title">${t('tasks.titleLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>
-          <input class="input" type="text" id="task-title" name="title"
-                 value="${esc(task?.title)}" placeholder="${t('tasks.titlePlaceholder')}"
-                 required autocomplete="off">
-          <div class="form-field__error">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/>
-                 <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16.01"/>
-            </svg>
-            ${t('common.required')}
-          </div>
-        </div>
-      </div>
-
+  const advancedFieldsHtml = `
       <div class="form-group">
         <label class="label" for="task-description">${t('tasks.descriptionLabel')}</label>
         <textarea class="input" id="task-description" name="description"
@@ -372,9 +362,29 @@ function renderModalContent({ task = null, users = [], reminder = null } = {}) {
         <label class="label" for="task-start-date">${t('tasks.startDateLabel')}</label>
         <input class="input js-date-input" type="text" id="task-start-date" name="start_date"
                value="${formatDateInput(task?.start_date)}" placeholder="${dateInputPlaceholder()}" inputmode="text">
+      </div>`;
+
+  return `
+    <form id="task-form" novalidate>
+      <input type="hidden" id="task-id" value="${task?.id ?? ''}">
+
+      <div class="form-group">
+        <div class="form-field">
+          <label class="label" for="task-title">${t('tasks.titleLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>
+          <input class="input" type="text" id="task-title" name="title"
+                 value="${esc(task?.title)}" placeholder="${t('tasks.titlePlaceholder')}"
+                 required autocomplete="off">
+          <div class="form-field__error">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/>
+                 <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16.01"/>
+            </svg>
+            ${t('common.required')}
+          </div>
+        </div>
       </div>
 
-      <div class="modal-grid modal-grid--2" style="margin-top:var(--space-4)">
+      <div class="modal-grid modal-grid--2">
         <div class="form-group">
           <label class="label" for="task-due-date">${t('tasks.dueDateLabel')}</label>
           <input class="input js-date-input" type="text" id="task-due-date" name="due_date"
@@ -390,6 +400,8 @@ function renderModalContent({ task = null, users = [], reminder = null } = {}) {
       <div class="form-group" style="margin-top:var(--space-4)">
         ${renderUserMultiSelect(users, selectedIds, 'task_assigned', 'tasks.assignedLabel')}
       </div>
+
+      ${advancedSection(advancedFieldsHtml, { open: advancedFieldsOpen })}
 
       ${isEdit ? `
         <div class="form-group">

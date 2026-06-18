@@ -1457,7 +1457,8 @@
         "closeLabel": "Fermer",
         "overlayLabel": "Arrière-plan de la boîte de dialogue modale",
         "unsavedChanges": "Abandonner les modifications ?",
-        "discardChanges": "Abandonner"
+        "discardChanges": "Abandonner",
+        "moreSettings": "Plus de paramètres"
     },
     "rrule": {
         "freqNone": "Pas de répétition",

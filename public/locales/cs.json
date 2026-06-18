@@ -1457,7 +1457,8 @@
         "closeLabel": "Zavřít",
         "overlayLabel": "Pozadí modálního dialogu",
         "unsavedChanges": "Zahodit změny?",
-        "discardChanges": "Zahodit"
+        "discardChanges": "Zahodit",
+        "moreSettings": "Další nastavení"
     },
     "search": {
         "title": "Hledat",

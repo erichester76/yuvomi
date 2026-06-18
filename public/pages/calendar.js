@@ -6,7 +6,7 @@
 
 import { api } from '/api.js';
 import { renderRRuleFields, bindRRuleEvents, getRRuleValues } from '/rrule-ui.js';
-import { openModal as openSharedModal, closeModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, advancedSection } from '/components/modal.js';
 import { stagger } from '/utils/ux.js';
 import { t, formatDate as formatPreferredDate, formatTime, dateInputPlaceholder, formatDateInput, parseDateInput, isDateInputValid, formatTimeInput, parseTimeInput, timeInputPlaceholder } from '/i18n.js';
 import { esc, fmtLocation } from '/utils/html.js';
@@ -2114,6 +2114,75 @@ function buildEventModalContent({ mode, event, date, reminder = null }) {
     ? (event.assigned_users?.map((u) => u.id) ?? (event.assigned_to ? [event.assigned_to] : []))
     : [];
 
+  // Sekundärfelder: wandern hinter „Weitere Einstellungen". Beim Bearbeiten
+  // automatisch geöffnet, falls bereits Werte gesetzt sind.
+  const advancedFieldsOpen = isEdit
+    && (!!event.location || !!event.description || hasAttachment(event));
+
+  const advancedFieldsHtml = `
+    <div class="form-group">
+      <label class="form-label" for="modal-location">${t('calendar.locationLabel')}</label>
+      <input type="text" class="form-input" id="modal-location"
+             placeholder="${t('calendar.locationPlaceholder')}" value="${esc(isEdit && event.location ? event.location : '')}">
+    </div>
+
+    <div class="form-group js-color-picker-group">
+      <label class="form-label" id="event-color-label">${t('calendar.colorLabel')}</label>
+      <div class="color-picker" id="event-color-picker" role="radiogroup" aria-labelledby="event-color-label">
+        ${EVENT_COLORS.map((c, i) => `
+          <div class="color-swatch" data-color="${c}" style="background-color:${c};"
+               role="radio"
+               tabindex="${i === 0 ? '0' : '-1'}"
+               aria-checked="false"
+               aria-label="${EVENT_COLOR_NAMES()[c] ?? c}"></div>
+        `).join('')}
+      </div>
+      <p class="form-hint color-picker__assignee-hint" id="color-picker-assignee-hint" hidden>${t('calendar.colorOverriddenByAssignee')}</p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="event-sync-target">${t('calendar.syncTargetLabel')}</label>
+      <select class="form-input" id="event-sync-target">
+        <option value="">${t('calendar.syncTargetLocal')}</option>
+      </select>
+      <small class="form-hint">${t('calendar.syncTargetHint')}</small>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="modal-description">${t('calendar.descriptionLabel')}</label>
+      <textarea class="form-input" id="modal-description" rows="2"
+                placeholder="${t('calendar.descriptionPlaceholder')}">${esc(isEdit && event.description ? event.description : '')}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="modal-attachment">${t('calendar.attachmentLabel')}</label>
+      <p class="document-storage-target">
+        <i data-lucide="${state.documentUploadBackend === 'webdav' ? 'cloud' : 'database'}" aria-hidden="true"></i>
+        <span>${t('documents.activeUploadTarget', {
+          target: state.documentUploadBackend === 'webdav'
+            ? t('documents.storageWebdav')
+            : t('documents.storageLocal'),
+        })}</span>
+      </p>
+      <label class="document-dropzone" id="modal-attachment-dropzone" for="modal-attachment">
+        <input class="sr-only" id="modal-attachment" type="file" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <span class="document-dropzone__icon">
+          <i data-lucide="file-up" aria-hidden="true"></i>
+        </span>
+        <span class="document-dropzone__title">${t('documents.dropzoneTitle')}</span>
+        <span class="document-dropzone__hint">${t('documents.dropzoneHint')}</span>
+        <span class="document-dropzone__file" id="modal-selected-attachment" ${isEdit && event.attachment_name ? '' : 'hidden'}>
+          ${isEdit && event.attachment_name ? esc(selectedAttachmentLabel(event.attachment_name)) : ''}
+        </span>
+      </label>
+      <div class="form-help">${t('calendar.attachmentHint')}</div>
+      <div class="event-attachment-preview" id="modal-attachment-preview" ${isEdit && hasAttachment(event) ? '' : 'hidden'}>
+        ${isEdit && hasAttachment(event) ? attachmentPreviewHtml(event) : ''}
+      </div>
+      <button class="btn btn--secondary" id="modal-remove-attachment" type="button"
+              ${isEdit && hasAttachment(event) ? '' : 'hidden'}>${t('calendar.attachmentRemove')}</button>
+    </div>`;
+
   return `
     <div class="event-title-picker">
       <div class="form-group event-icon-picker">
@@ -2180,71 +2249,10 @@ function buildEventModalContent({ mode, event, date, reminder = null }) {
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="modal-location">${t('calendar.locationLabel')}</label>
-      <input type="text" class="form-input" id="modal-location"
-             placeholder="${t('calendar.locationPlaceholder')}" value="${esc(isEdit && event.location ? event.location : '')}">
-    </div>
-
-    <div class="form-group">
       ${renderUserMultiSelect(state.users, selectedUserIds, 'cal_assigned', 'calendar.assignedLabel')}
     </div>
 
-    <div class="form-group js-color-picker-group">
-      <label class="form-label" id="event-color-label">${t('calendar.colorLabel')}</label>
-      <div class="color-picker" id="event-color-picker" role="radiogroup" aria-labelledby="event-color-label">
-        ${EVENT_COLORS.map((c, i) => `
-          <div class="color-swatch" data-color="${c}" style="background-color:${c};"
-               role="radio"
-               tabindex="${i === 0 ? '0' : '-1'}"
-               aria-checked="false"
-               aria-label="${EVENT_COLOR_NAMES()[c] ?? c}"></div>
-        `).join('')}
-      </div>
-      <p class="form-hint color-picker__assignee-hint" id="color-picker-assignee-hint" hidden>${t('calendar.colorOverriddenByAssignee')}</p>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="event-sync-target">${t('calendar.syncTargetLabel')}</label>
-      <select class="form-input" id="event-sync-target">
-        <option value="">${t('calendar.syncTargetLocal')}</option>
-      </select>
-      <small class="form-hint">${t('calendar.syncTargetHint')}</small>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="modal-description">${t('calendar.descriptionLabel')}</label>
-      <textarea class="form-input" id="modal-description" rows="2"
-                placeholder="${t('calendar.descriptionPlaceholder')}">${esc(isEdit && event.description ? event.description : '')}</textarea>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="modal-attachment">${t('calendar.attachmentLabel')}</label>
-      <p class="document-storage-target">
-        <i data-lucide="${state.documentUploadBackend === 'webdav' ? 'cloud' : 'database'}" aria-hidden="true"></i>
-        <span>${t('documents.activeUploadTarget', {
-          target: state.documentUploadBackend === 'webdav'
-            ? t('documents.storageWebdav')
-            : t('documents.storageLocal'),
-        })}</span>
-      </p>
-      <label class="document-dropzone" id="modal-attachment-dropzone" for="modal-attachment">
-        <input class="sr-only" id="modal-attachment" type="file" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-        <span class="document-dropzone__icon">
-          <i data-lucide="file-up" aria-hidden="true"></i>
-        </span>
-        <span class="document-dropzone__title">${t('documents.dropzoneTitle')}</span>
-        <span class="document-dropzone__hint">${t('documents.dropzoneHint')}</span>
-        <span class="document-dropzone__file" id="modal-selected-attachment" ${isEdit && event.attachment_name ? '' : 'hidden'}>
-          ${isEdit && event.attachment_name ? esc(selectedAttachmentLabel(event.attachment_name)) : ''}
-        </span>
-      </label>
-      <div class="form-help">${t('calendar.attachmentHint')}</div>
-      <div class="event-attachment-preview" id="modal-attachment-preview" ${isEdit && hasAttachment(event) ? '' : 'hidden'}>
-        ${isEdit && hasAttachment(event) ? attachmentPreviewHtml(event) : ''}
-      </div>
-      <button class="btn btn--secondary" id="modal-remove-attachment" type="button"
-              ${isEdit && hasAttachment(event) ? '' : 'hidden'}>${t('calendar.attachmentRemove')}</button>
-    </div>
+    ${advancedSection(advancedFieldsHtml, { open: advancedFieldsOpen })}
 
     ${renderRRuleFields('event', isEdit ? event.recurrence_rule : null)}
 

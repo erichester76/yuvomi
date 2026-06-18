@@ -1457,7 +1457,8 @@
         "closeLabel": "बंद करें",
         "overlayLabel": "मोडल डायलॉग पृष्ठभूमि",
         "unsavedChanges": "बदलाव छोड़ें?",
-        "discardChanges": "छोड़ें"
+        "discardChanges": "छोड़ें",
+        "moreSettings": "अधिक सेटिंग्स"
     },
     "rrule": {
         "freqNone": "कोई दोहराव नहीं",

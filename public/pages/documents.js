@@ -5,7 +5,7 @@
  */
 
 import { api } from '/api.js';
-import { openModal as openSharedModal, closeModal, selectModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, selectModal, advancedSection } from '/components/modal.js';
 import { t, formatDate } from '/i18n.js';
 import { esc } from '/utils/html.js';
 import { stagger } from '/utils/ux.js';
@@ -522,6 +522,41 @@ function memberOptions(selected = []) {
 
 function openDocumentModal(doc = null) {
   const isEdit = !!doc;
+
+  // Sekundärfelder: Beschreibung, Sichtbarkeit/Status + Mitglieder-Freigabe.
+  const advancedOpen = isEdit && (
+    !!doc.description
+    || (!!doc.visibility && doc.visibility !== 'family')
+    || doc.status === 'archived'
+  );
+
+  const advancedFieldsHtml = `
+        <div class="form-group">
+          <label class="label" for="document-description">${t('documents.descriptionLabel')}</label>
+          <textarea class="input" id="document-description" rows="3" maxlength="5000">${esc(doc?.description || '')}</textarea>
+        </div>
+        <div class="modal-grid modal-grid--2">
+          <div class="form-group">
+            <label class="label" for="document-visibility">${t('documents.visibilityLabel')}</label>
+            <select class="input" id="document-visibility">
+              <option value="family" ${doc?.visibility === 'family' ? 'selected' : ''}>${t('documents.visibility.family')}</option>
+              <option value="restricted" ${doc?.visibility === 'restricted' ? 'selected' : ''}>${t('documents.visibility.restricted')}</option>
+              <option value="private" ${doc?.visibility === 'private' ? 'selected' : ''}>${t('documents.visibility.private')}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="label" for="document-status">${t('documents.statusLabel')}</label>
+            <select class="input" id="document-status">
+              <option value="active" ${doc?.status !== 'archived' ? 'selected' : ''}>${t('documents.statusActive')}</option>
+              <option value="archived" ${doc?.status === 'archived' ? 'selected' : ''}>${t('documents.statusArchived')}</option>
+            </select>
+          </div>
+        </div>
+        <div class="document-member-picker" id="document-member-picker">
+          <div class="label">${t('documents.allowedMembersLabel')}</div>
+          <div class="document-member-picker__grid">${memberOptions(doc?.allowed_member_ids || [])}</div>
+        </div>`;
+
   openSharedModal({
     title: isEdit ? t('documents.editTitle') : t('documents.newTitle'),
     size: 'lg',
@@ -546,10 +581,6 @@ function openDocumentModal(doc = null) {
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label class="label" for="document-description">${t('documents.descriptionLabel')}</label>
-          <textarea class="input" id="document-description" rows="3" maxlength="5000">${esc(doc?.description || '')}</textarea>
-        </div>
         ${!isEdit ? `
         <div class="form-group">
           <label class="label" for="document-file">${t('documents.fileLabel')}</label>
@@ -572,27 +603,7 @@ function openDocumentModal(doc = null) {
           </label>
           <p class="document-form__hint">${t('documents.fileHint')}</p>
         </div>` : ''}
-        <div class="modal-grid modal-grid--2">
-          <div class="form-group">
-            <label class="label" for="document-visibility">${t('documents.visibilityLabel')}</label>
-            <select class="input" id="document-visibility">
-              <option value="family" ${doc?.visibility === 'family' ? 'selected' : ''}>${t('documents.visibility.family')}</option>
-              <option value="restricted" ${doc?.visibility === 'restricted' ? 'selected' : ''}>${t('documents.visibility.restricted')}</option>
-              <option value="private" ${doc?.visibility === 'private' ? 'selected' : ''}>${t('documents.visibility.private')}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="label" for="document-status">${t('documents.statusLabel')}</label>
-            <select class="input" id="document-status">
-              <option value="active" ${doc?.status !== 'archived' ? 'selected' : ''}>${t('documents.statusActive')}</option>
-              <option value="archived" ${doc?.status === 'archived' ? 'selected' : ''}>${t('documents.statusArchived')}</option>
-            </select>
-          </div>
-        </div>
-        <div class="document-member-picker" id="document-member-picker">
-          <div class="label">${t('documents.allowedMembersLabel')}</div>
-          <div class="document-member-picker__grid">${memberOptions(doc?.allowed_member_ids || [])}</div>
-        </div>
+        ${advancedSection(advancedFieldsHtml, { open: advancedOpen })}
         <div id="document-error" class="login-error" hidden></div>
         <div class="modal-panel__footer" style="padding:0;border:none;margin-top:var(--space-5)">
           <button type="submit" class="btn btn--primary" id="document-submit">${isEdit ? t('common.save') : t('documents.uploadAction')}</button>

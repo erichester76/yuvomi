@@ -5,7 +5,7 @@
  */
 
 import { api } from '/api.js';
-import { openModal as openSharedModal, closeModal, btnError } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, btnError, advancedSection } from '/components/modal.js';
 import { stagger, vibrate } from '/utils/ux.js';
 import { t } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -400,27 +400,29 @@ function openNoteModal({ mode, note = null }) {
                 placeholder="${t('notes.contentPlaceholder')}"
                 style="resize:vertical;">${esc(isEdit ? note.content : '')}</textarea>
     </div>
-    <div class="form-group">
-      <label class="form-label" id="note-color-label">${t('notes.colorLabel')}</label>
-      <div class="note-color-picker" role="radiogroup" aria-labelledby="note-color-label">
-        ${NOTE_COLORS.map((c) => `
-          <div class="note-color-swatch ${c === selColor ? 'note-color-swatch--active' : ''}"
-               data-color="${c}"
-               style="background-color:${c};border:2px solid ${c === '#FFFFFF' ? '#E5E5EA' : c};"
-               role="radio"
-               tabindex="${c === selColor ? '0' : '-1'}"
-               aria-checked="${c === selColor ? 'true' : 'false'}"
-               aria-label="${NOTE_COLOR_NAMES()[c] ?? c}"></div>
-        `).join('')}
+    ${advancedSection(`
+      <div class="form-group">
+        <label class="form-label" id="note-color-label">${t('notes.colorLabel')}</label>
+        <div class="note-color-picker" role="radiogroup" aria-labelledby="note-color-label">
+          ${NOTE_COLORS.map((c) => `
+            <div class="note-color-swatch ${c === selColor ? 'note-color-swatch--active' : ''}"
+                 data-color="${c}"
+                 style="background-color:${c};border:2px solid ${c === '#FFFFFF' ? '#E5E5EA' : c};"
+                 role="radio"
+                 tabindex="${c === selColor ? '0' : '-1'}"
+                 aria-checked="${c === selColor ? 'true' : 'false'}"
+                 aria-label="${NOTE_COLOR_NAMES()[c] ?? c}"></div>
+          `).join('')}
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="toggle">
-        <input type="checkbox" id="note-pinned" ${isEdit && note.pinned ? 'checked' : ''}>
-        <span class="toggle__track"></span>
-        <span>${t('notes.pinnedLabel')}</span>
-      </label>
-    </div>
+      <div class="form-group">
+        <label class="toggle">
+          <input type="checkbox" id="note-pinned" ${isEdit && note.pinned ? 'checked' : ''}>
+          <span class="toggle__track"></span>
+          <span>${t('notes.pinnedLabel')}</span>
+        </label>
+      </div>`,
+      { open: isEdit && (!!note.pinned || (!!note.color && note.color !== NOTE_COLORS[0])) })}
 
     <div class="modal-panel__footer" style="border:none;padding:0;margin-top:var(--space-4)">
       <button class="btn btn--secondary" id="note-modal-cancel">${t('common.cancel')}</button>

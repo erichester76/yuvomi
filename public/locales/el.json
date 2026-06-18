@@ -1457,7 +1457,8 @@
         "closeLabel": "Κλείσιμο",
         "overlayLabel": "Φόντο αναδυόμενου παραθύρου",
         "unsavedChanges": "Απόρριψη αλλαγών;",
-        "discardChanges": "Απόρριψη"
+        "discardChanges": "Απόρριψη",
+        "moreSettings": "Περισσότερες ρυθμίσεις"
     },
     "rrule": {
         "freqNone": "Χωρίς επανάληψη",

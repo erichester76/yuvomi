@@ -1457,7 +1457,8 @@
         "closeLabel": "Закрити",
         "overlayLabel": "Фон модального вікна",
         "unsavedChanges": "Скасувати зміни?",
-        "discardChanges": "Скасувати"
+        "discardChanges": "Скасувати",
+        "moreSettings": "Додаткові налаштування"
     },
     "rrule": {
         "freqNone": "Без повторення",

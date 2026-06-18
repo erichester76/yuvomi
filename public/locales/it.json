@@ -1457,7 +1457,8 @@
         "closeLabel": "Chiudi",
         "overlayLabel": "Sfondo del dialogo modale",
         "unsavedChanges": "Annullare le modifiche?",
-        "discardChanges": "Annulla"
+        "discardChanges": "Annulla",
+        "moreSettings": "Altre impostazioni"
     },
     "rrule": {
         "freqNone": "Nessuna ripetizione",

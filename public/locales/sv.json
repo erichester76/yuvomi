@@ -1457,7 +1457,8 @@
         "closeLabel": "Stäng",
         "overlayLabel": "Bakgrund för modal dialog",
         "unsavedChanges": "Ignorera ändringar?",
-        "discardChanges": "Ignorera"
+        "discardChanges": "Ignorera",
+        "moreSettings": "Fler inställningar"
     },
     "rrule": {
         "freqNone": "Ingen upprepning",

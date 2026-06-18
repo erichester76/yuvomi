@@ -1457,7 +1457,8 @@
         "closeLabel": "閉じる",
         "overlayLabel": "モーダルダイアログの背景",
         "unsavedChanges": "変更を破棄しますか？",
-        "discardChanges": "破棄"
+        "discardChanges": "破棄",
+        "moreSettings": "詳細設定"
     },
     "rrule": {
         "freqNone": "繰り返しなし",

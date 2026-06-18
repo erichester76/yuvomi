@@ -5,7 +5,7 @@
  */
 
 import { api } from '/api.js';
-import { openModal as openSharedModal, closeModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, advancedSection } from '/components/modal.js';
 import { stagger, vibrate } from '/utils/ux.js';
 import { t } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -321,14 +321,26 @@ function openContactModal({ mode, contact = null }) {
     `<option value="${c}" ${isEdit && contact.category === c ? 'selected' : ''}>${catLabels[c] || esc(c)}</option>`
   ).join('');
 
+  const advancedOpen = isEdit && (!!contact.address || !!contact.notes);
+
+  const advancedFieldsHtml = `
+    <div class="form-group">
+      <label class="form-label" for="cm-category">${t('contacts.categoryLabel')}</label>
+      <select class="form-input" id="cm-category">${catOpts}</select>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="cm-address">${t('contacts.addressLabel')}</label>
+      <input type="text" class="form-input" id="cm-address" placeholder="${t('contacts.addressPlaceholder')}" value="${v('address')}" autocomplete="street-address">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="cm-notes">${t('contacts.notesLabel')}</label>
+      <textarea class="form-input" id="cm-notes" rows="2" placeholder="${t('contacts.notesPlaceholder')}">${v('notes')}</textarea>
+    </div>`;
+
   const content = `
     <div class="form-group">
       <label class="form-label" for="cm-name">${t('contacts.nameLabel')}</label>
       <input type="text" class="form-input" id="cm-name" placeholder="${t('contacts.namePlaceholder')}" value="${v('name')}" autocomplete="name">
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="cm-category">${t('contacts.categoryLabel')}</label>
-      <select class="form-input" id="cm-category">${catOpts}</select>
     </div>
     <div class="form-group">
       <label class="form-label" for="cm-phone">${t('contacts.phoneLabel')}</label>
@@ -338,14 +350,8 @@ function openContactModal({ mode, contact = null }) {
       <label class="form-label" for="cm-email">${t('contacts.emailLabel')}</label>
       <input type="email" class="form-input" id="cm-email" placeholder="${t('contacts.emailPlaceholder')}" value="${v('email')}" autocomplete="email">
     </div>
-    <div class="form-group">
-      <label class="form-label" for="cm-address">${t('contacts.addressLabel')}</label>
-      <input type="text" class="form-input" id="cm-address" placeholder="${t('contacts.addressPlaceholder')}" value="${v('address')}" autocomplete="street-address">
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="cm-notes">${t('contacts.notesLabel')}</label>
-      <textarea class="form-input" id="cm-notes" rows="2" placeholder="${t('contacts.notesPlaceholder')}">${v('notes')}</textarea>
-    </div>
+
+    ${advancedSection(advancedFieldsHtml, { open: advancedOpen })}
 
     <div class="modal-panel__footer" style="border:none;padding:0;margin-top:var(--space-4)">
       ${isEdit && !contact.family_user_id ? `<button class="btn btn--danger btn--icon" id="cm-delete" aria-label="${t('contacts.deleteLabel')}">

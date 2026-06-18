@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.0] - 2026-06-18
+
+### Changed
+- **Calmer create/edit modals across the app:** form dialogs now keep their module visible as a soft, tinted blur behind the panel instead of a full-screen takeover, and on mobile they open as a bottom sheet anchored to the lower edge.
+- **Progressive disclosure in heavy forms:** the most-used fields stay visible while secondary options collapse under a "More settings" section that auto-expands when editing an entry that already uses them. Applied to calendar events, tasks, budget entries, subscriptions, contacts, birthdays, meals, recipes, notes, and documents.
+
 ## [0.73.0] - 2026-06-18
 
 ### Added

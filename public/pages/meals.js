@@ -5,7 +5,7 @@
  */
 
 import { api } from '/api.js';
-import { openModal as openSharedModal, closeModal as closeSharedModal, selectModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal as closeSharedModal, selectModal, advancedSection } from '/components/modal.js';
 import { stagger } from '/utils/ux.js';
 import { t, formatDate, dateInputPlaceholder, formatDateInput, parseDateInput, isDateInputValid } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -783,7 +783,7 @@ function openMealModal(opts) {
   });
 }
 
-function buildModalContent({ mode, date, mealType, meal }) {
+function buildModalContent({ mode, date, mealType, meal, presetRecipeId = null }) {
   const isEdit   = mode === 'edit';
   const typeOpts = MEAL_TYPES().map((mt) =>
     `<option value="${mt.key}" ${mt.key === mealType ? 'selected' : ''}>${mt.label}</option>`
@@ -804,27 +804,10 @@ function buildModalContent({ mode, date, mealType, meal }) {
     ...state.recipes.map((r) => `<option value="${r.id}" ${isEdit && meal.recipe_id === r.id ? 'selected' : ''}>${esc(r.title)}</option>`),
   ].join('');
 
-  return `
-    <div class="modal-grid modal-grid--2">
-      <div class="form-group">
-        <label class="form-label" for="modal-date">${t('meals.dateLabel')}</label>
-        <input type="text" class="form-input js-date-input" id="modal-date" value="${formatDateInput(date)}" placeholder="${dateInputPlaceholder()}" inputmode="numeric">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="modal-type">${t('meals.mealTypeLabel')}</label>
-        <select class="form-input" id="modal-type">${typeOpts}</select>
-      </div>
-    </div>
+  const advancedOpen = (isEdit && (!!meal.recipe_id || !!meal.notes || !!meal.recipe_url))
+    || !!presetRecipeId;
 
-    <div class="form-group" style="position:relative;">
-      <label class="form-label" for="modal-title">${t('meals.titleLabel')}</label>
-      <input type="text" class="form-input" id="modal-title"
-             placeholder="${t('meals.titlePlaceholder')}"
-             value="${esc(isEdit ? meal.title : '')}"
-             autocomplete="off">
-      <div id="modal-autocomplete" class="meal-modal__autocomplete" hidden></div>
-    </div>
-
+  const advancedFieldsHtml = `
     <div class="form-group">
       <label class="form-label" for="modal-recipe-id">${t('meals.savedRecipeLabel')}</label>
       <select class="form-input" id="modal-recipe-id">${recipeOptions}</select>
@@ -851,6 +834,27 @@ function buildModalContent({ mode, date, mealType, meal }) {
       <input type="url" class="form-input" id="modal-recipe-url"
              placeholder="${t('meals.recipeUrlPlaceholder')}"
              value="${esc(isEdit && meal.recipe_url ? meal.recipe_url : '')}">
+    </div>`;
+
+  return `
+    <div class="modal-grid modal-grid--2">
+      <div class="form-group">
+        <label class="form-label" for="modal-date">${t('meals.dateLabel')}</label>
+        <input type="text" class="form-input js-date-input" id="modal-date" value="${formatDateInput(date)}" placeholder="${dateInputPlaceholder()}" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="modal-type">${t('meals.mealTypeLabel')}</label>
+        <select class="form-input" id="modal-type">${typeOpts}</select>
+      </div>
+    </div>
+
+    <div class="form-group" style="position:relative;">
+      <label class="form-label" for="modal-title">${t('meals.titleLabel')}</label>
+      <input type="text" class="form-input" id="modal-title"
+             placeholder="${t('meals.titlePlaceholder')}"
+             value="${esc(isEdit ? meal.title : '')}"
+             autocomplete="off">
+      <div id="modal-autocomplete" class="meal-modal__autocomplete" hidden></div>
     </div>
 
     <div class="form-group">
@@ -861,6 +865,8 @@ function buildModalContent({ mode, date, mealType, meal }) {
         ${t('meals.addIngredient')}
       </button>
     </div>
+
+    ${advancedSection(advancedFieldsHtml, { open: advancedOpen })}
 
     ${isEdit && hasIngOpen ? `
     <div class="shopping-transfer">

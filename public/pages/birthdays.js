@@ -1,5 +1,5 @@
 import { api } from '/api.js';
-import { openModal as openSharedModal, closeModal, confirmModal } from '/components/modal.js';
+import { openModal as openSharedModal, closeModal, confirmModal, advancedSection } from '/components/modal.js';
 import { stagger, deleteWithUndo } from '/utils/ux.js';
 import { t, formatDate, dateInputPlaceholder, formatDateInput, parseDateInput, isDateInputValid } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -377,11 +377,13 @@ function openBirthdayModal({ mode, birthday = null }) {
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="bd-notes">${t('birthdays.notesLabel')}</label>
-          <textarea class="form-input" id="bd-notes" rows="3" placeholder="${t('birthdays.notesPlaceholder')}">${esc(birthday?.notes || '')}</textarea>
-        </div>
-        ${renderBirthdayReminderSection(birthday)}
+        ${advancedSection(`
+          <div class="form-group">
+            <label class="form-label" for="bd-notes">${t('birthdays.notesLabel')}</label>
+            <textarea class="form-input" id="bd-notes" rows="3" placeholder="${t('birthdays.notesPlaceholder')}">${esc(birthday?.notes || '')}</textarea>
+          </div>
+          ${renderBirthdayReminderSection(birthday)}`,
+          { open: isEdit && (!!birthday?.notes || (!!birthday?.reminder_offset && birthday.reminder_offset !== '0')) })}
         <div class="birthday-modal__hint">${t('birthdays.calendarHint')}</div>
         <div class="modal-panel__footer" style="border:none;padding:0;margin-top:var(--space-4)">
           ${isEdit ? `<button class="btn btn--danger" id="bd-delete">${t('common.delete')}</button>` : '<div></div>'}
