@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.73.0] - 2026-06-18
+
 ### Added
 - **Subscriptions tracker under Budget:** a new tab between Budget and Loans tracks daily, weekly, monthly, and yearly services with renewal dates, pause/disable state, custom categories and payment methods, search/filter/sort controls, uploaded or securely discovered logos, brand colors, and responsive mobile cards.
 - **Subscription budgeting and analytics:** configurable monthly budget, remaining/over-budget status, yearly projection, category and payment-method breakdowns, native-currency amounts, and optional Fixer-backed conversion into a household base currency with a 12-hour server cache.

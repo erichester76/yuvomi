@@ -143,4 +143,7 @@ After the container starts, open the WebUI — the first visit guides you throug
   <Config Name="EMAIL_FROM_ADDRESS" Target="EMAIL_FROM_ADDRESS" Default="" Mode="" Description="Optional. Sender email address for outgoing mail, e.g. yuvomi@example.com." Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="EMAIL_FROM_NAME" Target="EMAIL_FROM_NAME" Default="Yuvomi" Mode="" Description="Optional. Sender display name for outgoing mail (default: Yuvomi)." Type="Variable" Display="advanced" Required="false" Mask="false">Yuvomi</Config>
   <Config Name="BASE_URL" Target="BASE_URL" Default="" Mode="" Description="Optional but required for password-reset emails to be sent. Absolute origin used to build reset links, e.g. https://yuvomi.example.com. The request Host header is never trusted as a fallback, to prevent reset-link poisoning." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Budget → Subscriptions currency conversion (optional) -->
+  <Config Name="FIXER_API_KEY" Target="FIXER_API_KEY" Default="" Mode="" Description="Optional. Fixer API key for live currency conversion in Budget → Subscriptions. Rates are cached for 12 hours; works without this key using the cached/manual rate." Type="Variable" Display="advanced" Required="false" Mask="true"/>
 </Container>
