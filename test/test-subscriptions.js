@@ -46,7 +46,7 @@ try {
     logoService.serviceDomainCandidates('Netflix').slice(0, 3),
     ['netflix.com', 'netflix.io', 'netflix.app'],
   );
-  assert.ok(logoService.serviceDomainCandidates('Amazon Prime').includes('amazon.com'));
+  assert.ok(logoService.serviceDomainCandidates('Amazon Prime').some((domain) => domain === 'amazon.com'));
   assert.deepEqual(
     logoService.serviceDomainCandidates('https://www.example.com/billing'),
     ['example.com'],

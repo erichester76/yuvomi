@@ -1,5 +1,7 @@
 import dns from 'node:dns/promises';
+import https from 'node:https';
 import net from 'node:net';
+import { decodeHtmlEntities } from '../utils/html-entities.js';
 
 const MAX_HTML_BYTES = 5 * 1024 * 1024;
 const MAX_HTML_SCAN_BYTES = 2 * 1024 * 1024;
@@ -61,16 +63,70 @@ async function assertPublicHttps(url) {
   if (!addresses.length || addresses.some(({ address }) => privateAddress(address))) {
     throw new Error('Logo search cannot access private or local network addresses.');
   }
-  return parsed;
+  return { parsed, addresses };
+}
+
+// dns.lookup() validates the hostname once; without pinning, the connection's own DNS
+// resolution could return a different (private) address by the time it runs — a TOCTOU
+// rebinding gap. Passing this `lookup` to https.request forces the socket to connect to
+// one of the addresses we already validated, while hostname/servername (and thus TLS cert
+// + SNI checks) stay untouched. Node's Happy-Eyeballs connector requests `{ all: true }`
+// and expects the address array form; older call sites expect the single-address form.
+function pinnedLookup(addresses) {
+  return (_hostname, optionsOrCallback, maybeCallback) => {
+    const options = typeof optionsOrCallback === 'function' ? {} : optionsOrCallback;
+    const callback = typeof optionsOrCallback === 'function' ? optionsOrCallback : maybeCallback;
+    if (options?.all) {
+      callback(null, addresses);
+    } else {
+      callback(null, addresses[0].address, addresses[0].family);
+    }
+  };
+}
+
+function nodeResponseAsFetchLike(res) {
+  const iterator = res[Symbol.asyncIterator]();
+  return {
+    status: res.statusCode,
+    get ok() { return res.statusCode >= 200 && res.statusCode < 300; },
+    headers: {
+      get: (name) => {
+        const value = res.headers[name.toLowerCase()];
+        return Array.isArray(value) ? value.join(', ') : (value ?? null);
+      },
+    },
+    body: {
+      getReader: () => ({
+        read: async () => {
+          const { done, value } = await iterator.next();
+          return { done, value };
+        },
+        cancel: async () => { res.destroy(); },
+      }),
+    },
+  };
+}
+
+function requestPinned(parsed, addresses, options) {
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: parsed.hostname,
+      servername: parsed.hostname,
+      port: parsed.port || 443,
+      path: `${parsed.pathname}${parsed.search}`,
+      method: 'GET',
+      headers: { ...REQUEST_HEADERS, ...options.headers },
+      signal: options.signal,
+      lookup: pinnedLookup(addresses),
+    }, (res) => resolve(nodeResponseAsFetchLike(res)));
+    req.on('error', reject);
+    req.end();
+  });
 }
 
 async function fetchPublic(url, options = {}, redirectCount = 0) {
-  const parsed = await assertPublicHttps(url);
-  const response = await fetch(parsed, {
-    ...options,
-    headers: { ...REQUEST_HEADERS, ...options.headers },
-    redirect: 'manual',
-  });
+  const { parsed, addresses } = await assertPublicHttps(url);
+  const response = await requestPinned(parsed, addresses, options);
   if (response.status >= 300 && response.status < 400) {
     if (redirectCount >= MAX_REDIRECTS) throw new Error('Logo search followed too many redirects.');
     const location = response.headers.get('location');
@@ -129,17 +185,8 @@ async function readHtmlPreview(response) {
   return Buffer.concat(chunks.map((chunk) => Buffer.from(chunk))).toString('utf8');
 }
 
-function decodeHtml(value) {
-  return String(value || '')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>');
-}
-
 function attrValue(markup, name) {
-  return decodeHtml(markup.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']+)["']`, 'i'))?.[1] || '');
+  return decodeHtmlEntities(markup.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']+)["']`, 'i'))?.[1] || '');
 }
 
 function diagnosticError(error) {

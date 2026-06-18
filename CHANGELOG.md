@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.1] - 2026-06-18
+
+### Security
+- **Closed a DNS-rebinding gap in subscription logo discovery:** the validated public address is now pinned for the actual HTTPS connection instead of letting a second, independent DNS lookup decide where the request goes.
+- **Updated nodemailer** to fix several SMTP command-injection and CRLF-injection vulnerabilities (GHSA-c7w3-x93f-qmm8, GHSA-vvjj-xcjg-gr5g, GHSA-268h-hp4c-crq3, GHSA-wqvq-jvpq-h66f, GHSA-r7g4-qg5f-qqm2).
+
+### Fixed
+- **Subscription logo HTML parsing** no longer double-unescapes encoded entities (e.g. `&amp;lt;` no longer collapses to `<`).
+
 ## [0.74.0] - 2026-06-18
 
 ### Changed
