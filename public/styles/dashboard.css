@@ -982,6 +982,7 @@
   gap: var(--space-3);
   min-width: 0;
   height: 100%;
+  padding: var(--space-3) var(--space-4);
 }
 
 .weather-widget__main {

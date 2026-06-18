@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.4] - 2026-06-18
+
+### Fixed
+- **Weather widget inset:** restored the card padding around current conditions and the forecast row, which was lost when the widget's wrapper was introduced in v0.74.3 and left its content flush against the card edges in contexts without the dashboard-specific override.
+
 ## [0.74.3] - 2026-06-18
 
 ### Added
