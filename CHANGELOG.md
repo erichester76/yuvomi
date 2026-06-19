@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.8] - 2026-06-19
+
+### Fixed
+- **Missing translations for admin password reset:** the "New password" label, placeholder, and hint added to the "Edit member" dialog in v0.74.6 were only present in the German locale file, so every other language fell back to German text. All 18 non-German locales now have proper translations. (Fixes #372)
+
 ## [0.74.7] - 2026-06-19
 
 ### Added
