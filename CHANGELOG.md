@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.77.1] - 2026-06-23
+
+### Fixed
+- **Missing `reminders.pushed_at` column after database rebuild:** migration 57 rebuilt the `reminders` table without carrying over the `pushed_at` column added in migration 54, causing `PushScheduler` to fail with `no such column: r.pushed_at` on every fresh install or update. A new migration restores the column. (Fixes #393)
+- **Schema-test export out of sync:** the node:sqlite-synchronized schema export used by tests had stopped at migration 61, so schema tests applying the exported migrations never picked up the restored `reminders.pushed_at` column.
+
 ## [0.77.0] - 2026-06-23
 
 ### Fixed
