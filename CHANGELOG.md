@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.77.3] - 2026-06-24
+
+### Fixed
+- **Split expenses: adding a family member as a group guest restricted their navigation to the Split page only:** when an existing user was added to an expense group with the `guest` role via the members endpoint, they were incorrectly written into the `split_expense_guest_users` table. This caused `access_scope` to be resolved as `split_guest` on their next login, hiding all navigation items except Budget/Split. The `split_expense_guest_users` table is now exclusively populated by the dedicated guest-account creation flow. A database migration removes existing incorrect entries for users who have no `guest_created` activity record. (Fixes #400)
+
 ## [0.77.2] - 2026-06-23
 
 ### Fixed
