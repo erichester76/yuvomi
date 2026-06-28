@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.77.8] - 2026-06-28
+
+### Changed
+- **Dashboard → Calendar deep links:** clicking an upcoming-events row or the Today Cockpit calendar card now navigates directly to the event detail popup (`/calendar?open=<id>`) instead of just opening the calendar view. The calendar automatically jumps to the event's date and shows the detail popup on the matching chip; falls back to the edit modal when the chip is not in the rendered view.
+
 ## [0.77.7] - 2026-06-28
 
 ### Changed
