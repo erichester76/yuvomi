@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.78.5] - 2026-06-30
+
+### Changed
+- **CalDAV/CardDAV sync:** updated the optional `tsdav` dependency to 2.3.0, keeping calendar/contact sync current and dropping the legacy `base-64` transitive package.
+- **Developer QA tooling:** updated Puppeteer to 25.2.1 for frontend audit and screenshot workflows.
+
+### Fixed
+- **Pull request automation:** the Claude Code Review workflow now skips cleanly when `CLAUDE_CODE_OAUTH_TOKEN` is unavailable, so Dependabot PRs are not marked failed because review credentials are absent.
+
 ## [0.78.4] - 2026-06-30
 
 ### Fixed
