@@ -470,21 +470,28 @@ router.get('/summary', (req, res) => {
 });
 
 /**
+ * Leitet Zeitraum aus from/to oder month ab.
+ * @param {object} query - { from?, to?, month? }
+ * @returns {object} { from: YYYY-MM-DD, to: YYYY-MM-DD }
+ */
+export function resolveExportRange({ from, to, month }) {
+  if (DATE_RE.test(from || '') && DATE_RE.test(to || '')) return { from, to };
+  const m = MONTH_RE.test(month || '') ? month : new Date().toISOString().slice(0, 7);
+  return { from: `${m}-01`, to: `${m}-31` };
+}
+
+/**
  * GET /api/v1/budget/export
  * Monatseinträge als CSV-Download.
- * Query: ?month=YYYY-MM
+ * Query: ?month=YYYY-MM or ?from=YYYY-MM-DD&to=YYYY-MM-DD
  * Response: text/csv
  */
 router.get('/export', (req, res) => {
   try {
-    const today = new Date().toISOString().slice(0, 7);
-    const month = req.query.month || today;
-
-    if (!MONTH_RE.test(month))
-      return res.status(400).json({ error: 'month muss YYYY-MM sein', code: 400 });
-
-    const from    = `${month}-01`;
-    const to      = `${month}-31`;
+    const { from, to } = resolveExportRange(req.query);
+    const filename = (DATE_RE.test(req.query.from || '') && DATE_RE.test(req.query.to || ''))
+      ? `budget-${from}_${to}.csv`
+      : `budget-${req.query.month || new Date().toISOString().slice(0, 7)}.csv`;
     const entries = db.get().prepare(`
       SELECT b.*, u.display_name AS creator_name
       FROM budget_entries b
@@ -512,7 +519,7 @@ router.get('/export', (req, res) => {
     ).join('\n');
 
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="budget-${month}.csv"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send('\uFEFF' + header + rows); // BOM für Excel
   } catch (err) {
     log.error('', err);

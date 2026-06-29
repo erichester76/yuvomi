@@ -3,7 +3,7 @@
  * Zweck: computeStatsRange (Zeitraum/Buckets) + computeStats (Aggregation) + /stats-Validierung.
  * Ausführen: node --experimental-sqlite test/test-budget-stats.js
  */
-import { computeStatsRange, computeStats, statsHandler } from '../server/routes/budget.js';
+import { computeStatsRange, computeStats, statsHandler, resolveExportRange } from '../server/routes/budget.js';
 import { DatabaseSync } from 'node:sqlite';
 
 let passed = 0, failed = 0;
@@ -151,6 +151,20 @@ test('statsHandler: 400 bei ungültigem anchor', () => {
   const res = mockRes();
   statsHandler({ query: { range: 'month', anchor: 'xx' } }, res);
   eq(res.statusCode, 400, 'status');
+});
+
+// --- resolveExportRange ---
+test('resolveExportRange: from/to hat Vorrang', () => {
+  const r = resolveExportRange({ from: '2026-01-01', to: '2026-03-31', month: '2026-06' });
+  eq(r.from, '2026-01-01', 'from'); eq(r.to, '2026-03-31', 'to');
+});
+test('resolveExportRange: fällt auf month zurück', () => {
+  const r = resolveExportRange({ month: '2026-06' });
+  eq(r.from, '2026-06-01', 'from'); eq(r.to, '2026-06-31', 'to');
+});
+test('resolveExportRange: ungültiges from/to → month-Fallback', () => {
+  const r = resolveExportRange({ from: 'x', to: 'y', month: '2026-06' });
+  eq(r.from, '2026-06-01', 'fallback from');
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);
