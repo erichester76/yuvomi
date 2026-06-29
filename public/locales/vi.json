@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Cân đối nguyên liệu",
         "deletedToast": "Bữa ăn đã xóa",
         "todaySection": "Hôm nay",
-        "nextDaysSection": "Những ngày tới"
+        "nextDaysSection": "Những ngày tới",
+        "recurrenceLabel": "Lặp lại hằng tuần",
+        "recurrenceHint": "Yuvomi tự động thêm bữa ăn này vào cùng thứ trong các tuần sau.",
+        "recurrenceBadge": "Bữa ăn lặp lại",
+        "recurrenceEditHint": "Bữa ăn này lặp lại hằng tuần. Xóa sẽ chỉ bỏ qua ngày này."
     },
     "calendar": {
         "title": "Lịch",

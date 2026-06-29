@@ -83,7 +83,42 @@ Custom, household-wide category list for shopping items. Replaces the old hardco
 | notes | TEXT | |
 | recipe_url | TEXT | nullable, URL to recipe |
 | recipe_id | INTEGER | FK → Recipes (ON DELETE SET NULL), nullable |
+| recurrence_template_id | INTEGER | FK → Meal Recurrence Templates (ON DELETE SET NULL), nullable |
 | created_by | INTEGER | FK → Users, NOT NULL |
+
+### Meal Recurrence Templates
+Weekly meal templates created from the meal modal's advanced repeat option (v0.78.1).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| start_date | TEXT | DATE, NOT NULL — first date eligible for materialization |
+| weekday | INTEGER | 0–6, Monday-based |
+| meal_type | TEXT | breakfast, lunch, dinner, snack |
+| title | TEXT | NOT NULL |
+| notes | TEXT | |
+| recipe_url | TEXT | nullable |
+| recipe_id | INTEGER | FK → Recipes (ON DELETE SET NULL), nullable |
+| created_by | INTEGER | FK → Users, NOT NULL |
+
+### Meal Recurrence Ingredients
+Ingredient snapshot copied to each generated weekly meal occurrence.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| template_id | INTEGER | FK → Meal Recurrence Templates (CASCADE delete), NOT NULL |
+| name | TEXT | NOT NULL |
+| quantity | TEXT | |
+| category | TEXT | NOT NULL (default 'Sonstiges') |
+
+### Meal Recurrence Exceptions
+Stores individual skipped recurring meal dates so deleting one occurrence does not regenerate it.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| template_id | INTEGER | FK → Meal Recurrence Templates (CASCADE delete), NOT NULL |
+| date | TEXT | DATE, NOT NULL |
+| created_by | INTEGER | FK → Users (ON DELETE SET NULL), nullable |
+| PRIMARY KEY | | (template_id, date) |
 
 ### Recipes
 Reusable recipe cards that can be pre-filled into meal slots.
@@ -951,6 +986,7 @@ Skeleton loading instead of spinners (skeleton renders all 9 widgets at their co
 - Autocomplete from meal history
 - **Multiple items per slot:** each day/meal-type cell can hold any number of meals, displayed as stacked cards with a separator. A hover-visible `+` button lets you add another item to an already-filled slot without clearing the existing entry. (v0.63.3)
 - **Recipe integration:** Select a saved recipe from the meal modal to auto-fill title, notes, URL, and ingredients. Scale ingredient quantities by a numeric factor. Save the current meal as a new recipe with one click.
+- **Weekly meal repeats:** New meals can be marked as weekly repeats from the advanced meal dialog. Yuvomi stores a recurrence template, materializes future occurrences for each loaded week, shows a repeat badge on generated meals, and records per-date skip exceptions when a single occurrence is deleted. (v0.78.1)
 - **Customizable meal visibility:** In Settings, users can toggle which meal types (breakfast, lunch, dinner, snack) are shown in the planner. Stored as household-wide preference in `sync_config` (key: `visible_meal_types`). At least one type must remain active.
 
 ### Recipes (`/recipes`)

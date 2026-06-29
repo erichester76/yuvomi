@@ -279,11 +279,27 @@
 
 .meal-card__title {
   color: var(--color-text-primary);
+  text-align: left;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.meal-card__title-text {
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: left;
-  align-self: stretch;
+}
+
+.meal-card__recurrence {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--module-meals);
+  flex: none;
 }
 
 .meal-card__meta {
@@ -490,6 +506,30 @@
 
 .shopping-transfer__btn {
   align-self: flex-start;
+}
+
+.meal-recurrence-option,
+.meal-recurrence-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-glass-inner);
+  background: color-mix(in srgb, var(--module-meals) 8%, transparent);
+}
+
+.meal-recurrence-note {
+  flex-direction: row;
+  align-items: flex-start;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.meal-recurrence-note i {
+  color: var(--module-meals);
+  flex: none;
+  margin-top: var(--space-0h);
 }
 
 /* --------------------------------------------------------

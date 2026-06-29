@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Scale ingredients",
         "deletedToast": "Meal deleted",
         "todaySection": "Сегодня",
-        "nextDaysSection": "Ближайшие дни"
+        "nextDaysSection": "Ближайшие дни",
+        "recurrenceLabel": "Повторять каждую неделю",
+        "recurrenceHint": "Yuvomi автоматически добавляет это блюдо в тот же день недели в следующих неделях.",
+        "recurrenceBadge": "Повторяющееся блюдо",
+        "recurrenceEditHint": "Это блюдо повторяется каждую неделю. Удаление пропускает только эту дату."
     },
     "calendar": {
         "title": "Календарь",

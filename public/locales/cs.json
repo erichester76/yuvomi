@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Upravit množství ingrediencí",
         "deletedToast": "Jídlo smazáno",
         "todaySection": "Dnes",
-        "nextDaysSection": "Další dny"
+        "nextDaysSection": "Další dny",
+        "recurrenceLabel": "Opakovat každý týden",
+        "recurrenceHint": "Yuvomi tuto večeři nebo jídlo automaticky vytvoří ve stejný den v dalších týdnech.",
+        "recurrenceBadge": "Opakované jídlo",
+        "recurrenceEditHint": "Toto jídlo se opakuje každý týden. Smazání tohoto záznamu přeskočí jen toto datum."
     },
     "calendar": {
         "title": "Kalendář",

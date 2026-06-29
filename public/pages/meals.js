@@ -297,13 +297,16 @@ function renderSlot(date, type, mealsForDay) {
     const ingLabel    = ingCount > 0 ? (ingCount !== 1 ? t('meals.ingredientCountPlural', { count: ingCount }) : t('meals.ingredientCount', { count: ingCount })) : '';
     const ingDoneLabel = ingCount > 0 && ingDone === ingCount ? ' ✓' : '';
     const canTransfer  = ingCount > 0 && ingDone < ingCount;
+    const recurrenceBadge = meal.recurrence_template_id
+      ? `<span class="meal-card__recurrence" aria-label="${t('meals.recurrenceBadge')}"><i data-lucide="repeat-2" class="icon-sm" aria-hidden="true"></i></span>`
+      : '';
 
     return `
       <div class="meal-card"
            data-action="edit-meal"
            data-meal-id="${meal.id}"
            role="button" tabindex="0">
-        <div class="meal-card__title">${esc(meal.title)}</div>
+        <div class="meal-card__title"><span class="meal-card__title-text">${esc(meal.title)}</span>${recurrenceBadge}</div>
         ${ingLabel ? `<div class="meal-card__meta">
           <span class="meal-card__ingredients-count">${ingLabel}${esc(ingDoneLabel)}</span>
         </div>` : ''}
@@ -785,6 +788,7 @@ function openMealModal(opts) {
 
 function buildModalContent({ mode, date, mealType, meal, presetRecipeId = null }) {
   const isEdit   = mode === 'edit';
+  const isRecurring = isEdit && meal.recurrence_template_id;
   const typeOpts = MEAL_TYPES().map((mt) =>
     `<option value="${mt.key}" ${mt.key === mealType ? 'selected' : ''}>${mt.label}</option>`
   ).join('');
@@ -804,7 +808,7 @@ function buildModalContent({ mode, date, mealType, meal, presetRecipeId = null }
     ...state.recipes.map((r) => `<option value="${r.id}" ${isEdit && meal.recipe_id === r.id ? 'selected' : ''}>${esc(r.title)}</option>`),
   ].join('');
 
-  const advancedOpen = (isEdit && (!!meal.recipe_id || !!meal.notes || !!meal.recipe_url))
+  const advancedOpen = (isEdit && (!!meal.recipe_id || !!meal.notes || !!meal.recipe_url || isRecurring))
     || !!presetRecipeId;
 
   const advancedFieldsHtml = `
@@ -834,7 +838,21 @@ function buildModalContent({ mode, date, mealType, meal, presetRecipeId = null }
       <input type="url" class="form-input" id="modal-recipe-url"
              placeholder="${t('meals.recipeUrlPlaceholder')}"
              value="${esc(isEdit && meal.recipe_url ? meal.recipe_url : '')}">
-    </div>`;
+    </div>
+
+    ${isEdit ? (isRecurring ? `
+    <div class="meal-recurrence-note">
+      <i data-lucide="repeat-2" class="icon-sm" aria-hidden="true"></i>
+      <span>${t('meals.recurrenceEditHint')}</span>
+    </div>` : '') : `
+    <div class="meal-recurrence-option">
+      <label class="toggle">
+        <input type="checkbox" id="modal-repeat-weekly">
+        <span class="toggle__track"></span>
+        <span>${t('meals.recurrenceLabel')}</span>
+      </label>
+      <p class="form-hint">${t('meals.recurrenceHint')}</p>
+    </div>`}`;
 
   return `
     <div class="modal-grid modal-grid--2">
@@ -921,6 +939,9 @@ async function saveModal(overlay) {
   const notes     = overlay.querySelector('#modal-notes').value.trim() || null;
   const recipe_url = overlay.querySelector('#modal-recipe-url').value.trim() || null;
   const recipe_id = overlay.querySelector('#modal-recipe-id')?.value || null;
+  const repeat_weekly = state.modal?.mode === 'create'
+    ? Boolean(overlay.querySelector('#modal-repeat-weekly')?.checked)
+    : false;
 
   if (!date || !isDateInputValid(dateRaw)) {
     window.oikos?.showToast(t('calendar.invalidDate'), 'error');
@@ -941,7 +962,7 @@ async function saveModal(overlay) {
     const { mode, meal } = state.modal;
 
     if (mode === 'create') {
-      const res     = await api.post('/meals', { date, meal_type, title, notes, recipe_url, recipe_id, ingredients });
+      const res     = await api.post('/meals', { date, meal_type, title, notes, recipe_url, recipe_id, ingredients, repeat_weekly });
       state.meals.push(res.data);
     } else {
       // Update meal meta

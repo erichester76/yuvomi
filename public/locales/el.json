@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Scale ingredients",
         "deletedToast": "Meal deleted",
         "todaySection": "Σήμερα",
-        "nextDaysSection": "Επόμενες ημέρες"
+        "nextDaysSection": "Επόμενες ημέρες",
+        "recurrenceLabel": "Επανάληψη κάθε εβδομάδα",
+        "recurrenceHint": "Το Yuvomi δημιουργεί αυτό το γεύμα αυτόματα την ίδια ημέρα της εβδομάδας στις επόμενες εβδομάδες.",
+        "recurrenceBadge": "Επαναλαμβανόμενο γεύμα",
+        "recurrenceEditHint": "Αυτό το γεύμα επαναλαμβάνεται κάθε εβδομάδα. Η διαγραφή παραλείπει μόνο αυτή την ημερομηνία."
     },
     "calendar": {
         "title": "Ημερολόγιο",

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.78.1] - 2026-06-29
+
+### Added
+- **Meals → Weekly recurrence:** new meals can be marked as weekly repeats from the advanced meal dialog; Yuvomi materializes future occurrences on the same weekday, shows a repeat badge on recurring meals, and remembers skipped dates when a single occurrence is deleted. (Closes #412)
+
 ## [0.78.0] - 2026-06-29
 
 ### Added
@@ -19,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.77.9] - 2026-06-28
 
 ### Changed
-- **Dashboard → Heute essen:** Mahlzeiten-Widget wurde optisch an den Budgetübersicht-Widget-Stil angeglichen — 2×2-Karten-Grid mit Rahmen, abgerundeten Ecken, gedämpftem Hintergrund und farbakzentuiertem Hover-Effekt.
+- **Dashboard → Today meals:** the meals widget now visually matches the budget overview widget style — a 2×2 card grid with borders, rounded corners, muted backgrounds, and color-accented hover states.
 
 ## [0.77.8] - 2026-06-28
 

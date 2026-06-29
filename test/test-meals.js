@@ -7,6 +7,7 @@
 
 import { DatabaseSync } from 'node:sqlite';
 import { MIGRATIONS_SQL } from '../server/db-schema-test.js';
+import { datesForTemplateInRange, mealWeekday } from '../server/services/meal-recurrence.js';
 const { __test: mealsHelpers } = await import('../public/pages/meals.js');
 
 let passed = 0;
@@ -25,6 +26,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS schema_migrations (
   applied_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );`);
 db.exec(MIGRATIONS_SQL[1]);
+db.exec(MIGRATIONS_SQL[13]);
+db.exec(MIGRATIONS_SQL[64]);
 
 // Test-Benutzer
 const u1 = db.prepare(`INSERT INTO users (username, display_name, password_hash, role)
@@ -130,6 +133,73 @@ test('Mahlzeit-Typ-Constraint (ungültiger Wert)', () => {
     db.prepare(`INSERT INTO meals (date, meal_type, title, created_by) VALUES ('2026-03-24', 'brunch', 'Test', ?)`).run(uid);
   } catch { threw = true; }
   assert(threw, 'Constraint muss verletzt werden');
+});
+
+// --------------------------------------------------------
+// Wiederkehrende Mahlzeiten
+// --------------------------------------------------------
+let recurrenceTemplateId;
+
+test('Wiederkehrende Mahlzeit: Wochentag wird Montag-basiert berechnet', () => {
+  assert(mealWeekday('2026-03-23') === 0, 'Montag ist 0');
+  assert(mealWeekday('2026-03-29') === 6, 'Sonntag ist 6');
+});
+
+test('Wiederkehrende Mahlzeit: Daten starten nicht vor dem Startdatum', () => {
+  const dates = datesForTemplateInRange(
+    { start_date: '2026-03-25', weekday: 2 },
+    '2026-03-23',
+    '2026-04-12'
+  );
+  assert(dates.length === 3, `3 Mittwoche erwartet, erhalten ${dates.length}`);
+  assert(dates[0] === '2026-03-25', 'Startdatum ist erstes Vorkommen');
+  assert(dates[2] === '2026-04-08', 'Folgewoche korrekt');
+});
+
+test('Wiederkehrende Mahlzeit: Template und Zutaten anlegen', () => {
+  const template = db.prepare(`
+    INSERT INTO meal_recurrence_templates
+      (start_date, weekday, meal_type, title, notes, created_by)
+    VALUES ('2026-03-25', 2, 'dinner', 'Pasta Wednesday', 'weekly', ?)
+  `).run(uid);
+  recurrenceTemplateId = template.lastInsertRowid;
+
+  db.prepare(`
+    INSERT INTO meal_recurrence_ingredients (template_id, name, quantity, category)
+    VALUES (?, 'Pasta', '500g', 'Sonstiges')
+  `).run(recurrenceTemplateId);
+
+  assert(recurrenceTemplateId > 0, 'Template angelegt');
+});
+
+test('Wiederkehrende Mahlzeit: nur ein Vorkommen pro Template und Datum', () => {
+  db.prepare(`
+    INSERT INTO meals (date, meal_type, title, recurrence_template_id, created_by)
+    VALUES ('2026-04-01', 'dinner', 'Pasta Wednesday', ?, ?)
+  `).run(recurrenceTemplateId, uid);
+
+  let threw = false;
+  try {
+    db.prepare(`
+      INSERT INTO meals (date, meal_type, title, recurrence_template_id, created_by)
+      VALUES ('2026-04-01', 'dinner', 'Pasta Wednesday again', ?, ?)
+    `).run(recurrenceTemplateId, uid);
+  } catch { threw = true; }
+
+  assert(threw, 'Unique-Index verhindert doppelte Vorkommen');
+});
+
+test('Wiederkehrende Mahlzeit: Skip-Ausnahme blockiert ein Datum', () => {
+  db.prepare(`
+    INSERT INTO meal_recurrence_exceptions (template_id, date, created_by)
+    VALUES (?, '2026-04-08', ?)
+  `).run(recurrenceTemplateId, uid);
+
+  const exception = db.prepare(`
+    SELECT 1 FROM meal_recurrence_exceptions
+    WHERE template_id = ? AND date = '2026-04-08'
+  `).get(recurrenceTemplateId);
+  assert(exception, 'Ausnahme gespeichert');
 });
 
 // --------------------------------------------------------

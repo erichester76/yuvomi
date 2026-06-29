@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Scale ingredients",
         "deletedToast": "Meal deleted",
         "todaySection": "Bugün",
-        "nextDaysSection": "Sonraki günler"
+        "nextDaysSection": "Sonraki günler",
+        "recurrenceLabel": "Haftalık tekrarla",
+        "recurrenceHint": "Yuvomi bu öğünü gelecek haftalarda aynı hafta gününde otomatik olarak ekler.",
+        "recurrenceBadge": "Tekrarlanan öğün",
+        "recurrenceEditHint": "Bu öğün haftalık tekrarlanır. Silmek yalnızca bu tarihi atlar."
     },
     "calendar": {
         "title": "Takvim",

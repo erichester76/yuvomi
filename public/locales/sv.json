@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Skala ingredienser",
         "deletedToast": "Måltid borttagen",
         "todaySection": "Idag",
-        "nextDaysSection": "Kommande dagar"
+        "nextDaysSection": "Kommande dagar",
+        "recurrenceLabel": "Upprepa varje vecka",
+        "recurrenceHint": "Yuvomi lägger automatiskt till den här måltiden samma veckodag kommande veckor.",
+        "recurrenceBadge": "Återkommande måltid",
+        "recurrenceEditHint": "Den här måltiden upprepas varje vecka. Om du tar bort den hoppas bara detta datum över."
     },
     "calendar": {
         "title": "Kalender",

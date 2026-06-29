@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Scale ingredients",
         "deletedToast": "Meal deleted",
         "todaySection": "Aujourd'hui",
-        "nextDaysSection": "Prochains jours"
+        "nextDaysSection": "Prochains jours",
+        "recurrenceLabel": "Répéter chaque semaine",
+        "recurrenceHint": "Yuvomi ajoute automatiquement ce repas le même jour de la semaine dans les semaines à venir.",
+        "recurrenceBadge": "Repas récurrent",
+        "recurrenceEditHint": "Ce repas se répète chaque semaine. Le supprimer ignore uniquement cette date."
     },
     "calendar": {
         "title": "Calendrier",

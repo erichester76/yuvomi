@@ -341,7 +341,11 @@
         "recipeScaleLabel": "Scale ingredients",
         "deletedToast": "Meal deleted",
         "todaySection": "Oggi",
-        "nextDaysSection": "Prossimi giorni"
+        "nextDaysSection": "Prossimi giorni",
+        "recurrenceLabel": "Ripeti ogni settimana",
+        "recurrenceHint": "Yuvomi aggiunge automaticamente questo pasto nello stesso giorno della settimana nelle settimane future.",
+        "recurrenceBadge": "Pasto ricorrente",
+        "recurrenceEditHint": "Questo pasto si ripete ogni settimana. Eliminandolo salti solo questa data."
     },
     "calendar": {
         "title": "Calendario",
