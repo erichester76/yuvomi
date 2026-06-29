@@ -13,6 +13,7 @@ import { esc } from '/utils/html.js';
 import { renderSkeletonList } from '/utils/skeleton.js';
 import { render as renderSplitExpenses } from '/pages/split-expenses.js';
 import { openSubscriptionModal, render as renderSubscriptions } from '/pages/subscriptions.js';
+import { renderStats } from '/pages/budget-stats.js';
 import { toLocalDateKey } from '/utils/date.js';
 import { budgetCategoryLabel } from '/utils/category-labels.js';
 import '/components/category-manager.js';
@@ -242,6 +243,9 @@ export async function render(container, { user }) {
             </button>
             <button class="budget-tab" id="budget-tab-loans" type="button" role="tab" aria-selected="false" data-tab="loans">
               ${t('budget.loansTab')}
+            </button>
+            <button class="budget-tab" id="budget-tab-reports" type="button" role="tab" aria-selected="false" data-tab="reports">
+              ${t('budget.reportsTab')}
             </button>`}
             <button class="budget-tab" id="budget-tab-split-expenses" type="button" role="tab" aria-selected="false" data-tab="split-expenses">
               ${t('splitExpenses.tabLabel')}
@@ -336,6 +340,14 @@ function renderBody() {
   const s    = state.summary;
   const p    = state.prevSummary;
   updateTabs();
+  if (state.activeTab === 'reports') {
+    setHtml(body, '<div class="budget-tab-panel budget-tab-panel--reports" id="budget-reports-panel"></div>');
+    renderStats(body.querySelector('#budget-reports-panel'), {
+      user: _user, currency: state.currency,
+      formatAmount, categoryLabel, esc,
+    }).catch((err) => console.error('[Budget] stats render error:', err));
+    return;
+  }
   if (state.activeTab === 'loans') {
     setHtml(body, renderLoansPage());
     wireLoansPage();
@@ -449,13 +461,14 @@ function updateTabs() {
   const splitActive = state.activeTab === 'split-expenses' || _user?.access_scope === 'split_guest';
   const loansActive = state.activeTab === 'loans';
   const subscriptionsActive = state.activeTab === 'subscriptions';
+  const reportsActive = state.activeTab === 'reports';
   ['#budget-today', '#budget-label', '#budget-add'].forEach((selector) => {
     const el = _container.querySelector(selector);
-    if (el) el.hidden = splitActive || subscriptionsActive;
+    if (el) el.hidden = splitActive || subscriptionsActive || reportsActive;
   });
   ['#budget-prev', '#budget-next'].forEach((selector) => {
     const el = _container.querySelector(selector);
-    if (el) el.hidden = splitActive || loansActive || subscriptionsActive;
+    if (el) el.hidden = splitActive || loansActive || subscriptionsActive || reportsActive;
   });
   const fab = _container.querySelector('#fab-new-budget');
   if (fab) {
