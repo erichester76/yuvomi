@@ -842,7 +842,14 @@
         "statsDonutTitle": "支出占比",
         "statsExport": "导出 CSV",
         "statsEmptyTitle": "该时段无数据",
-        "statsEmptyDescription": "所选时段暂无任何记录。"
+        "statsEmptyDescription": "所选时段暂无任何记录。",
+        "statsError": "暂无统计数据",
+        "statsErrorDescription": "暂时无法加载数据，请重试。",
+        "statsRetry": "重试",
+        "prevPeriod": "上一期",
+        "nextPeriod": "下一期",
+        "recurringInstanceLabel": "系列的一部分",
+        "loanProgressLabel": "还款进度"
     },
     "settings": {
         "title": "设置",

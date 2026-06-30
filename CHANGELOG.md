@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.81.0] - 2026-07-01
+
+### Added
+- **Undo for marking a loan installment paid** (Budget → Loans). The one money action that *creates* a commitment now has the same 5-second undo as deletions — a stray tap can be taken back without hunting down the payment.
+
+### Changed
+- **Budget on mobile** now scrolls as a single view, so the floating add button no longer covers the last category or transaction. The module tab strip scrolls horizontally with a fade hint at the edge instead of clipping the last tab, and the active tab scrolls into view.
+- **Budget category labels** no longer truncate on tablet and desktop widths.
+- **Budget summary, loan, and loan-transaction surfaces** are now opaque for better legibility; the glass treatment is reserved for overlays.
+- **Budget statistics period** now shows localized dates instead of raw ISO dates.
+
+### Fixed
+- **Budget statistics** now show a clear error state with a retry button when data can't be loaded, instead of a misleading "no data yet" message that looked like an empty history.
+- **Budget accessibility:** category amounts carry +/− signs (not color alone), the expense-breakdown donut keeps distinct colors for more categories, loan progress is announced as a progress bar, recurring markers are labeled for screen readers, and the module tabs support full keyboard navigation (arrow keys, Home/End, roving focus).
+
 ## [0.80.1] - 2026-06-30
 
 ### Fixed

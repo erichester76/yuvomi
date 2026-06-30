@@ -848,7 +848,14 @@
         "statsDonutTitle": "Udziały wydatków",
         "statsExport": "Eksportuj CSV",
         "statsEmptyTitle": "Brak danych w okresie",
-        "statsEmptyDescription": "Brak wpisów dla wybranego okresu."
+        "statsEmptyDescription": "Brak wpisów dla wybranego okresu.",
+        "statsError": "Statystyki niedostępne",
+        "statsErrorDescription": "Dane są chwilowo niedostępne. Spróbuj ponownie.",
+        "statsRetry": "Spróbuj ponownie",
+        "prevPeriod": "Poprzedni okres",
+        "nextPeriod": "Następny okres",
+        "recurringInstanceLabel": "Część serii",
+        "loanProgressLabel": "Postęp spłaty"
     },
     "settings": {
         "title": "Ustawienia",

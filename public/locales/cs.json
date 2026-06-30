@@ -842,7 +842,14 @@
         "statsDonutTitle": "Podíly výdajů",
         "statsExport": "Exportovat CSV",
         "statsEmptyTitle": "Žádná data v období",
-        "statsEmptyDescription": "Pro vybrané období zatím nejsou žádné záznamy."
+        "statsEmptyDescription": "Pro vybrané období zatím nejsou žádné záznamy.",
+        "statsError": "Statistiky nejsou dostupné",
+        "statsErrorDescription": "Data nyní nejsou dostupná. Zkuste to znovu.",
+        "statsRetry": "Zkusit znovu",
+        "prevPeriod": "Předchozí období",
+        "nextPeriod": "Další období",
+        "recurringInstanceLabel": "Součást série",
+        "loanProgressLabel": "Průběh splácení"
     },
     "settings": {
         "title": "Nastavení",

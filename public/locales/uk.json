@@ -842,7 +842,14 @@
         "statsDonutTitle": "Частки витрат",
         "statsExport": "Експорт CSV",
         "statsEmptyTitle": "Немає даних за період",
-        "statsEmptyDescription": "За вибраний період записів ще немає."
+        "statsEmptyDescription": "За вибраний період записів ще немає.",
+        "statsError": "Статистика недоступна",
+        "statsErrorDescription": "Дані зараз недоступні. Спробуйте ще раз.",
+        "statsRetry": "Спробувати ще раз",
+        "prevPeriod": "Попередній період",
+        "nextPeriod": "Наступний період",
+        "recurringInstanceLabel": "Частина серії",
+        "loanProgressLabel": "Хід погашення"
     },
     "settings": {
         "title": "Налаштування",

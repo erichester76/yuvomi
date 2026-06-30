@@ -842,7 +842,14 @@
         "statsDonutTitle": "Utgiftsandelar",
         "statsExport": "Exportera CSV",
         "statsEmptyTitle": "Ingen data i perioden",
-        "statsEmptyDescription": "Det finns inga poster för den valda perioden ännu."
+        "statsEmptyDescription": "Det finns inga poster för den valda perioden ännu.",
+        "statsError": "Statistik är inte tillgänglig",
+        "statsErrorDescription": "Det gick inte att hämta data just nu. Försök igen.",
+        "statsRetry": "Försök igen",
+        "prevPeriod": "Föregående period",
+        "nextPeriod": "Nästa period",
+        "recurringInstanceLabel": "Del av en serie",
+        "loanProgressLabel": "Återbetalningsförlopp"
     },
     "settings": {
         "title": "Inställningar",

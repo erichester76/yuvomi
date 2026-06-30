@@ -842,7 +842,14 @@
         "statsDonutTitle": "Μερίδια εξόδων",
         "statsExport": "Εξαγωγή CSV",
         "statsEmptyTitle": "Δεν υπάρχουν δεδομένα στην περίοδο",
-        "statsEmptyDescription": "Δεν υπάρχουν ακόμη εγγραφές για την επιλεγμένη περίοδο."
+        "statsEmptyDescription": "Δεν υπάρχουν ακόμη εγγραφές για την επιλεγμένη περίοδο.",
+        "statsError": "Τα στατιστικά δεν είναι διαθέσιμα",
+        "statsErrorDescription": "Τα δεδομένα δεν είναι προσβάσιμα αυτή τη στιγμή. Δοκιμάστε ξανά.",
+        "statsRetry": "Δοκιμάστε ξανά",
+        "prevPeriod": "Προηγούμενη περίοδος",
+        "nextPeriod": "Επόμενη περίοδος",
+        "recurringInstanceLabel": "Μέρος μιας σειράς",
+        "loanProgressLabel": "Πρόοδος αποπληρωμής"
     },
     "settings": {
         "title": "Ρυθμίσεις",

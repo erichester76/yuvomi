@@ -842,7 +842,14 @@
         "statsDonutTitle": "व्यय हिस्सेदारी",
         "statsExport": "CSV निर्यात करें",
         "statsEmptyTitle": "अवधि में कोई डेटा नहीं",
-        "statsEmptyDescription": "चुनी गई अवधि के लिए अभी तक कोई प्रविष्टि नहीं है।"
+        "statsEmptyDescription": "चुनी गई अवधि के लिए अभी तक कोई प्रविष्टि नहीं है।",
+        "statsError": "आँकड़े उपलब्ध नहीं",
+        "statsErrorDescription": "डेटा अभी उपलब्ध नहीं है। कृपया पुनः प्रयास करें।",
+        "statsRetry": "पुनः प्रयास करें",
+        "prevPeriod": "पिछली अवधि",
+        "nextPeriod": "अगली अवधि",
+        "recurringInstanceLabel": "एक शृंखला का हिस्सा",
+        "loanProgressLabel": "चुकौती प्रगति"
     },
     "settings": {
         "title": "सेटिंग्स",

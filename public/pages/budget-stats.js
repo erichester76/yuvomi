@@ -3,10 +3,10 @@
  * Zweck: Statistik-Tab (Zeitraum-Filter, Summary-Cards, Trendlinie, Donut, CSV-Export).
  */
 import { api } from '/api.js';
-import { t } from '/i18n.js';
+import { t, formatDate } from '/i18n.js';
 import { toLocalDateKey, parseLocalDateKey, addLocalDays } from '/utils/date.js';
 
-const view = { range: 'month', anchor: toLocalDateKey(new Date()), data: null, ctx: null, root: null };
+const view = { range: 'month', anchor: toLocalDateKey(new Date()), data: null, error: false, ctx: null, root: null };
 
 const RANGE_LABELS = {
   week: 'budget.statsRangeWeek',
@@ -28,9 +28,11 @@ async function loadStats() {
   try {
     const res = await api.get(`/budget/stats?range=${view.range}&anchor=${view.anchor}`);
     view.data = res.data;
+    view.error = false;
   } catch (err) {
     console.error('[Budget] stats load error:', err);
     view.data = null;
+    view.error = true;
   }
   renderBodyContent(body);
 }
@@ -46,9 +48,9 @@ function renderShell() {
               data-range="${r}">${t(RANGE_LABELS[r])}</button>`).join('')}
         </div>
         <div class="budget-stats__stepper">
-          <button class="btn btn--icon" data-step="-1" aria-label="prev"><i data-lucide="chevron-left"></i></button>
+          <button class="btn btn--icon" data-step="-1" aria-label="${t('budget.prevPeriod')}"><i data-lucide="chevron-left" aria-hidden="true"></i></button>
           <span class="budget-stats__period" id="budget-stats-period"></span>
-          <button class="btn btn--icon" data-step="1" aria-label="next"><i data-lucide="chevron-right"></i></button>
+          <button class="btn btn--icon" data-step="1" aria-label="${t('budget.nextPeriod')}"><i data-lucide="chevron-right" aria-hidden="true"></i></button>
         </div>
       </div>
       <div id="budget-stats-body"></div>
@@ -77,6 +79,24 @@ function stepAnchor(dir) {
 }
 
 function renderBodyContent(body) {
+  // Fehler beim Laden klar von „keine Daten" trennen: ein Netzwerk-/Serverfehler
+  // darf der Familie nicht vortäuschen, ihre Finanzhistorie sei leer.
+  if (view.error) {
+    body.replaceChildren();
+    body.insertAdjacentHTML('beforeend', `
+      <div class="empty-state">
+        <i data-lucide="cloud-off" class="empty-state__icon" aria-hidden="true"></i>
+        <div class="empty-state__title">${t('budget.statsError')}</div>
+        <div class="empty-state__description">${t('budget.statsErrorDescription')}</div>
+        <button class="btn btn--primary empty-state__cta" id="budget-stats-retry">
+          <i data-lucide="refresh-cw" class="icon-md" aria-hidden="true"></i>
+          ${t('budget.statsRetry')}
+        </button>
+      </div>`);
+    if (window.lucide) lucide.createIcons({ el: body });
+    body.querySelector('#budget-stats-retry')?.addEventListener('click', () => loadStats());
+    return;
+  }
   const d = view.data;
   if (!d || (d.totals.income === 0 && d.totals.expenses === 0 && !d.series.some((s) => s.income || s.expenses))) {
     body.replaceChildren();
@@ -117,7 +137,8 @@ function renderBodyContent(body) {
 
 const DONUT_COLORS = [
   'var(--color-accent)', 'var(--color-danger)', 'var(--color-warning)',
-  'var(--color-success)', 'var(--color-info)', 'var(--text-secondary)',
+  'var(--color-success)', 'var(--color-info)', 'var(--module-shopping)',
+  'var(--module-meals)', 'var(--color-text-secondary)',
 ];
 
 function renderCatBars() {
@@ -136,7 +157,7 @@ function renderCatBars() {
                style="--bar-scale:${pct / 100}"></div>
         </div>
         <div class="budget-bar-row__amount" style="color:${isExp ? 'var(--color-danger)' : 'var(--color-success)'};">
-          ${view.ctx.formatAmount(c.total)}
+          ${isExp ? '' : '+'}${view.ctx.formatAmount(c.total)}
         </div>
       </div>`;
   }).join('');
@@ -229,5 +250,5 @@ function renderTrendChart() {
 
 function updatePeriodLabel() {
   const el = view.root.querySelector('#budget-stats-period');
-  if (el && view.data) el.textContent = `${view.data.from} – ${view.data.to}`;
+  if (el && view.data) el.textContent = `${formatDate(view.data.from)} – ${formatDate(view.data.to)}`;
 }

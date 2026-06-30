@@ -842,7 +842,14 @@
         "statsDonutTitle": "Quote spese",
         "statsExport": "Esporta CSV",
         "statsEmptyTitle": "Nessun dato nel periodo",
-        "statsEmptyDescription": "Non ci sono ancora voci per il periodo selezionato."
+        "statsEmptyDescription": "Non ci sono ancora voci per il periodo selezionato.",
+        "statsError": "Statistiche non disponibili",
+        "statsErrorDescription": "I dati non sono al momento raggiungibili. Riprova.",
+        "statsRetry": "Riprova",
+        "prevPeriod": "Periodo precedente",
+        "nextPeriod": "Periodo successivo",
+        "recurringInstanceLabel": "Parte di una serie",
+        "loanProgressLabel": "Avanzamento del rimborso"
     },
     "settings": {
         "title": "Impostazioni",

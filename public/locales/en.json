@@ -842,7 +842,14 @@
         "statsDonutTitle": "Expense shares",
         "statsExport": "Export CSV",
         "statsEmptyTitle": "No data in range",
-        "statsEmptyDescription": "There are no entries for the selected period yet."
+        "statsEmptyDescription": "There are no entries for the selected period yet.",
+        "statsError": "Statistics unavailable",
+        "statsErrorDescription": "The data couldn't be loaded right now. Please try again.",
+        "statsRetry": "Try again",
+        "prevPeriod": "Previous period",
+        "nextPeriod": "Next period",
+        "recurringInstanceLabel": "Part of a series",
+        "loanProgressLabel": "Repayment progress"
     },
     "settings": {
         "title": "Settings",

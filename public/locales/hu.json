@@ -842,7 +842,14 @@
         "statsDonutTitle": "Kiadások megoszlása",
         "statsExport": "CSV exportálása",
         "statsEmptyTitle": "Nincs adat az időszakban",
-        "statsEmptyDescription": "A kiválasztott időszakhoz még nincsenek bejegyzések."
+        "statsEmptyDescription": "A kiválasztott időszakhoz még nincsenek bejegyzések.",
+        "statsError": "A statisztika nem érhető el",
+        "statsErrorDescription": "Az adatok jelenleg nem érhetők el. Próbáld újra.",
+        "statsRetry": "Újra",
+        "prevPeriod": "Előző időszak",
+        "nextPeriod": "Következő időszak",
+        "recurringInstanceLabel": "Egy sorozat része",
+        "loanProgressLabel": "Törlesztés állása"
     },
     "settings": {
         "title": "Beállítások",

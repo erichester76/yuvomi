@@ -842,7 +842,14 @@
         "statsDonutTitle": "Доли расходов",
         "statsExport": "Экспорт CSV",
         "statsEmptyTitle": "Нет данных за период",
-        "statsEmptyDescription": "За выбранный период записей пока нет."
+        "statsEmptyDescription": "За выбранный период записей пока нет.",
+        "statsError": "Статистика недоступна",
+        "statsErrorDescription": "Данные сейчас недоступны. Попробуйте снова.",
+        "statsRetry": "Повторить",
+        "prevPeriod": "Предыдущий период",
+        "nextPeriod": "Следующий период",
+        "recurringInstanceLabel": "Часть серии",
+        "loanProgressLabel": "Ход погашения"
     },
     "settings": {
         "title": "Настройки",

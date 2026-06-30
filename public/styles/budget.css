@@ -24,12 +24,16 @@
   overflow: hidden;
   /* Container für die Summenkarten: reflowt nach eigenem Platz, nicht Viewport. */
   container: budget-page / inline-size;
+  /* Freiraum am Ende jeder Scroll-Region, damit der schwebende FAB die letzte
+   * Zeile (Kategorie/Transaktion) nicht verdeckt — primär ein Mobil-Problem. */
+  --budget-fab-clearance: calc(var(--target-lg) + var(--space-6) + var(--space-4));
 }
 
 .budget-tab-panel--split-expenses {
   flex: 1;
   min-height: 0;
   overflow: auto;
+  padding-bottom: var(--budget-fab-clearance);
 }
 
 .budget-page--split-active #budget-prev,
@@ -81,6 +85,37 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface-2);
+  /* Bis zu 5 Tabs passen auf 380px nicht nebeneinander: horizontal scrollen
+   * statt Text zu stauchen oder den Add-Button vom Rand zu drängen. Tabs
+   * behalten ihre lesbare Größe (flex-shrink:0), der Streifen darf schrumpfen. */
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.budget-tabs::-webkit-scrollbar { display: none; }
+
+/* Scroll-Affordance: JS setzt has-fade-start/-end nur, wenn auf der jeweiligen
+ * Seite weitere Tabs verborgen sind → Rand wird ausgeblendet als „mehr hier"-
+ * Hinweis. Ohne Klasse (Desktop, alle Tabs sichtbar) keine Maske. */
+.budget-tabs.has-fade-end {
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--space-6)), transparent);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--space-6)), transparent);
+}
+
+.budget-tabs.has-fade-start {
+  mask-image: linear-gradient(to right, transparent, #000 var(--space-6));
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--space-6));
+}
+
+.budget-tabs.has-fade-start.has-fade-end {
+  mask-image: linear-gradient(to right, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
 }
 
 .budget-tab {
@@ -93,6 +128,9 @@
   cursor: pointer;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
+  flex-shrink: 0;
+  white-space: nowrap;
+  scroll-snap-align: start;
 }
 
 .budget-tab--active {
@@ -134,10 +172,12 @@
 .budget-tab-panel--loans {
   overflow-y: auto;
   padding-top: var(--space-3);
+  padding-bottom: var(--budget-fab-clearance);
 }
 
 .budget-tab-panel--subscriptions {
   overflow-y: auto;
+  padding-bottom: var(--budget-fab-clearance);
 }
 
 /* --------------------------------------------------------
@@ -159,10 +199,13 @@
 }
 
 .budget-summary-card {
-  background-color: var(--glass-bg-card);
+  /* Arbeitsfläche = opak (Brief: Glass bleibt den Overlays/Modals vorbehalten,
+   * Inhalt muss auf einen Blick lesbar sein). */
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-glass-card);
   padding: var(--space-3);
-  box-shadow: var(--glass-shadow-sm);
+  box-shadow: var(--shadow-sm);
   text-align: center;
   position: relative;
 }
@@ -242,11 +285,17 @@
 .budget-bar-row__label {
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
-  width: 90px;
+  width: 104px;
   flex-shrink: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Auf breiteren Layouts (Desktop/Tablet) haben die Kategorienamen reichlich
+ * Platz — Label aufweiten statt die deutschen Bezeichnungen abzuschneiden. */
+@container budget-page (min-width: 480px) {
+  .budget-bar-row__label { width: 168px; }
 }
 
 .budget-bar-row__track {
@@ -284,10 +333,10 @@
 .budget-loans {
   margin: 0 var(--space-4) var(--space-3);
   padding: var(--space-3);
-  background-color: var(--glass-bg-card);
-  border: 1px solid var(--glass-border-subtle);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-glass-card);
-  box-shadow: var(--glass-shadow-sm);
+  box-shadow: var(--shadow-sm);
   flex-shrink: 0;
 }
 
@@ -384,9 +433,6 @@
   grid-template-columns: 1fr;
   gap: var(--space-2);
   margin-top: var(--space-3);
-  max-height: min(58dvh, 640px);
-  overflow-y: auto;
-  padding-right: var(--space-1);
 }
 
 .budget-loans__empty {
@@ -526,9 +572,9 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-3);
-  border: 1px solid var(--glass-border-subtle);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-glass-inner);
-  background-color: var(--glass-bg-card);
+  background-color: var(--color-surface);
 }
 
 .budget-loan-transaction span {
@@ -672,11 +718,25 @@
   color: var(--color-text-secondary);
 }
 
+.budget-csv-export {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-3);
+}
+
+.budget-recur-mark {
+  font-size: var(--text-xs);
+  vertical-align: baseline;
+}
+
 .budget-list {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--budget-fab-clearance);
 }
 
 .budget-list,
@@ -758,7 +818,9 @@
 .budget-entry__amount--income   { color: var(--color-success); }
 .budget-entry__amount--expenses { color: var(--color-danger);  }
 
-.budget-entry__delete {
+/* Neutrale Basis für alle Icon-Buttons einer Zeile (Löschen UND Bearbeiten).
+ * Die Delete-Semantik (roter Hover) liegt separat auf .budget-entry__delete. */
+.budget-entry__action {
   width: var(--target-base);
   height: var(--target-base);
   min-width: var(--target-base);
@@ -783,28 +845,63 @@
   flex-shrink: 0;
 }
 
-.budget-entry__delete::before {
+.budget-entry__action::before {
   content: '';
   position: absolute;
   inset: 0;
 }
 
-.budget-entry:hover .budget-entry__delete {
+.budget-entry:hover .budget-entry__action {
   opacity: 1;
 }
 
-.budget-entry--loan .budget-entry__delete {
+.budget-entry--loan .budget-entry__action {
   opacity: 1;
 }
 
 @media (hover: none), (max-width: 640px) {
-  .budget-entry__delete {
+  .budget-entry__action {
     opacity: 1;
   }
 }
 
+.budget-entry__action:hover {
+  color: var(--color-text-secondary);
+}
+
 .budget-entry__delete:hover {
   color: var(--color-danger);
+}
+
+/* --------------------------------------------------------
+ * Mobil-Reflow (≤640px)
+ * - Budget-Tab scrollt als Ganzes (Summary + Chart + Liste), damit der
+ *   schwebende FAB keine Kategorie-/Transaktionszeile mehr verdeckt und das
+ *   9-zeilige Kategorie-Chart nicht abgeschnitten wird.
+ * - Tab-Leiste auf die Zeilenbreite kappen, damit sie horizontal scrollt
+ *   statt den letzten Tab abzuschneiden.
+ * -------------------------------------------------------- */
+@media (max-width: 640px) {
+  /* Tab-Leiste auf die verfügbare Zeilenbreite kappen (Toolbar-Seitenpadding
+   * abziehen), damit overflow-x:auto greift statt den letzten Tab zu kappen.
+   * Der Eltern-Container begrenzt die Breite nicht, daher viewport-relativ. */
+  .budget-tabs { max-width: calc(100vw - var(--space-8)); }
+
+  .budget-tab-panel--budget {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: var(--budget-fab-clearance);
+  }
+
+  .budget-tab-panel--budget .budget-list-section,
+  .budget-tab-panel--budget .budget-list {
+    flex: 0 0 auto;
+    overflow: visible;
+    min-height: 0;
+  }
+
+  /* Doppelte FAB-Clearance vermeiden: das Panel polstert bereits unten. */
+  .budget-tab-panel--budget .budget-list { padding-bottom: 0; }
 }
 
 

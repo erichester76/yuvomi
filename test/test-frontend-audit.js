@@ -1639,13 +1639,16 @@ test('phase 7 calendar inline polish keeps icons and all-day labels tokenized', 
 test('phase 7 Budget row actions stay touch-safe on mobile', () => {
   const source = read('../public/pages/budget.js');
   const budget = read('../public/styles/budget.css');
-  const deleteRule = cssRuleBody(budget, '.budget-entry__delete');
+  // Row-Action-Buttons (Löschen UND Bearbeiten) teilen die touch-sichere
+  // Basisklasse .budget-entry__action; .budget-entry__delete trägt nur noch
+  // die Delete-Semantik (roter Hover).
+  const actionRule = cssRuleBody(budget, '.budget-entry__action');
 
-  assert.match(deleteRule, /width:\s*var\(--target-base\)/, 'Budget delete buttons should use the base touch target width');
-  assert.match(deleteRule, /height:\s*var\(--target-base\)/, 'Budget delete buttons should use the base touch target height');
+  assert.match(actionRule, /width:\s*var\(--target-base\)/, 'Budget row action buttons should use the base touch target width');
+  assert.match(actionRule, /height:\s*var\(--target-base\)/, 'Budget row action buttons should use the base touch target height');
   assert.match(
     budget,
-    /@media \(hover:\s*none\), \(max-width:\s*640px\)[\s\S]*\.budget-entry__delete\s*\{[\s\S]*opacity:\s*1/,
+    /@media \(hover:\s*none\), \(max-width:\s*640px\)[\s\S]*\.budget-entry__action\s*\{[\s\S]*opacity:\s*1/,
     'Budget row actions should be visible on touch/mobile viewports',
   );
   assert.doesNotMatch(source, /data-lucide="(?:plus|trash-2|pencil)"\s+style=/, 'Budget Lucide actions should use icon utility classes');

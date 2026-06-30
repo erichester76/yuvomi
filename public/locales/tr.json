@@ -842,7 +842,14 @@
         "statsDonutTitle": "Gider payları",
         "statsExport": "CSV dışa aktar",
         "statsEmptyTitle": "Dönemde veri yok",
-        "statsEmptyDescription": "Seçilen dönem için henüz kayıt bulunmuyor."
+        "statsEmptyDescription": "Seçilen dönem için henüz kayıt bulunmuyor.",
+        "statsError": "İstatistikler kullanılamıyor",
+        "statsErrorDescription": "Veriler şu anda yüklenemedi. Lütfen tekrar deneyin.",
+        "statsRetry": "Tekrar dene",
+        "prevPeriod": "Önceki dönem",
+        "nextPeriod": "Sonraki dönem",
+        "recurringInstanceLabel": "Bir serinin parçası",
+        "loanProgressLabel": "Geri ödeme ilerlemesi"
     },
     "settings": {
         "title": "Ayarlar",

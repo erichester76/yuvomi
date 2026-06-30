@@ -842,7 +842,14 @@
         "statsDonutTitle": "Uitgavenaandelen",
         "statsExport": "CSV exporteren",
         "statsEmptyTitle": "Geen gegevens in periode",
-        "statsEmptyDescription": "Er zijn nog geen vermeldingen voor de geselecteerde periode."
+        "statsEmptyDescription": "Er zijn nog geen vermeldingen voor de geselecteerde periode.",
+        "statsError": "Statistieken niet beschikbaar",
+        "statsErrorDescription": "De gegevens zijn nu niet bereikbaar. Probeer het opnieuw.",
+        "statsRetry": "Opnieuw proberen",
+        "prevPeriod": "Vorige periode",
+        "nextPeriod": "Volgende periode",
+        "recurringInstanceLabel": "Onderdeel van een reeks",
+        "loanProgressLabel": "Aflossingsvoortgang"
     },
     "settings": {
         "title": "Instellingen",

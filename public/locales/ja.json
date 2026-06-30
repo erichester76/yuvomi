@@ -842,7 +842,14 @@
         "statsDonutTitle": "支出の内訳",
         "statsExport": "CSVエクスポート",
         "statsEmptyTitle": "期間にデータがありません",
-        "statsEmptyDescription": "選択した期間にはまだ記録がありません。"
+        "statsEmptyDescription": "選択した期間にはまだ記録がありません。",
+        "statsError": "統計を表示できません",
+        "statsErrorDescription": "現在データを取得できません。もう一度お試しください。",
+        "statsRetry": "再試行",
+        "prevPeriod": "前の期間",
+        "nextPeriod": "次の期間",
+        "recurringInstanceLabel": "シリーズの一部",
+        "loanProgressLabel": "返済の進捗"
     },
     "settings": {
         "title": "設定",

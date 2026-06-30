@@ -842,7 +842,14 @@
         "statsDonutTitle": "توزيع المصروفات",
         "statsExport": "تصدير CSV",
         "statsEmptyTitle": "لا بيانات في الفترة",
-        "statsEmptyDescription": "لا توجد إدخالات للفترة المحددة حتى الآن."
+        "statsEmptyDescription": "لا توجد إدخالات للفترة المحددة حتى الآن.",
+        "statsError": "الإحصائيات غير متاحة",
+        "statsErrorDescription": "البيانات غير متاحة حاليًا. يرجى المحاولة مرة أخرى.",
+        "statsRetry": "إعادة المحاولة",
+        "prevPeriod": "الفترة السابقة",
+        "nextPeriod": "الفترة التالية",
+        "recurringInstanceLabel": "جزء من سلسلة",
+        "loanProgressLabel": "تقدّم السداد"
     },
     "settings": {
         "title": "الإعدادات",

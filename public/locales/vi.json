@@ -842,7 +842,14 @@
         "statsDonutTitle": "Tỷ lệ chi tiêu",
         "statsExport": "Xuất CSV",
         "statsEmptyTitle": "Không có dữ liệu trong kỳ",
-        "statsEmptyDescription": "Chưa có mục nào cho kỳ đã chọn."
+        "statsEmptyDescription": "Chưa có mục nào cho kỳ đã chọn.",
+        "statsError": "Không có thống kê",
+        "statsErrorDescription": "Hiện không thể tải dữ liệu. Vui lòng thử lại.",
+        "statsRetry": "Thử lại",
+        "prevPeriod": "Kỳ trước",
+        "nextPeriod": "Kỳ sau",
+        "recurringInstanceLabel": "Một phần của chuỗi",
+        "loanProgressLabel": "Tiến độ trả nợ"
     },
     "settings": {
         "title": "Cài đặt",

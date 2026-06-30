@@ -848,7 +848,14 @@
         "statsDonutTitle": "Ausgaben-Anteile",
         "statsExport": "CSV exportieren",
         "statsEmptyTitle": "Keine Daten im Zeitraum",
-        "statsEmptyDescription": "Für den gewählten Zeitraum gibt es noch keine Einträge."
+        "statsEmptyDescription": "Für den gewählten Zeitraum gibt es noch keine Einträge.",
+        "statsError": "Statistik nicht verfügbar",
+        "statsErrorDescription": "Die Daten sind gerade nicht erreichbar. Bitte erneut versuchen.",
+        "statsRetry": "Erneut versuchen",
+        "prevPeriod": "Vorheriger Zeitraum",
+        "nextPeriod": "Nächster Zeitraum",
+        "recurringInstanceLabel": "Teil einer Serie",
+        "loanProgressLabel": "Tilgungsfortschritt"
     },
     "settings": {
         "title": "Einstellungen",

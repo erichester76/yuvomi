@@ -842,7 +842,14 @@
         "statsDonutTitle": "Distribución de gastos",
         "statsExport": "Exportar CSV",
         "statsEmptyTitle": "Sin datos en el período",
-        "statsEmptyDescription": "Aún no hay entradas para el período seleccionado."
+        "statsEmptyDescription": "Aún no hay entradas para el período seleccionado.",
+        "statsError": "Estadísticas no disponibles",
+        "statsErrorDescription": "Los datos no están disponibles en este momento. Inténtalo de nuevo.",
+        "statsRetry": "Reintentar",
+        "prevPeriod": "Período anterior",
+        "nextPeriod": "Período siguiente",
+        "recurringInstanceLabel": "Parte de una serie",
+        "loanProgressLabel": "Progreso de amortización"
     },
     "settings": {
         "title": "Ajustes",

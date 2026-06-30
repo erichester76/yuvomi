@@ -235,19 +235,19 @@ export async function render(container, { user }) {
         <div class="page-toolbar__actions">
           <div class="budget-tabs" role="tablist" aria-label="${t('budget.tabsLabel')}">
             ${user?.access_scope === 'split_guest' ? '' : `
-            <button class="budget-tab" id="budget-tab-budget" type="button" role="tab" aria-selected="true" data-tab="budget">
+            <button class="budget-tab" id="budget-tab-budget" type="button" role="tab" aria-selected="true" aria-controls="budget-body" tabindex="-1" data-tab="budget">
               ${t('budget.budgetTab')}
             </button>
-            <button class="budget-tab" id="budget-tab-subscriptions" type="button" role="tab" aria-selected="false" data-tab="subscriptions">
+            <button class="budget-tab" id="budget-tab-subscriptions" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="subscriptions">
               ${t('subscriptions.tabLabel')}
             </button>
-            <button class="budget-tab" id="budget-tab-loans" type="button" role="tab" aria-selected="false" data-tab="loans">
+            <button class="budget-tab" id="budget-tab-loans" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="loans">
               ${t('budget.loansTab')}
             </button>
-            <button class="budget-tab" id="budget-tab-reports" type="button" role="tab" aria-selected="false" data-tab="reports">
+            <button class="budget-tab" id="budget-tab-reports" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="reports">
               ${t('budget.reportsTab')}
             </button>`}
-            <button class="budget-tab" id="budget-tab-split-expenses" type="button" role="tab" aria-selected="false" data-tab="split-expenses">
+            <button class="budget-tab" id="budget-tab-split-expenses" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="split-expenses">
               ${t('splitExpenses.tabLabel')}
             </button>
           </div>
@@ -256,7 +256,7 @@ export async function render(container, { user }) {
           </button>
         </div>
       </div>
-      <div id="budget-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <div id="budget-body" role="tabpanel" tabindex="0" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
         ${renderSkeletonList({ rows: 6, lines: 2 })}
       </div>
       <button class="page-fab" id="fab-new-budget" aria-label="${t('budget.newEntryFabLabel')}">
@@ -320,12 +320,49 @@ function wireNav() {
       renderBody();
     });
   });
+  // Pfeiltasten-Navigation im Tablist (WAI-ARIA): ←/→ und Home/End wechseln
+  // den aktiven Tab und ziehen den Fokus mit.
+  _container.querySelector('.budget-tabs')?.addEventListener('keydown', (e) => {
+    const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+    if (!keys.includes(e.key)) return;
+    const tabs = [..._container.querySelectorAll('.budget-tab')];
+    if (!tabs.length) return;
+    const current = tabs.findIndex((tab) => tab.dataset.tab === state.activeTab);
+    let next = current;
+    if (e.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'ArrowRight') next = (current + 1) % tabs.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = tabs.length - 1;
+    e.preventDefault();
+    state.activeTab = tabs[next].dataset.tab;
+    renderBody();
+    _container.querySelector('.budget-tab--active')?.focus();
+  });
+  // Edge-Fade live nachführen, während der Nutzer die Tab-Leiste scrollt.
+  // (Re-Render ruft updateTabsFade ohnehin auf; daher kein window-resize-
+  // Listener, der bei Re-Navigation lecken würde.) Aktiven Tab in Sicht holen.
+  const tabsEl = _container.querySelector('.budget-tabs');
+  tabsEl?.addEventListener('scroll', updateTabsFade, { passive: true });
+  _container.querySelector('.budget-tab--active')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
   updateLabel();
 }
 
 function updateLabel() {
   const lbl = _container.querySelector('#budget-label');
   if (lbl) lbl.textContent = formatMonthLabel(state.month);
+}
+
+// Scroll-Affordance der Tab-Leiste: Rand ausblenden, solange auf der Seite
+// weitere Tabs verborgen sind (Mobil; auf Desktop passen alle → keine Maske).
+function updateTabsFade() {
+  const el = _container?.querySelector('.budget-tabs');
+  if (!el) return;
+  // Epsilon > Scroll-Snap/Padding-Ruhelage (~2px), sonst flackert der Rand-Fade
+  // schon bei minimalem Offset am Anfang/Ende.
+  const eps = 8;
+  const max = el.scrollWidth - el.clientWidth;
+  el.classList.toggle('has-fade-start', el.scrollLeft > eps);
+  el.classList.toggle('has-fade-end', el.scrollLeft < max - eps);
 }
 
 // --------------------------------------------------------
@@ -417,9 +454,8 @@ function renderBody() {
           <i data-lucide="tags" class="icon-md" aria-hidden="true"></i>
         </button>
         ${state.entries.length ? `
-        <a href="/api/v1/budget/export?month=${state.month}" class="btn btn--secondary"
-           style="font-size:var(--text-sm);padding:var(--space-1) var(--space-3);">
-          <i data-lucide="download" style="width:14px;height:14px;margin-right:4px;" aria-hidden="true"></i>CSV
+        <a href="/api/v1/budget/export?month=${state.month}" class="btn btn--secondary budget-csv-export">
+          <i data-lucide="download" class="icon-sm" aria-hidden="true"></i>CSV
         </a>` : ''}
         </div>
       </div>
@@ -453,11 +489,19 @@ function updateTabs() {
   _container.classList.toggle('budget-page--split-active', state.activeTab === 'split-expenses' || _user?.access_scope === 'split_guest');
   _container.classList.toggle('budget-page--loans-active', state.activeTab === 'loans');
   _container.classList.toggle('budget-page--subscriptions-active', state.activeTab === 'subscriptions');
+  let activeTabId = '';
   _container.querySelectorAll('.budget-tab').forEach((tab) => {
     const active = tab.dataset.tab === state.activeTab;
     tab.classList.toggle('budget-tab--active', active);
     tab.setAttribute('aria-selected', String(active));
+    // Roving Tabindex: nur der aktive Tab ist per Tab-Taste fokussierbar,
+    // zwischen den Tabs wird mit Pfeiltasten gewechselt (WAI-ARIA Tabs).
+    tab.tabIndex = active ? 0 : -1;
+    if (active) activeTabId = tab.id;
   });
+  const panel = _container.querySelector('#budget-body');
+  if (panel && activeTabId) panel.setAttribute('aria-labelledby', activeTabId);
+  updateTabsFade();
   const splitActive = state.activeTab === 'split-expenses' || _user?.access_scope === 'split_guest';
   const loansActive = state.activeTab === 'loans';
   const subscriptionsActive = state.activeTab === 'subscriptions';
@@ -508,7 +552,7 @@ function renderCategoryBars(byCategory) {
           <div class="budget-bar-row__fill ${cls}" style="--bar-scale:${pct / 100}"></div>
         </div>
         <div class="budget-bar-row__amount" style="color:${isExpense ? 'var(--color-danger)' : 'var(--color-success)'};">
-          ${formatAmount(c.total)}
+          ${isExpense ? '' : '+'}${formatAmount(c.total)}
         </div>
       </div>
     `;
@@ -539,8 +583,8 @@ function renderEntries() {
     const sign      = isIncome ? '+' : '';
     const date      = formatEntryDate(e.date);
     const recurTag  = e.is_recurring
-      ? ` 🔁${e.recurrence_virtual ? ' ' + t('budget.virtualBudgetBadge') : ''}`
-      : (e.recurrence_parent_id ? ' ↩' : '');
+      ? ` <span class="budget-recur-mark" role="img" aria-label="${t('budget.recurringLabel')}">🔁</span>${e.recurrence_virtual ? ' ' + t('budget.virtualBudgetBadge') : ''}`
+      : (e.recurrence_parent_id ? ` <span class="budget-recur-mark" role="img" aria-label="${t('budget.recurringInstanceLabel')}">↩</span>` : '');
     const categoryMeta = isIncome || !e.subcategory
       ? categoryLabel(e.category)
       : `${categoryLabel(e.category)} · ${subcategoryLabel(e.subcategory)}`;
@@ -553,7 +597,7 @@ function renderEntries() {
           <div class="budget-entry__meta">${date} · ${esc(categoryMeta)}${recurTag}</div>
         </div>
         <div class="budget-entry__amount ${amtClass}">${sign}${formatAmount(e.amount)}</div>
-        <button class="budget-entry__delete" data-action="delete" data-id="${e.id}" aria-label="${t('budget.deleteLabel')}">
+        <button class="budget-entry__action budget-entry__delete" data-action="delete" data-id="${e.id}" aria-label="${t('budget.deleteLabel')}">
           <i data-lucide="trash-2" class="icon-md" aria-hidden="true"></i>
         </button>
       </div>
@@ -680,10 +724,10 @@ function renderLoanPaymentEntry(loan, payment) {
       <div class="budget-entry__amount budget-entry__amount--income">+${formatAmount(payment.amount)}</div>
       <div class="budget-entry__actions">
         ${entry ? `
-        <button class="budget-entry__delete" data-action="loan-payment-edit" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry.id}" aria-label="${t('common.edit')}">
+        <button class="budget-entry__action" data-action="loan-payment-edit" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry.id}" aria-label="${t('common.edit')}">
           <i data-lucide="pencil" class="icon-md" aria-hidden="true"></i>
         </button>` : ''}
-        <button class="budget-entry__delete" data-action="loan-payment-delete" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry?.id ?? ''}" aria-label="${t('budget.deleteLabel')}">
+        <button class="budget-entry__action budget-entry__delete" data-action="loan-payment-delete" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry?.id ?? ''}" aria-label="${t('budget.deleteLabel')}">
           <i data-lucide="trash-2" class="icon-md" aria-hidden="true"></i>
         </button>
       </div>
@@ -844,7 +888,9 @@ function renderLoanCard(loan) {
         <strong>${formatAmount(loan.remaining_amount)}</strong>
         <span>${t('budget.loanRemainingOf', { total: formatAmount(loan.total_amount) })}</span>
       </div>
-      <div class="budget-loan-card__progress" aria-label="${paidPct}%">
+      <div class="budget-loan-card__progress" role="progressbar"
+           aria-valuenow="${paidPct}" aria-valuemin="0" aria-valuemax="100"
+           aria-label="${t('budget.loanProgressLabel')}">
         <span style="--bar-scale:${paidPct / 100}"></span>
       </div>
       <div class="budget-loan-card__footer">
@@ -968,7 +1014,7 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
     <div class="form-group js-entry-field">
       <label class="form-label" for="bm-amount">${t('budget.amountLabel')}<span class="required-marker" aria-hidden="true"> *</span></label>
       <input type="number" class="form-input" id="bm-amount"
-             placeholder="${t('budget.amountPlaceholder')}" step="0.01" min="0"
+             placeholder="${t('budget.amountPlaceholder')}" step="0.01" min="0.01"
              inputmode="decimal" value="${absAmount}">
     </div>
 
@@ -1338,7 +1384,7 @@ async function saveLoanFromPanel(panel, saveBtn, { loan = null, closeAfterSave =
 
 function openLoanModal(loan = null) {
   const isEdit = Boolean(loan);
-  const todayMonth = new Date().toISOString().slice(0, 7);
+  const todayMonth = toLocalDateKey(new Date()).slice(0, 7);
   const content = `
     <div class="form-group">
       <label class="form-label" for="lm-borrower">${t('budget.loanBorrowerLabel')}</label>
@@ -1397,16 +1443,33 @@ async function markLoanPayment(id) {
   if (!loan?.next_installment_number) return;
   const today = toLocalDateKey(new Date());
   try {
-    await api.post(`/budget/loans/${id}/payments`, {
+    const res = await api.post(`/budget/loans/${id}/payments`, {
       installment_number: loan.next_installment_number,
       amount: loan.next_installment_number === loan.installment_count
         ? loan.remaining_amount
         : Math.min(loan.installment_amount, loan.remaining_amount),
       paid_date: today,
     });
+    const paymentId = res.data?.payment?.id;
     await loadMonth(state.month);
     renderBody();
-    window.yuvomi?.showToast(t('budget.loanPaymentAddedToast'), 'success');
+    vibrate(30);
+
+    // Undo wie bei Löschungen: die eine Geld-Aktion, die eine Verpflichtung
+    // *erzeugt*, bekommt dasselbe 5-Sekunden-Netz — Rücknahme löscht die Rate.
+    if (paymentId) {
+      window.yuvomi?.showToast(t('budget.loanPaymentAddedToast'), 'default', 5000, async () => {
+        try {
+          await api.delete(`/budget/loans/${id}/payments/${paymentId}`);
+          await loadMonth(state.month);
+          renderBody();
+        } catch (err) {
+          window.yuvomi?.showToast(err.data?.error ?? t('common.unknownError'), 'danger');
+        }
+      });
+    } else {
+      window.yuvomi?.showToast(t('budget.loanPaymentAddedToast'), 'success');
+    }
   } catch (err) {
     window.yuvomi?.showToast(err.data?.error ?? t('common.unknownError'), 'error');
   }

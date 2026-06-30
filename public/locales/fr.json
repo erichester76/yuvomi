@@ -842,7 +842,14 @@
         "statsDonutTitle": "Répartition des dépenses",
         "statsExport": "Exporter CSV",
         "statsEmptyTitle": "Aucune donnée sur la période",
-        "statsEmptyDescription": "Il n'y a pas encore d'entrées pour la période sélectionnée."
+        "statsEmptyDescription": "Il n'y a pas encore d'entrées pour la période sélectionnée.",
+        "statsError": "Statistiques indisponibles",
+        "statsErrorDescription": "Les données sont momentanément indisponibles. Veuillez réessayer.",
+        "statsRetry": "Réessayer",
+        "prevPeriod": "Période précédente",
+        "nextPeriod": "Période suivante",
+        "recurringInstanceLabel": "Fait partie d'une série",
+        "loanProgressLabel": "Progression du remboursement"
     },
     "settings": {
         "title": "Paramètres",
