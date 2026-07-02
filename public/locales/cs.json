@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Nechte prázdné pro zachování tajného údaje",
         "notificationChannelEmpty": "Zatím nejsou nastaveny žádné kanály domácnosti.",
         "notificationChannelAdminOnlyHint": "Kanály domácnosti mohou spravovat pouze správci.",
-        "notificationChannelDeleteConfirm": "Smazat tento kanál oznámení?"
+        "notificationChannelDeleteConfirm": "Smazat tento kanál oznámení?",
+        "apiTokensMcpHint": "Tyto tokeny fungují také jako Bearer tokeny pro koncový bod MCP na /mcp (např. v Claude Desktop pro vytváření úkolů, položek nákupu a událostí pomocí AI)."
     },
     "login": {
         "tagline": "Rodinné plánování. Bezpečné. Soukromé. Open Source.",

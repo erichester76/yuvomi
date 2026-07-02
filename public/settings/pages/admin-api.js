@@ -86,6 +86,7 @@ function renderPage(container) {
       <div class="settings-card">
         <h3 class="settings-card__title">${t('settings.apiTokensCardTitle')}</h3>
         <p class="form-hint" style="margin-bottom:var(--space-3)">${t('settings.apiTokensHint')}</p>
+        <p class="form-hint" style="margin-bottom:var(--space-3)">${t('settings.apiTokensMcpHint')}</p>
         <ul class="settings-members" id="api-token-list"></ul>
         <form id="api-token-form" class="settings-form" autocomplete="off">
           <div class="form-group">

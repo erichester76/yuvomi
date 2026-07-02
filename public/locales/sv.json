@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Lämna tomt för att behålla hemligheten",
         "notificationChannelEmpty": "Inga hushållskanaler har konfigurerats ännu.",
         "notificationChannelAdminOnlyHint": "Endast administratörer kan hantera hushållskanaler.",
-        "notificationChannelDeleteConfirm": "Ta bort den här aviseringskanalen?"
+        "notificationChannelDeleteConfirm": "Ta bort den här aviseringskanalen?",
+        "apiTokensMcpHint": "Dessa token fungerar även som Bearer-token för MCP-slutpunkten på /mcp (t.ex. i Claude Desktop, för att skapa uppgifter, inköpsartiklar och händelser med AI)."
     },
     "login": {
         "tagline": "Familjeplanering. Säker. Sekretessvänlig. Öppen källkod.",

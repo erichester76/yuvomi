@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Hagyja üresen a titok megtartásához",
         "notificationChannelEmpty": "Még nincsenek háztartási csatornák konfigurálva.",
         "notificationChannelAdminOnlyHint": "Csak az adminisztrátorok kezelhetik a háztartási csatornákat.",
-        "notificationChannelDeleteConfirm": "Törölni szeretné ezt a értesítési csatornát?"
+        "notificationChannelDeleteConfirm": "Törölni szeretné ezt a értesítési csatornát?",
+        "apiTokensMcpHint": "Ezek a tokenek Bearer tokenként is működnek a /mcp címen elérhető MCP-végponthoz (pl. a Claude Desktopban, feladatok, bevásárlólista-tételek és események MI-vel történő létrehozásához)."
     },
     "login": {
         "tagline": "Family planning. Secure. Privacy-friendly. Open source.",

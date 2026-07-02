@@ -1497,7 +1497,8 @@
         "notificationChannelSecretKeep": "Pozostaw puste, aby zachować sekret",
         "notificationChannelEmpty": "Nie skonfigurowano jeszcze kanałów domowych.",
         "notificationChannelAdminOnlyHint": "Tylko administratorzy mogą zarządzać kanałami domowymi.",
-        "notificationChannelDeleteConfirm": "Usunąć ten kanał powiadomień?"
+        "notificationChannelDeleteConfirm": "Usunąć ten kanał powiadomień?",
+        "apiTokensMcpHint": "Te tokeny działają również jako tokeny Bearer dla punktu końcowego MCP pod adresem /mcp (np. w Claude Desktop, aby tworzyć zadania, produkty na liście zakupów i wydarzenia za pomocą AI)."
     },
     "login": {
         "tagline": "Planowanie rodziny. Bezpieczne. Chroniące prywatność. Open Source.",

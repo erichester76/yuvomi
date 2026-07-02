@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Laat leeg om het geheim te behouden",
         "notificationChannelEmpty": "Er zijn nog geen huishoudkanalen ingesteld.",
         "notificationChannelAdminOnlyHint": "Alleen beheerders kunnen huishoudkanalen beheren.",
-        "notificationChannelDeleteConfirm": "Dit meldingskanaal verwijderen?"
+        "notificationChannelDeleteConfirm": "Dit meldingskanaal verwijderen?",
+        "apiTokensMcpHint": "Deze tokens werken ook als Bearer-tokens voor het MCP-eindpunt op /mcp (bijv. in Claude Desktop, om taken, boodschappen en afspraken via AI aan te maken)."
     },
     "login": {
         "tagline": "Gezinsplanning. Veilig. Privacyvriendelijk. Open source.",

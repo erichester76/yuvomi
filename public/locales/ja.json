@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "シークレットを保持するには空のままにします",
         "notificationChannelEmpty": "世帯チャンネルはまだ設定されていません。",
         "notificationChannelAdminOnlyHint": "世帯チャンネルを管理できるのは管理者のみです。",
-        "notificationChannelDeleteConfirm": "この通知チャンネルを削除しますか？"
+        "notificationChannelDeleteConfirm": "この通知チャンネルを削除しますか？",
+        "apiTokensMcpHint": "これらのトークンは、/mcp の MCP エンドポイント用の Bearer トークンとしても機能します（例: Claude Desktop で、AI によりタスク・買い物リスト・予定を作成）。"
     },
     "login": {
         "tagline": "家族計画。安全。プライバシー重視。オープンソース。",

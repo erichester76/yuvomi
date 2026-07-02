@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Gizli değeri korumak için boş bırakın",
         "notificationChannelEmpty": "Henüz ev kanalı yapılandırılmadı.",
         "notificationChannelAdminOnlyHint": "Ev kanallarını yalnızca yöneticiler yönetebilir.",
-        "notificationChannelDeleteConfirm": "Bu bildirim kanalı silinsin mi?"
+        "notificationChannelDeleteConfirm": "Bu bildirim kanalı silinsin mi?",
+        "apiTokensMcpHint": "Bu belirteçler /mcp adresindeki MCP uç noktası için Bearer belirteci olarak da çalışır (örn. Claude Desktop'ta yapay zekâ ile görev, alışveriş öğesi ve etkinlik oluşturmak için)."
     },
     "login": {
         "tagline": "Aile planlaması. Güvenli. Gizlilik dostu. Açık kaynak.",

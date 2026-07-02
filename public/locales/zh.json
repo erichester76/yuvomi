@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "留空以保留密钥",
         "notificationChannelEmpty": "尚未配置家庭频道。",
         "notificationChannelAdminOnlyHint": "只有管理员可以管理家庭频道。",
-        "notificationChannelDeleteConfirm": "删除此通知频道？"
+        "notificationChannelDeleteConfirm": "删除此通知频道？",
+        "apiTokensMcpHint": "这些令牌也可用作 /mcp 上 MCP 端点的 Bearer 令牌（例如在 Claude Desktop 中，通过 AI 创建任务、购物项和日程）。"
     },
     "login": {
         "tagline": "家庭规划。安全。注重隐私。开源。",

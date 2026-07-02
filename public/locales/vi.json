@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Để trống để giữ nguyên bí mật",
         "notificationChannelEmpty": "Chưa cấu hình kênh gia đình nào.",
         "notificationChannelAdminOnlyHint": "Chỉ quản trị viên mới có thể quản lý kênh gia đình.",
-        "notificationChannelDeleteConfirm": "Xóa kênh thông báo này?"
+        "notificationChannelDeleteConfirm": "Xóa kênh thông báo này?",
+        "apiTokensMcpHint": "Các token này cũng hoạt động như token Bearer cho điểm cuối MCP tại /mcp (ví dụ trong Claude Desktop, để tạo công việc, món hàng cần mua và sự kiện bằng AI)."
     },
     "login": {
         "tagline": "Kế hoạch gia đình. Bảo mật. Thân thiện với quyền riêng tư. Mã nguồn mở.",

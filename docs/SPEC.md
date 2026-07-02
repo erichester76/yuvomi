@@ -1362,6 +1362,14 @@ Authentication options for external integrations:
 - **Bearer token:** `Authorization: Bearer <token>` — tokens created via Settings → Administration → API access (admin only)
 - **X-API-Key header:** `X-API-Key: <token>` — alternative header accepted alongside Bearer
 
+### MCP Endpoint
+
+A stateless [Model Context Protocol](https://modelcontextprotocol.io) endpoint is served at `/mcp` (JSON-RPC 2.0 over HTTP). It lets AI agents such as Claude Desktop read and create the most common entities via natural language. Authentication reuses the API tokens above — send the token as `Authorization: Bearer <token>`; no CSRF token is required, and no additional env var or port is needed.
+
+- **Methods:** `initialize`, `tools/list`, `tools/call`, `ping`.
+- **Tools (v1):** `list_tasks`, `create_task`, `list_shopping_items`, `add_shopping_item`, `list_upcoming_events`, `create_event`.
+- Each call runs as the token's creating user and inherits that user's role. HTTPS is strongly recommended.
+
 ---
 
 ## Design System

@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Залиште порожнім, щоб зберегти секрет",
         "notificationChannelEmpty": "Канали домогосподарства ще не налаштовано.",
         "notificationChannelAdminOnlyHint": "Керувати каналами домогосподарства можуть лише адміністратори.",
-        "notificationChannelDeleteConfirm": "Видалити цей канал сповіщень?"
+        "notificationChannelDeleteConfirm": "Видалити цей канал сповіщень?",
+        "apiTokensMcpHint": "Ці токени також працюють як токени Bearer для кінцевої точки MCP за адресою /mcp (наприклад, у Claude Desktop для створення завдань, покупок і подій за допомогою ШІ)."
     },
     "login": {
         "tagline": "Планування для родини. Безпечно. Конфіденційно. Відкритий код.",

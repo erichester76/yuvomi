@@ -52,6 +52,7 @@ import pushRouter from './routes/push.js';
 import emailRouter from './routes/email.js';
 import notificationsRouter from './routes/notifications.js';
 import healthRouter from './routes/health.js';
+import mcpRouter from './mcp/server.js';
 
 const log     = createLogger('Server');
 const logSync = createLogger('Sync');
@@ -314,6 +315,10 @@ app.get('/feed/calendar/:token.ics', feedLimiter, (req, res) => {
     res.status(500).type('text/plain').send('Internal error');
   }
 });
+
+// MCP-Endpoint (Streamable HTTP, stateless): Auth über bestehende Bearer-API-Tokens.
+// Eigener Namespace außerhalb von /api/v1 → kein CSRF, kein Guest-Guard.
+app.use('/mcp', apiLimiter, requireAuth, mcpRouter);
 
 // Alle weiteren API-Routen erfordern Authentifizierung + CSRF-Schutz
 app.use('/api/v1', requireAuth);

@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Déjalo vacío para conservar el secreto",
         "notificationChannelEmpty": "Aún no hay canales del hogar configurados.",
         "notificationChannelAdminOnlyHint": "Solo los administradores pueden gestionar canales del hogar.",
-        "notificationChannelDeleteConfirm": "¿Eliminar este canal de notificaciones?"
+        "notificationChannelDeleteConfirm": "¿Eliminar este canal de notificaciones?",
+        "apiTokensMcpHint": "Estos tokens también funcionan como tokens Bearer para el endpoint MCP en /mcp (p. ej. en Claude Desktop, para crear tareas, artículos de la compra y eventos mediante IA)."
     },
     "login": {
         "tagline": "Planificación familiar. Segura. Privada. Código abierto.",

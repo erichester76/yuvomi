@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "اتركه فارغًا للاحتفاظ بالسر",
         "notificationChannelEmpty": "لم يتم إعداد أي قنوات منزلية بعد.",
         "notificationChannelAdminOnlyHint": "يمكن للمشرفين فقط إدارة قنوات المنزل.",
-        "notificationChannelDeleteConfirm": "هل تريد حذف قناة الإشعارات هذه؟"
+        "notificationChannelDeleteConfirm": "هل تريد حذف قناة الإشعارات هذه؟",
+        "apiTokensMcpHint": "تعمل هذه الرموز أيضًا كرموز Bearer لنقطة نهاية MCP على /mcp (على سبيل المثال في Claude Desktop، لإنشاء المهام وعناصر التسوق والمواعيد باستخدام الذكاء الاصطناعي)."
     },
     "login": {
         "tagline": "تخطيط عائلي. آمن. يحترم الخصوصية. مفتوح المصدر.",

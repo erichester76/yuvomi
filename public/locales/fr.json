@@ -1491,7 +1491,8 @@
         "notificationChannelSecretKeep": "Laisser vide pour conserver le secret",
         "notificationChannelEmpty": "Aucun canal du foyer n’est encore configuré.",
         "notificationChannelAdminOnlyHint": "Seuls les administrateurs peuvent gérer les canaux du foyer.",
-        "notificationChannelDeleteConfirm": "Supprimer ce canal de notification ?"
+        "notificationChannelDeleteConfirm": "Supprimer ce canal de notification ?",
+        "apiTokensMcpHint": "Ces jetons fonctionnent aussi comme jetons Bearer pour le point de terminaison MCP sur /mcp (p. ex. dans Claude Desktop, pour créer des tâches, des articles de courses et des événements via l'IA)."
     },
     "login": {
         "tagline": "Planification familiale. Sécurisée. Respectueuse de la vie privée. Open source.",

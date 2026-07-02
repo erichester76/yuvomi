@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.85.0] - 2026-07-02
+
+### Added
+- **MCP endpoint for AI agents (Discussion #429)** — Yuvomi now serves a stateless [Model Context Protocol](https://modelcontextprotocol.io) endpoint at `/mcp` (JSON-RPC 2.0 over HTTP). AI clients such as Claude Desktop can list and create tasks, shopping items, and calendar events through natural language. It authenticates with the existing API tokens (`Authorization: Bearer <token>`), so no new environment variable, port, or setup step is required.
+
 ## [0.84.0] - 2026-07-02
 
 ### Added
