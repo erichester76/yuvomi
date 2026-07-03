@@ -465,18 +465,38 @@ function buildTodayHighlights(data) {
         const items = Array.isArray(list.items) ? list.items : [];
         return sum + items.filter((item) => !item.is_checked).length;
       }, 0);
-  const dinner = Array.isArray(meals)
-    ? meals.find((meal) => meal.meal_type === 'dinner') ?? null
-    : meals?.dinner ?? null;
+  const { meal, mealType } = selectTodayMeal(meals);
 
   return {
     urgentTask,
     nextEvent,
     openShoppingCount,
-    dinner,
+    meal,
+    mealType,
     taskCount: tasks.length,
     eventCount: todayEvents.length,
   };
+}
+
+// Pick the meal relevant to the current time of day (matches greeting thresholds:
+// morning → breakfast, afternoon → lunch, evening → dinner). If the target meal
+// is not planned, fall back to the next planned meal later today.
+function selectTodayMeal(meals) {
+  const order = ['breakfast', 'lunch', 'dinner'];
+  const list = Array.isArray(meals)
+    ? meals
+    : meals && typeof meals === 'object'
+      ? order.map((type) => (meals[type] ? { ...meals[type], meal_type: type } : null)).filter(Boolean)
+      : [];
+
+  const h = new Date().getHours();
+  const targetType = h < 12 ? 'breakfast' : h < 18 ? 'lunch' : 'dinner';
+
+  for (let i = order.indexOf(targetType); i < order.length; i++) {
+    const found = list.find((m) => m.meal_type === order[i]);
+    if (found) return { meal: found, mealType: order[i] };
+  }
+  return { meal: null, mealType: targetType };
 }
 
 // --------------------------------------------------------
@@ -741,7 +761,9 @@ function renderTodayCockpit(data) {
   const highlights = buildTodayHighlights(data);
   const taskTitle = highlights.urgentTask?.title ?? t('dashboard.todayNoTasks');
   const eventTitle = highlights.nextEvent?.title ?? t('dashboard.todayNoEvents');
-  const dinnerTitle = highlights.dinner?.title ?? t('dashboard.todayNoDinner');
+  const mealLabel = MEAL_LABELS()[highlights.mealType] ?? t('dashboard.todayDinner');
+  const mealIcon = MEAL_ICONS[highlights.mealType] ?? 'utensils';
+  const mealTitle = highlights.meal?.title ?? t('dashboard.todayNoDinner');
 
   return `
     <section class="today-cockpit" aria-labelledby="today-cockpit-title">
@@ -752,7 +774,7 @@ function renderTodayCockpit(data) {
         ${!window.yuvomi?.isModuleDisabled('tasks')    ? renderTodayCard('check-square',   t('dashboard.todayTask'),     taskTitle, '/tasks', 'task', highlights.taskCount) : ''}
         ${!window.yuvomi?.isModuleDisabled('calendar') ? renderTodayCard('calendar',        t('dashboard.todayEvent'),    eventTitle, calendarEventRoute(highlights.nextEvent), 'event', highlights.eventCount) : ''}
         ${!window.yuvomi?.isModuleDisabled('shopping') ? renderTodayCard('shopping-cart',   t('dashboard.todayShopping'), t('dashboard.todayShoppingCount', { count: highlights.openShoppingCount }), '/shopping', 'shopping') : ''}
-        ${!window.yuvomi?.isModuleDisabled('meals')    ? renderTodayCard('utensils',        t('dashboard.todayDinner'),   dinnerTitle, '/meals', 'dinner') : ''}
+        ${!window.yuvomi?.isModuleDisabled('meals')    ? renderTodayCard(mealIcon,          mealLabel,   mealTitle, '/meals', 'dinner') : ''}
       </div>
     </section>
   `;

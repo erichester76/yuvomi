@@ -135,7 +135,40 @@ test('Today-Highlights priorisieren dringende Aufgaben und nächsten Termin', as
   assert(result.urgentTask.title === 'Pay bill', 'Urgent Task sollte priorisiert werden');
   assert(result.nextEvent.title === 'Dentist', 'Nächster Termin sollte übernommen werden');
   assert(result.openShoppingCount === 1, 'Offene Einkaufsartikel sollten gezählt werden');
-  assert(result.dinner.title === 'Soup', 'Abendessen sollte übernommen werden');
+  assert(result.meal.title === 'Soup', 'Geplante Mahlzeit sollte übernommen werden');
+});
+
+test('Today-Highlights wählt die Mahlzeit passend zur Tageszeit', async () => {
+  const { __test } = await import('../public/pages/dashboard.js');
+  const RealDate = Date;
+  const withHour = (hour, fn) => {
+    class FakeDate extends RealDate {
+      constructor(...args) {
+        if (args.length === 0) { super('2026-07-03T00:00:00'); this.setHours(hour); return; }
+        super(...args);
+      }
+    }
+    globalThis.Date = FakeDate;
+    try { return fn(); } finally { globalThis.Date = RealDate; }
+  };
+  const meals = [
+    { meal_type: 'breakfast', title: 'Eier' },
+    { meal_type: 'lunch', title: 'Salat' },
+    { meal_type: 'dinner', title: 'Suppe' },
+  ];
+
+  const morning = withHour(8, () => __test.buildTodayHighlights({ meals }));
+  assert(morning.mealType === 'breakfast' && morning.meal.title === 'Eier', 'Morgens sollte Frühstück gezeigt werden');
+
+  const noon = withHour(13, () => __test.buildTodayHighlights({ meals }));
+  assert(noon.mealType === 'lunch' && noon.meal.title === 'Salat', 'Mittags sollte Mittagessen gezeigt werden');
+
+  const evening = withHour(20, () => __test.buildTodayHighlights({ meals }));
+  assert(evening.mealType === 'dinner' && evening.meal.title === 'Suppe', 'Abends sollte Abendessen gezeigt werden');
+
+  // Frühstück nicht geplant → nächste geplante Mahlzeit des Tages
+  const onlyDinner = withHour(8, () => __test.buildTodayHighlights({ meals: [{ meal_type: 'dinner', title: 'Suppe' }] }));
+  assert(onlyDinner.meal.title === 'Suppe', 'Ohne Frühstück sollte die nächste geplante Mahlzeit gezeigt werden');
 });
 
 test('Today-Highlights filtert Termine auf den heutigen Tag', async () => {

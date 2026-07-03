@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.88.1] - 2026-07-03
+
+### Fixed
+- **Overview "Today at a glance" now shows the right meal (Issue #430)** — the meal card in the overview cockpit always displayed dinner, even in the morning. It now picks the meal that matches the time of day (breakfast before noon, lunch in the afternoon, dinner in the evening), with the label and icon updating to match. If the meal for the current time slot isn't planned, it falls back to the next planned meal of the day.
+
 ## [0.88.0] - 2026-07-03
 
 ### Added
