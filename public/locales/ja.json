@@ -658,7 +658,16 @@
         "categoryEmergency": "緊急連絡先",
         "categoryOther": "その他",
         "emptyAction": "連絡先を追加",
-        "moreActions": "その他の操作"
+        "moreActions": "その他の操作",
+        "noResultsTitle": "結果なし",
+        "noResultsDescription": "検索またはフィルターに一致する連絡先がありません。",
+        "resetSearch": "検索とフィルターをリセット",
+        "countOne": "連絡先 1 件",
+        "countMany": "連絡先 {{count}} 件",
+        "selectButton": "選択",
+        "selectAll": "すべて選択",
+        "selectCount": "{{count}} 件選択",
+        "bulkDeletedToast": "連絡先 {{count}} 件を削除しました"
     },
     "budget": {
         "title": "家計",

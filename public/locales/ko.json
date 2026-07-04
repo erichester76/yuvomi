@@ -664,7 +664,16 @@
         "categoryCraftsman": "수리공",
         "categoryEmergency": "긴급",
         "categoryOther": "기타",
-        "moreActions": "추가 작업"
+        "moreActions": "추가 작업",
+        "noResultsTitle": "결과 없음",
+        "noResultsDescription": "검색 또는 필터와 일치하는 연락처가 없습니다.",
+        "resetSearch": "검색 및 필터 재설정",
+        "countOne": "연락처 1개",
+        "countMany": "연락처 {{count}}개",
+        "selectButton": "선택",
+        "selectAll": "모두 선택",
+        "selectCount": "{{count}}개 선택됨",
+        "bulkDeletedToast": "연락처 {{count}}개 삭제됨"
     },
     "budget": {
         "title": "예산",

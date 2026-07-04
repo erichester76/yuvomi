@@ -658,7 +658,16 @@
         "categoryEmergency": "Nouzové kontakty",
         "categoryOther": "Ostatní",
         "emptyAction": "Přidat kontakt",
-        "moreActions": "Více akcí"
+        "moreActions": "Více akcí",
+        "noResultsTitle": "Žádné výsledky",
+        "noResultsDescription": "Žádné kontakty neodpovídají hledání ani filtru.",
+        "resetSearch": "Zrušit hledání a filtr",
+        "countOne": "1 kontakt",
+        "countMany": "{{count}} kontaktů",
+        "selectButton": "Vybrat",
+        "selectAll": "Vybrat vše",
+        "selectCount": "Vybráno: {{count}}",
+        "bulkDeletedToast": "Smazáno {{count}} kontaktů"
     },
     "budget": {
         "title": "Rozpočet",

@@ -162,15 +162,88 @@
 .contact-item {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: var(--space-2);
+  padding-right: var(--space-4);
   border-bottom: 1px solid var(--color-border-subtle);
-  cursor: pointer;
   transition: background-color var(--transition-fast);
 }
 
 .contact-item:hover {
   background-color: var(--color-surface-2);
+}
+
+/* --------------------------------------------------------
+ * Auswahl-Modus (opt-in Bulk)
+ * -------------------------------------------------------- */
+.contacts-selectbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-2);
+  flex-shrink: 0;
+}
+
+.contacts-selectbar__count {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.contacts-selectbar__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.contact-item__select {
+  cursor: pointer;
+}
+
+.contact-item__checkbox {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.contact-item__checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.contact-item--selected {
+  background-color: var(--color-accent-light);
+}
+
+.contacts-page.is-selecting .page-fab {
+  display: none;
+}
+
+/* Öffnen/Bearbeiten: echte, fokussierbare Schaltfläche (Tastatur/Screenreader).
+ * Padding wandert hierher, damit die gesamte linke Zeilenfläche klickbar ist. */
+.contact-item__open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  padding-right: var(--space-2);
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contact-item__open:focus-visible {
+  outline: 2px solid var(--active-module-accent, var(--color-accent));
+  outline-offset: -2px;
+  border-radius: var(--radius-md);
 }
 
 .contact-item__icon {
@@ -189,16 +262,19 @@
 .contact-item__body {
   flex: 1;
   min-width: 0;
-  max-width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-item__name {
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .contact-item__meta {
+  display: block;
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   white-space: nowrap;
@@ -244,41 +320,62 @@
   background-color: var(--color-danger-light);
 }
 
-.contact-more-menu {
+/* Desktop: sekundäre Aktionen (Karte/Export/Löschen) ruhen unsichtbar und
+ * erscheinen erst bei Hover/Fokus der Zeile — reduziert die Grunddichte von
+ * fünf auf zwei Buttons, ohne Layout-Sprünge (Platz bleibt reserviert).
+ * Fokus per Tastatur enthüllt sie ebenfalls; Touch/Mobile ist nicht betroffen. */
+@media (min-width: 768px) {
+  .contact-action-btn--reveal {
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  .contact-item:hover .contact-action-btn--reveal,
+  .contact-item:focus-within .contact-action-btn--reveal {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: reduce) {
+  .contact-action-btn--reveal { transition: none; }
+}
+
+/* „Mehr"-Trigger nur auf Mobile; auf Desktop sind alle Aktionen inline sichtbar. */
+.contact-more-menu__trigger {
   display: none;
-  position: relative;
 }
 
-.contact-more-menu summary {
-  list-style: none;
-}
-
-.contact-more-menu summary::-webkit-details-marker {
-  display: none;
-}
-
+/* Panel als Popover: rendert im Top-Layer → kein Clipping durch den Scroll-
+ * Container, freies Light-Dismiss + Esc. Position setzt JS (onPanelToggle);
+ * inset/margin überschreiben die UA-Zentrierung. */
 .contact-more-menu__panel {
-  position: absolute;
-  right: 0;
-  top: calc(100% + var(--space-1));
+  position: fixed;
+  margin: 0;
+  inset: auto;
   z-index: var(--z-dropdown);
-  display: flex;
   gap: var(--space-1);
   padding: var(--space-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-md);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
-.contact-action-btn--mobile-menu {
-  display: none;
+.contact-more-menu__panel:popover-open {
+  display: flex;
 }
 
 @media (max-width: 767px) {
-  .contact-item {
+  .contact-item__open {
     gap: var(--space-2);
     padding: var(--space-3);
+    padding-right: var(--space-2);
+  }
+
+  .contact-item {
+    padding-right: var(--space-3);
   }
 
   .contact-item__icon {
@@ -286,23 +383,11 @@
     height: 36px;
   }
 
-  .contact-item__actions {
-    gap: var(--space-1);
-  }
-
   .contact-action-btn--desktop-extra {
     display: none;
   }
 
-  .contact-more-menu {
-    display: block;
-  }
-
-  .contact-more-menu[open] {
-    z-index: var(--z-dropdown);
-  }
-
-  .contact-action-btn--mobile-menu {
+  .contact-more-menu__trigger {
     display: flex;
   }
 }

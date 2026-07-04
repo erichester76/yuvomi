@@ -658,7 +658,16 @@
         "categoryEmergency": "आपातकालीन",
         "categoryOther": "विविध",
         "emptyAction": "संपर्क जोड़ें",
-        "moreActions": "और कार्रवाइयाँ"
+        "moreActions": "और कार्रवाइयाँ",
+        "noResultsTitle": "कोई परिणाम नहीं",
+        "noResultsDescription": "खोज या फ़िल्टर से कोई संपर्क मेल नहीं खाता.",
+        "resetSearch": "खोज और फ़िल्टर रीसेट करें",
+        "countOne": "1 संपर्क",
+        "countMany": "{{count}} संपर्क",
+        "selectButton": "चुनें",
+        "selectAll": "सभी चुनें",
+        "selectCount": "{{count}} चयनित",
+        "bulkDeletedToast": "{{count}} संपर्क हटाए गए"
     },
     "budget": {
         "title": "बजट",

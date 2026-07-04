@@ -658,7 +658,16 @@
         "categoryEmergency": "Acil",
         "categoryOther": "Diğer",
         "emptyAction": "Kişi ekle",
-        "moreActions": "Diğer işlemler"
+        "moreActions": "Diğer işlemler",
+        "noResultsTitle": "Sonuç yok",
+        "noResultsDescription": "Arama veya filtreyle eşleşen kişi yok.",
+        "resetSearch": "Aramayı ve filtreyi sıfırla",
+        "countOne": "1 kişi",
+        "countMany": "{{count}} kişi",
+        "selectButton": "Seç",
+        "selectAll": "Tümünü seç",
+        "selectCount": "{{count}} seçildi",
+        "bulkDeletedToast": "{{count}} kişi silindi"
     },
     "budget": {
         "title": "Bütçe",

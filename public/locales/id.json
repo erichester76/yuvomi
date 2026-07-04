@@ -664,7 +664,16 @@
         "categoryCraftsman": "Tukang",
         "categoryEmergency": "Darurat",
         "categoryOther": "Lainnya",
-        "moreActions": "Tindakan lain"
+        "moreActions": "Tindakan lain",
+        "noResultsTitle": "Tidak ada kecocokan",
+        "noResultsDescription": "Tidak ada kontak yang cocok dengan pencarian atau filter.",
+        "resetSearch": "Atur ulang pencarian & filter",
+        "countOne": "1 kontak",
+        "countMany": "{{count}} kontak",
+        "selectButton": "Pilih",
+        "selectAll": "Pilih semua",
+        "selectCount": "{{count}} dipilih",
+        "bulkDeletedToast": "{{count}} kontak dihapus"
     },
     "budget": {
         "title": "Anggaran",

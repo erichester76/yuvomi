@@ -658,7 +658,16 @@
         "categoryEmergency": "Экстренная помощь",
         "categoryOther": "Другое",
         "emptyAction": "Добавить контакт",
-        "moreActions": "Другие действия"
+        "moreActions": "Другие действия",
+        "noResultsTitle": "Нет результатов",
+        "noResultsDescription": "Нет контактов, соответствующих поиску или фильтру.",
+        "resetSearch": "Сбросить поиск и фильтр",
+        "countOne": "1 контакт",
+        "countMany": "{{count}} контактов",
+        "selectButton": "Выбрать",
+        "selectAll": "Выбрать все",
+        "selectCount": "Выбрано: {{count}}",
+        "bulkDeletedToast": "Удалено контактов: {{count}}"
     },
     "budget": {
         "title": "Бюджет",

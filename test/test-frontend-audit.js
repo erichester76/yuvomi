@@ -2231,10 +2231,40 @@ test('mobile contacts keep one primary action and disclose the rest through More
     contactsCss,
     /@media \(max-width:\s*767px\)[\s\S]*\.contact-action-btn--desktop-extra\s*\{[\s\S]*display:\s*none/,
   );
+  // Der „Mehr"-Trigger erscheint nur auf Mobile; das Panel ist ein Popover
+  // (Top-Layer) statt eines absolut positionierten Menüs im Scroll-Container.
   assert.match(
     contactsCss,
-    /@media \(max-width:\s*767px\)[\s\S]*\.contact-more-menu\s*\{[\s\S]*display:\s*block/,
+    /@media \(max-width:\s*767px\)[\s\S]*\.contact-more-menu__trigger\s*\{[\s\S]*display:\s*flex/,
   );
+  assert.match(contactsCss, /\.contact-more-menu__panel\s*\{[\s\S]*position:\s*fixed/);
+  assert.match(contactsPage, /popovertarget="\$\{menuId\}"/);
+  assert.match(contactsPage, /id="\$\{menuId\}" popover/);
+});
+
+test('contacts keyboard shortcut and aria-live result count are wired', () => {
+  const contactsPage = read('../public/pages/contacts.js');
+
+  // sr-only Live-Region sagt die Trefferzahl an
+  assert.match(contactsPage, /id="contacts-status"[^>]*role="status"[^>]*aria-live="polite"/);
+  // „/" fokussiert die Suche; document-Listener meldet sich bei Teardown selbst ab
+  assert.match(contactsPage, /e\.key === '\/'/);
+  assert.match(contactsPage, /pageRoot\.isConnected/);
+});
+
+test('contacts bulk selection is opt-in and hidden by default', () => {
+  const contactsPage = read('../public/pages/contacts.js');
+  const contactsCss = read('../public/styles/contacts.css');
+
+  // Toggle in der Toolbar + Auswahl-Leiste, die per hidden startet (Default clean)
+  assert.match(contactsPage, /id="contacts-select-btn"/);
+  assert.match(contactsPage, /id="contacts-selectbar"[\s\S]*?hidden>/);
+  // Sammel-Löschen mit Undo-Toast
+  assert.match(contactsPage, /async function deleteSelected/);
+  assert.match(contactsPage, /bulkDeletedToast/);
+  // Familien-Kontakte bleiben nicht wählbar (deaktivierte Checkbox)
+  assert.match(contactsPage, /c\.family_user_id \? ' disabled' : ''/);
+  assert.match(contactsCss, /\.contacts-selectbar\s*\{/);
 });
 
 test('documents and navigation settings use progressive disclosure instead of stacked control cards', () => {

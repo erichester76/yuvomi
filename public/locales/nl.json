@@ -658,7 +658,16 @@
         "categoryEmergency": "Noodgeval",
         "categoryOther": "Overig",
         "emptyAction": "Contact toevoegen",
-        "moreActions": "Meer acties"
+        "moreActions": "Meer acties",
+        "noResultsTitle": "Geen resultaten",
+        "noResultsDescription": "Geen contacten komen overeen met de zoekopdracht of het filter.",
+        "resetSearch": "Zoeken & filter wissen",
+        "countOne": "1 contact",
+        "countMany": "{{count}} contacten",
+        "selectButton": "Selecteren",
+        "selectAll": "Alles selecteren",
+        "selectCount": "{{count}} geselecteerd",
+        "bulkDeletedToast": "{{count}} contacten verwijderd"
     },
     "budget": {
         "title": "Budget",

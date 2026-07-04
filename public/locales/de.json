@@ -664,7 +664,16 @@
         "categoryCraftsman": "Handwerker",
         "categoryEmergency": "Notfall",
         "categoryOther": "Sonstiges",
-        "moreActions": "Weitere Aktionen"
+        "moreActions": "Weitere Aktionen",
+        "noResultsTitle": "Keine Treffer",
+        "noResultsDescription": "Keine Kontakte passen zu Suche oder Filter.",
+        "resetSearch": "Suche & Filter zurücksetzen",
+        "countOne": "1 Kontakt",
+        "countMany": "{{count}} Kontakte",
+        "selectButton": "Auswählen",
+        "selectAll": "Alle auswählen",
+        "selectCount": "{{count}} ausgewählt",
+        "bulkDeletedToast": "{{count}} Kontakte gelöscht"
     },
     "budget": {
         "title": "Budget",

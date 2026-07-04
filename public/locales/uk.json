@@ -658,7 +658,16 @@
         "categoryEmergency": "Екстрена служба",
         "categoryOther": "Інше",
         "emptyAction": "Додати контакт",
-        "moreActions": "Більше дій"
+        "moreActions": "Більше дій",
+        "noResultsTitle": "Результатів немає",
+        "noResultsDescription": "Немає контактів, що відповідають пошуку або фільтру.",
+        "resetSearch": "Скинути пошук і фільтр",
+        "countOne": "1 контакт",
+        "countMany": "{{count}} контактів",
+        "selectButton": "Вибрати",
+        "selectAll": "Вибрати все",
+        "selectCount": "Вибрано: {{count}}",
+        "bulkDeletedToast": "Видалено контактів: {{count}}"
     },
     "budget": {
         "title": "Бюджет",

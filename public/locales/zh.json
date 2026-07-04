@@ -658,7 +658,16 @@
         "categoryEmergency": "紧急联系",
         "categoryOther": "其他",
         "emptyAction": "添加联系人",
-        "moreActions": "更多操作"
+        "moreActions": "更多操作",
+        "noResultsTitle": "无结果",
+        "noResultsDescription": "没有符合搜索或筛选的联系人。",
+        "resetSearch": "重置搜索和筛选",
+        "countOne": "1 个联系人",
+        "countMany": "{{count}} 个联系人",
+        "selectButton": "选择",
+        "selectAll": "全选",
+        "selectCount": "已选择 {{count}} 个",
+        "bulkDeletedToast": "已删除 {{count}} 个联系人"
     },
     "budget": {
         "title": "预算",

@@ -658,7 +658,16 @@
         "categoryEmergency": "Emergency",
         "categoryOther": "Other",
         "emptyAction": "Add contact",
-        "moreActions": "More actions"
+        "moreActions": "More actions",
+        "noResultsTitle": "No results",
+        "noResultsDescription": "No contacts match your search or filter.",
+        "resetSearch": "Reset search & filter",
+        "countOne": "1 contact",
+        "countMany": "{{count}} contacts",
+        "selectButton": "Select",
+        "selectAll": "Select all",
+        "selectCount": "{{count}} selected",
+        "bulkDeletedToast": "{{count}} contacts deleted"
     },
     "budget": {
         "title": "Budget",

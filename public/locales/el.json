@@ -658,7 +658,16 @@
         "categoryEmergency": "Έκτακτη ανάγκη",
         "categoryOther": "Άλλο",
         "emptyAction": "Προσθήκη επαφής",
-        "moreActions": "Περισσότερες ενέργειες"
+        "moreActions": "Περισσότερες ενέργειες",
+        "noResultsTitle": "Δεν βρέθηκαν αποτελέσματα",
+        "noResultsDescription": "Καμία επαφή δεν ταιριάζει με την αναζήτηση ή το φίλτρο.",
+        "resetSearch": "Επαναφορά αναζήτησης & φίλτρου",
+        "countOne": "1 επαφή",
+        "countMany": "{{count}} επαφές",
+        "selectButton": "Επιλογή",
+        "selectAll": "Επιλογή όλων",
+        "selectCount": "{{count}} επιλεγμένα",
+        "bulkDeletedToast": "Διαγράφηκαν {{count}} επαφές"
     },
     "budget": {
         "title": "Προϋπολογισμός",

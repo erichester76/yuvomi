@@ -658,7 +658,16 @@
         "categoryEmergency": "Vészhelyzet",
         "categoryOther": "Egyéb",
         "emptyAction": "Kapcsolat hozzáadása",
-        "moreActions": "További műveletek"
+        "moreActions": "További műveletek",
+        "noResultsTitle": "Nincs találat",
+        "noResultsDescription": "Egyetlen névjegy sem felel meg a keresésnek vagy szűrőnek.",
+        "resetSearch": "Keresés és szűrő visszaállítása",
+        "countOne": "1 névjegy",
+        "countMany": "{{count}} névjegy",
+        "selectButton": "Kijelölés",
+        "selectAll": "Összes kijelölése",
+        "selectCount": "{{count}} kijelölve",
+        "bulkDeletedToast": "{{count}} névjegy törölve"
     },
     "budget": {
         "title": "Költségvetés",

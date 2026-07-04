@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.92.0] - 2026-07-04
+
+### Added
+- **Contacts bulk selection** — an opt-in "Select" toggle in the contacts toolbar turns the list into checkboxes with select-all and batch delete (with a 5-second undo); family-linked contacts are excluded since they are managed through their member profile.
+- **Contacts keyboard shortcuts** — `/` focuses the search field and `n` creates a new contact (suppressed while typing in a field or while a dialog is open).
+- **Contacts screen-reader result count** — a live region announces the number of matching contacts as you search or filter.
+
+### Changed
+- **Contact category is now a primary field** — the category selector moved out of the collapsed "advanced" section into the main add/edit form, so new contacts no longer silently default to the first category.
+- **Vendor-neutral contact map links** — a contact address now opens in OpenStreetMap instead of Google Maps.
+- **Calmer contact rows on desktop** — secondary row actions (map, export, delete) now appear on hover/focus instead of always being visible, reducing visual density.
+- **Clearer empty state for contacts** — searching or filtering with no matches now shows a distinct "no results" state with a reset action, separate from the first-run "no contacts yet" state.
+
+### Fixed
+- **Keyboard and screen-reader access to contacts** — contact rows are now focusable buttons that open on Enter/Space instead of being click-only.
+- **Contacts mobile action menu no longer clipped** — the mobile "more actions" menu uses the native popover layer, so it is no longer cut off at the bottom of the list.
+- **No more duplicate contact dialogs or deletions** — fixed stacked click handlers that could open the edit dialog or trigger deletion multiple times after searching or filtering.
+- **Steadier contact list** — the list entrance animation no longer replays on every keystroke or filter change.
+
 ## [0.91.0] - 2026-07-04
 
 ### Changed

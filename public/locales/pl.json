@@ -664,7 +664,16 @@
         "categoryCraftsman": "Rzemieślnik",
         "categoryEmergency": "Nagły wypadek",
         "categoryOther": "Inne",
-        "moreActions": "Więcej działań"
+        "moreActions": "Więcej działań",
+        "noResultsTitle": "Brak wyników",
+        "noResultsDescription": "Żaden kontakt nie pasuje do wyszukiwania ani filtra.",
+        "resetSearch": "Wyczyść wyszukiwanie i filtr",
+        "countOne": "1 kontakt",
+        "countMany": "{{count}} kontaktów",
+        "selectButton": "Zaznacz",
+        "selectAll": "Zaznacz wszystko",
+        "selectCount": "Zaznaczono: {{count}}",
+        "bulkDeletedToast": "Usunięto {{count}} kontaktów"
     },
     "budget": {
         "title": "Budżet",

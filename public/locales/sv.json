@@ -658,7 +658,16 @@
         "categoryEmergency": "Nödsituation",
         "categoryOther": "Andra",
         "emptyAction": "Lägg till kontakt",
-        "moreActions": "Fler åtgärder"
+        "moreActions": "Fler åtgärder",
+        "noResultsTitle": "Inga resultat",
+        "noResultsDescription": "Inga kontakter matchar sökningen eller filtret.",
+        "resetSearch": "Återställ sökning och filter",
+        "countOne": "1 kontakt",
+        "countMany": "{{count}} kontakter",
+        "selectButton": "Välj",
+        "selectAll": "Markera alla",
+        "selectCount": "{{count}} markerade",
+        "bulkDeletedToast": "{{count}} kontakter raderade"
     },
     "budget": {
         "title": "Budget",

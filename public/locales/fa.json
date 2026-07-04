@@ -664,7 +664,16 @@
         "categoryCraftsman": "تعمیرکار",
         "categoryEmergency": "اورژانس",
         "categoryOther": "متفرقه",
-        "moreActions": "اقدامات بیشتر"
+        "moreActions": "اقدامات بیشتر",
+        "noResultsTitle": "بدون نتیجه",
+        "noResultsDescription": "هیچ مخاطبی با جستجو یا فیلتر مطابقت ندارد.",
+        "resetSearch": "بازنشانی جستجو و فیلتر",
+        "countOne": "۱ مخاطب",
+        "countMany": "{{count}} مخاطب",
+        "selectButton": "انتخاب",
+        "selectAll": "انتخاب همه",
+        "selectCount": "{{count}} انتخاب‌شده",
+        "bulkDeletedToast": "{{count}} مخاطب حذف شد"
     },
     "budget": {
         "title": "بودجه",

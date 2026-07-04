@@ -658,7 +658,16 @@
         "categoryEmergency": "طوارئ",
         "categoryOther": "متنوع",
         "emptyAction": "إضافة جهة اتصال",
-        "moreActions": "إجراءات إضافية"
+        "moreActions": "إجراءات إضافية",
+        "noResultsTitle": "لا توجد نتائج",
+        "noResultsDescription": "لا توجد جهات اتصال تطابق البحث أو التصفية.",
+        "resetSearch": "إعادة تعيين البحث والتصفية",
+        "countOne": "جهة اتصال واحدة",
+        "countMany": "{{count}} جهة اتصال",
+        "selectButton": "تحديد",
+        "selectAll": "تحديد الكل",
+        "selectCount": "تم تحديد {{count}}",
+        "bulkDeletedToast": "تم حذف {{count}} جهة اتصال"
     },
     "budget": {
         "title": "الميزانية",

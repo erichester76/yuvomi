@@ -658,7 +658,16 @@
         "categoryEmergency": "Khẩn cấp",
         "categoryOther": "Khác",
         "emptyAction": "Thêm liên hệ",
-        "moreActions": "Hành động khác"
+        "moreActions": "Hành động khác",
+        "noResultsTitle": "Không có kết quả",
+        "noResultsDescription": "Không có liên hệ nào khớp với tìm kiếm hoặc bộ lọc.",
+        "resetSearch": "Đặt lại tìm kiếm & bộ lọc",
+        "countOne": "1 liên hệ",
+        "countMany": "{{count}} liên hệ",
+        "selectButton": "Chọn",
+        "selectAll": "Chọn tất cả",
+        "selectCount": "Đã chọn {{count}}",
+        "bulkDeletedToast": "Đã xóa {{count}} liên hệ"
     },
     "budget": {
         "title": "Ngân sách",

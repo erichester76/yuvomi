@@ -658,7 +658,16 @@
         "categoryEmergency": "Emergenza",
         "categoryOther": "Altro",
         "emptyAction": "Aggiungi contatto",
-        "moreActions": "Altre azioni"
+        "moreActions": "Altre azioni",
+        "noResultsTitle": "Nessun risultato",
+        "noResultsDescription": "Nessun contatto corrisponde alla ricerca o al filtro.",
+        "resetSearch": "Reimposta ricerca e filtro",
+        "countOne": "1 contatto",
+        "countMany": "{{count}} contatti",
+        "selectButton": "Seleziona",
+        "selectAll": "Seleziona tutto",
+        "selectCount": "{{count}} selezionati",
+        "bulkDeletedToast": "{{count}} contatti eliminati"
     },
     "budget": {
         "title": "Bilancio",

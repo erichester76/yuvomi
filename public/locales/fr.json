@@ -658,7 +658,16 @@
         "categoryEmergency": "Urgence",
         "categoryOther": "Autre",
         "emptyAction": "Ajouter un contact",
-        "moreActions": "Plus d’actions"
+        "moreActions": "Plus d’actions",
+        "noResultsTitle": "Aucun résultat",
+        "noResultsDescription": "Aucun contact ne correspond à la recherche ou au filtre.",
+        "resetSearch": "Réinitialiser la recherche et le filtre",
+        "countOne": "1 contact",
+        "countMany": "{{count}} contacts",
+        "selectButton": "Sélectionner",
+        "selectAll": "Tout sélectionner",
+        "selectCount": "{{count}} sélectionné(s)",
+        "bulkDeletedToast": "{{count}} contacts supprimés"
     },
     "budget": {
         "title": "Budget",

@@ -1155,8 +1155,11 @@ Responsive grid with colored sticky notes. Phones use one readable column; wider
 - **Multi-value fields:** multiple phones, emails, and addresses per contact, each with a label (mobile, work, home, etc.) and optional `isPrimary` flag
 - **Additional fields:** organization, job_title, birthday, website, photo, nickname
 - Phone: `tel:` link, email: `mailto:` link
-- Address: Maps link (Google/Apple via user agent)
-- Real-time search filter
+- Address: Maps link (vendor-neutral OpenStreetMap search)
+- Real-time search filter; screen-reader live-region announces the result count
+- **Keyboard shortcuts:** `/` focuses search, `n` creates a contact (disabled while a modal is open or while typing in a field)
+- **Bulk selection (opt-in):** a toolbar toggle enters selection mode — rows become checkboxes with select-all and batch delete (5-second undo). Family-linked contacts (`family_user_id`) are not selectable, since they can only be removed via their member profile
+- Rows are keyboard/screen-reader operable (each row is a focusable button); the mobile secondary-action menu uses the native Popover API (top-layer, no clipping)
 - vCard export: each contact downloadable as `.vcf` (`GET /api/v1/contacts/:id/vcard`)
 - vCard import: upload file → client-side parser (FN, TEL, EMAIL, ADR, NOTE, CATEGORIES) → create contact
 - **CardDAV multi-account sync:** connect multiple CardDAV servers (Nextcloud, iCloud, Radicale, Baikal); per-addressbook enable/disable via checkboxes; manual sync trigger; bidirectional sync. New API routes under `/api/v1/contacts/cardav/*`: create/delete accounts, test connections, discover/refresh addressbooks, toggle addressbook selection, sync contacts

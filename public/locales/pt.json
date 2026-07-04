@@ -658,7 +658,16 @@
         "categoryEmergency": "Emergência",
         "categoryOther": "Outros",
         "emptyAction": "Adicionar contato",
-        "moreActions": "Mais ações"
+        "moreActions": "Mais ações",
+        "noResultsTitle": "Nenhum resultado",
+        "noResultsDescription": "Nenhum contato corresponde à busca ou ao filtro.",
+        "resetSearch": "Redefinir busca e filtro",
+        "countOne": "1 contato",
+        "countMany": "{{count}} contatos",
+        "selectButton": "Selecionar",
+        "selectAll": "Selecionar tudo",
+        "selectCount": "{{count}} selecionados",
+        "bulkDeletedToast": "{{count}} contatos excluídos"
     },
     "budget": {
         "title": "Orçamento",
