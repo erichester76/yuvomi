@@ -68,21 +68,20 @@
   color: var(--color-text-primary);
 }
 
+/* Aktive Liste: getönte Pille wie .sub-tab--active/.budget-tab--active.
+ * Der Chip-Umriss bleibt als Identität „wählbare Listen-Entität"; nur die
+ * Farbsprache (Tint statt Vollfüllung) wird vereinheitlicht. */
 .list-tab--active {
-  background-color: var(--module-accent);
-  border-color: var(--module-accent);
-  color: var(--color-ink-on-vivid);
+  background-color: color-mix(in srgb, var(--module-accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--module-accent) 40%, transparent);
+  color: var(--module-accent);
 }
 
 .list-tab__count {
-  background-color: var(--color-glass);
+  background-color: color-mix(in srgb, currentColor 15%, transparent);
   border-radius: var(--radius-full);
   padding: var(--space-px) var(--space-1);
   font-size: var(--text-xs);
-}
-
-.list-tab--active .list-tab__count {
-  background-color: var(--color-glass-hover);
 }
 
 .list-tab__new {

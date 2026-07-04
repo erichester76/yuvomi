@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.94.1] - 2026-07-04
+
+### Changed
+- **Unified tab styling across modules** — the Budget tab bar (Budget/Subscriptions/Loans/Statistics/Split) and the Shopping list switcher now share the same pill-shaped active state (a subtle tinted highlight in each domain's own colour) used by the rest of the app's tab surfaces, so moving between modules feels like one product. Each Budget sub-domain keeps its distinct accent colour.
+- **Consistent heading sizes in Subscriptions and Housekeeping** — section and card headings in these two modules now follow the app-wide typography roles instead of module-specific font-size overrides, removing the heading size jumps that appeared when navigating between modules.
+
 ## [0.94.0] - 2026-07-04
 
 ### Added

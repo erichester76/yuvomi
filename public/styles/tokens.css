@@ -430,6 +430,9 @@
   --sidebar-width-expanded: 220px;   /* full sidebar (≥1024px), max 240px laut Spec */
   --content-max-width: 1280px;
   --content-max-width-narrow: 720px;
+  /* Kanonisches horizontales Seiten-Padding. Ein Wert für den Gutter aller
+   * Modul-Roots, statt gestreuter --space-3/4/5/6 pro Modul. */
+  --page-gutter: var(--space-4);
   --cal-hour-height: 56px;
   --sub-tabs-height: 52px;
   --kitchen-tabs-height: 56px;

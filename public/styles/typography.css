@@ -72,6 +72,10 @@
 .settings-navigation-group__title,
 .settings-mobile-overview__title,
 .split-group-header h2,
+.housekeeping-card h2,
+.subscriptions-chart h2,
+.subscriptions-section-head h2,
+.subscriptions-logo-picker-head h3,
 .settings-empty-state__title {
   font-size: var(--type-section-title);
   font-weight: var(--font-weight-semibold);
@@ -121,6 +125,7 @@
 .document-row__title,
 .document-viewer__unsupported-title,
 .recipe-card__title,
+.housekeeping-task__body h2,
 .split-card h3,
 .settings-card__title,
 .settings-member__name,
@@ -148,6 +153,7 @@
 .meal-card__title,
 .shopping-cat-row__name,
 .housekeeping-section-heading span,
+.subscription-card h3,
 .reminder-section__title,
 .cat-row__name,
 .cat-subrow__name {

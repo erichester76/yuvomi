@@ -1,7 +1,7 @@
 .subscriptions-page {
   --module-accent: var(--color-accent);
   min-height: 100%;
-  padding: var(--space-4);
+  padding: var(--page-gutter);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 280px),
     var(--color-bg);
@@ -121,7 +121,6 @@
 .subscriptions-chart h2,
 .subscriptions-section-head h2 {
   margin: 0;
-  font-size: var(--text-base);
 }
 
 .subscriptions-area-chart {
@@ -295,10 +294,6 @@
 .subscription-card h3,
 .subscription-card p {
   margin: 0;
-}
-
-.subscription-card h3 {
-  font-size: var(--text-sm);
 }
 
 .subscription-card p,
@@ -629,7 +624,6 @@
 
 .subscriptions-logo-picker-head h3 {
   margin: 0;
-  font-size: var(--text-lg);
 }
 
 .subscriptions-logo-search-form {
