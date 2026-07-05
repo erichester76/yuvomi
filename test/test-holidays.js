@@ -204,6 +204,25 @@ test('sync: is idempotent – re-running does not duplicate cached rows', async 
   assert.equal(pub, SYNC_YEAR_SPAN);
 });
 
+test('sync: switching region purges the previous scope – no duplicate holidays (#434)', async () => {
+  __setFetchImpl(makeApiMock());
+  // 1. Erst länderweit synchronisieren (subdivision NULL → nationale Feiertage).
+  setConfig({ holiday_country: 'DE', holiday_show_public: '1', holiday_show_school: '0' });
+  await sync(true);
+  // 2. Nutzer wählt danach eine Region und synchronisiert erneut.
+  setConfig({ holiday_subdivision: 'DE-SH' });
+  await sync(true);
+
+  // Cache darf pro Jahr nur einen Satz enthalten (kein NULL- + Regions-Duplikat).
+  const total = db.prepare("SELECT COUNT(*) c FROM holiday_cache WHERE type='public'").get().c;
+  assert.equal(total, SYNC_YEAR_SPAN);
+
+  // Die veralteten länderweiten (NULL-)Zeilen wurden entfernt; es bleibt nur
+  // der aktuell gewählte Regions-Scope übrig.
+  const stale = db.prepare("SELECT COUNT(*) c FROM holiday_cache WHERE subdivision IS NULL").get().c;
+  assert.equal(stale, 0);
+});
+
 test('sync: both layers enabled caches public and school entries', async () => {
   __setFetchImpl(makeApiMock());
   setConfig({ holiday_country: 'DE', holiday_show_public: '1', holiday_show_school: '1' });

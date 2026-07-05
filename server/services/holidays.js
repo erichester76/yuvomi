@@ -194,10 +194,13 @@ async function syncYearAndType(country, subdivision, year, type, langCode) {
     }
   });
 
-  // Alte Einträge für diesen Scope löschen, dann neu einfügen
+  // Alle Einträge dieses Landes/Jahres/Typs löschen – auch aus zuvor gewählten
+  // Regionen bzw. dem länderweiten (NULL-)Scope. Verhindert doppelte Feiertage
+  // beim Wechsel der Region: es ist immer nur genau eine Region konfiguriert,
+  // daher darf nur der aktuell gefetchte Scope im Cache verbleiben (#434).
   db.get().prepare(
-    'DELETE FROM holiday_cache WHERE type = ? AND country = ? AND (subdivision IS ? OR subdivision = ?) AND year = ?'
-  ).run(type, country, subdivision ?? null, subdivision ?? '', year);
+    'DELETE FROM holiday_cache WHERE type = ? AND country = ? AND year = ?'
+  ).run(type, country, year);
 
   insertAll(holidays);
   return holidays.length;

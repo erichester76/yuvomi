@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.96.1] - 2026-07-05
+
+### Fixed
+- **Duplicate holiday entries after changing region** — public and school holidays no longer appear multiple times once you switch the holiday region (e.g. from a country-wide selection to a specific state). Each holiday sync now replaces the entire cached set for that country and year, so stale entries from a previously selected scope are removed. Existing duplicates clear on the next sync (use "Sync now" in settings to trigger it immediately).
+
 ## [0.96.0] - 2026-07-05
 
 ### Added
