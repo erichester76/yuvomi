@@ -147,6 +147,7 @@
         "customizeHide": "Dölj {{widget}}",
         "widgetSizeTiny": "Liten (1×1)",
         "widgetSizeNarrow": "Smal (2×1)",
+        "widgetSizeTall": "Hög (1×2)",
         "widgetSizeStandard": "Standard (2×2)",
         "widgetSizeLarge": "Stor (3×2)",
         "widgetSizeFull": "Hel (4×2)",

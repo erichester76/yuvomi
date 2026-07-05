@@ -147,6 +147,7 @@
         "customizeHide": "Nascondi {{widget}}",
         "widgetSizeTiny": "Piccolo (1×1)",
         "widgetSizeNarrow": "Stretto (2×1)",
+        "widgetSizeTall": "Alto (1×2)",
         "widgetSizeStandard": "Standard (2×2)",
         "widgetSizeLarge": "Grande (3×2)",
         "widgetSizeFull": "Pieno (4×2)",

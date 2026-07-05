@@ -147,6 +147,7 @@
         "customizeHide": "Приховати {{widget}}",
         "widgetSizeTiny": "Маленький (1×1)",
         "widgetSizeNarrow": "Вузький (2×1)",
+        "widgetSizeTall": "Високий (1×2)",
         "widgetSizeStandard": "Стандартний (2×2)",
         "widgetSizeLarge": "Великий (3×2)",
         "widgetSizeFull": "Повний (4×2)",

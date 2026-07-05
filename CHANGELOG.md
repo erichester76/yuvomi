@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.95.0] - 2026-07-05
+
+### Added
+- **Tall (1×2) widget size** — a new tall-and-narrow dashboard widget size. List widgets (Tasks, Calendar) now default to it, so a short "today" list keeps useful height without taking up a full two-column row. Available in the widget size picker and localised in all 23 languages.
+
+### Changed
+- **Redesigned weather widget** — an atmospheric gradient with a soft highlight and a tighter composition (temperature and icon grouped as one "now" cluster), a clearer forecast divider, and a more legible location line. White-text contrast is verified in both light and dark themes.
+- **Denser, calmer dashboard grid** — widgets no longer stretch to fill empty cells (short lists stay compact instead of becoming half-empty cards), small widgets backfill the gaps left by wide ones, and the "Today" cockpit adapts its column count to the number of cards shown.
+- **No duplicate "Today" entries** — when a module's own widget is visible on the dashboard, the matching "Today" cockpit card is now hidden, so each domain is represented once instead of twice.
+- **Refined "Today" cockpit cards** — the summary cards are de-framed into tinted zones rather than cards nested inside a card.
+
+### Fixed
+- **Weather forecast now visible on mobile** — the multi-day forecast stays in the narrow mobile weather widget instead of being hidden, so the widget shows real information rather than empty space.
+- **Task priority no longer relies on colour alone** — priority markers now also differ in size and shape (filled vs. outlined), meeting WCAG 1.4.1 for colour-blind users; the screen-reader priority label is unchanged.
+
 ## [0.94.2] - 2026-07-04
 
 ### Changed

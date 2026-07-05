@@ -147,6 +147,7 @@
         "customizeHide": "Ocultar {{widget}}",
         "widgetSizeTiny": "Pequeño (1×1)",
         "widgetSizeNarrow": "Estrecho (2×1)",
+        "widgetSizeTall": "Alto (1×2)",
         "widgetSizeStandard": "Estándar (2×2)",
         "widgetSizeLarge": "Grande (3×2)",
         "widgetSizeFull": "Completo (4×2)",

@@ -1103,7 +1103,7 @@ Responsive grid: 1 column on mobile, 2 on tablet, 3 on desktop.
 - Pinboard preview: 2–3 pinned notes (Markdown formatting rendered)
 - FAB (quick actions): + Task, + Event, + Shopping list item, + Note
 
-**Widget sizes:** each widget has a configurable size using named presets (Tiny, Narrow, Standard, Large, Full) that map to `columns × rows` in the CSS grid. Sizes are persisted in user preferences and survive page reloads.
+**Widget sizes:** each widget has a configurable size using named presets (Tiny, Narrow, Tall, Standard, Large, Full) that map to `columns × rows` in the CSS grid. List widgets (tasks, calendar) default to the tall/narrow **Tall** (1×2) preset so a short list keeps useful height without occupying a full two-column row. Sizes are persisted in user preferences and survive page reloads.
 
 Skeleton loading instead of spinners (the skeleton mirrors the default-visible widgets at their correct grid-spanning sizes to prevent layout shift). Clicking any widget navigates to that module.
 

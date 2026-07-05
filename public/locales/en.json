@@ -147,6 +147,7 @@
         "customizeHide": "Hide {{widget}}",
         "widgetSizeTiny": "Small (1×1)",
         "widgetSizeNarrow": "Narrow (2×1)",
+        "widgetSizeTall": "Tall (1×2)",
         "widgetSizeStandard": "Standard (2×2)",
         "widgetSizeLarge": "Large (3×2)",
         "widgetSizeFull": "Full (4×2)",

@@ -147,6 +147,7 @@
         "customizeHide": "Ẩn {{widget}}",
         "widgetSizeTiny": "Nhỏ (1×1)",
         "widgetSizeNarrow": "Hẹp (2×1)",
+        "widgetSizeTall": "Cao (1×2)",
         "widgetSizeStandard": "Tiêu chuẩn (2×2)",
         "widgetSizeLarge": "Lớn (3×2)",
         "widgetSizeFull": "Toàn bộ (4×2)",

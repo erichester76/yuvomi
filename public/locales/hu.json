@@ -147,6 +147,7 @@
         "customizeHide": "Elrejtés {{widget}}",
         "widgetSizeTiny": "Kicsi (1×1)",
         "widgetSizeNarrow": "Keskeny (2×1)",
+        "widgetSizeTall": "Magas (1×2)",
         "widgetSizeStandard": "Normál (2×2)",
         "widgetSizeLarge": "Nagy (3×2)",
         "widgetSizeFull": "Teljes (4×2)",

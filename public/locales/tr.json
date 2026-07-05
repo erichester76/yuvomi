@@ -147,6 +147,7 @@
         "customizeHide": "{{widget}} gizle",
         "widgetSizeTiny": "Küçük (1×1)",
         "widgetSizeNarrow": "Dar (2×1)",
+        "widgetSizeTall": "Yüksek (1×2)",
         "widgetSizeStandard": "Standart (2×2)",
         "widgetSizeLarge": "Büyük (3×2)",
         "widgetSizeFull": "Tam (4×2)",

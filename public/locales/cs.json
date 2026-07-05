@@ -147,6 +147,7 @@
         "customizeHide": "Skrýt {{widget}}",
         "widgetSizeTiny": "Malý (1×1)",
         "widgetSizeNarrow": "Úzký (2×1)",
+        "widgetSizeTall": "Vysoký (1×2)",
         "widgetSizeStandard": "Standardní (2×2)",
         "widgetSizeLarge": "Velký (3×2)",
         "widgetSizeFull": "Plná šířka (4×2)",

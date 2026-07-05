@@ -56,6 +56,11 @@
   position: relative;
   min-width: 0;
   container: dashboard-widget / inline-size;
+  /* content-fit: ein Widget mit kurzer „Heute"-Liste streckt sich NICHT auf die
+   * volle Höhe seiner (evtl. 2 Reihen hohen) Grid-Zelle — es bleibt so hoch wie
+   * sein Inhalt und rückt nach oben. Kein halbleerer Rahmen mehr; der Restraum
+   * wird zu ruhigem Weißraum statt zur toten Kartenfläche. */
+  align-self: start;
 }
 
 .widget-wrapper > .widget {
@@ -89,6 +94,9 @@
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: minmax(132px, auto);
     gap: var(--space-5);
+    /* Dense-Packing: kleine 1x1-Widgets füllen die Lücken, die breite 2x1/2x2-Kacheln
+     * im Auto-Placement hinterlassen — kein toter Weißraum mehr im Grid. */
+    grid-auto-flow: row dense;
   }
 
   .widget-size--2x1,
@@ -148,6 +156,7 @@
 @media (min-width: 1440px) {
   .dashboard__grid {
     grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: row dense;
   }
 
   .widget-size--1x1,
@@ -390,12 +399,33 @@
   border-radius: var(--radius-full);
   flex-shrink: 0;
   margin-top: var(--space-1);
+  box-sizing: border-box;
 }
 
-.task-item__priority--urgent { background-color: var(--color-priority-urgent); }
-.task-item__priority--high   { background-color: var(--color-priority-high); }
-.task-item__priority--medium { background-color: var(--color-priority-medium); }
-.task-item__priority--low    { background-color: var(--color-priority-low); }
+/* Zweite, farbunabhängige Kodierung (WCAG 1.4.1): hohe Priorität = gefüllt +
+ * größer, niedrige = hohler Ring + kleiner. So unterscheidet auch eine
+ * farbfehlsichtige sehende Person die Dringlichkeit an Form und Größe, nicht
+ * nur am Farbton. Screenreader lesen zusätzlich das sr-only-Label. */
+.task-item__priority--urgent {
+  background-color: var(--color-priority-urgent);
+  width: 11px;
+  height: 11px;
+}
+.task-item__priority--high {
+  background-color: var(--color-priority-high);
+  width: var(--space-2h, 10px);
+  height: var(--space-2h, 10px);
+}
+.task-item__priority--medium {
+  background-color: transparent;
+  border: 2px solid var(--color-priority-medium);
+}
+.task-item__priority--low {
+  background-color: transparent;
+  border: 1.5px solid var(--color-priority-low);
+  width: 7px;
+  height: 7px;
+}
 
 .task-item__content {
   flex: 1;
@@ -865,7 +895,7 @@
 .weather-widget__main {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-3);
   min-width: 0;
 }
@@ -895,8 +925,9 @@
 }
 
 .weather-widget__city {
-  font-size: var(--text-xs);
-  opacity: 0.85;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.92;
   margin-bottom: var(--space-1);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -918,7 +949,7 @@
 .weather-forecast {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid var(--color-glass-border);
+  border-top: 1px solid color-mix(in srgb, white 20%, transparent);
   padding-top: var(--space-3);
   gap: var(--space-2);
   min-width: 0;
@@ -974,7 +1005,7 @@ svg.weather-forecast__icon {
 }
 
 .weather-forecast__low {
-  opacity: 0.6;
+  opacity: 0.72;
 }
 
 /* Tiny weather keeps the current conditions readable instead of forcing
@@ -1010,9 +1041,18 @@ svg.weather-forecast__icon {
   display: none;
 }
 
+/* Mobil (schmaler 2x1-Container): der Forecast bleibt sichtbar — eine kompakte
+ * 3-Tage-Zeile unter den Aktuellwerten füllt den Hero mit echter Information,
+ * statt als hoher, halbleerer Violett-Block zu wirken. */
 @container dashboard-widget (max-width: 399px) {
   .widget-size--2x1 > .weather-widget .weather-forecast {
-    display: none;
+    padding-top: var(--space-2);
+    gap: var(--space-1);
+  }
+
+  .widget-size--2x1 > .weather-widget .weather-forecast__icon {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -1027,21 +1067,28 @@ svg.weather-forecast__icon {
     flex-direction: row;
     align-items: stretch;
     justify-content: flex-start;
-    gap: var(--space-4);
+    gap: var(--space-5);
   }
 
+  /* „Jetzt"-Cluster (Temperatur + Icon) an den Inhalt binden, nicht auf 42% fixen —
+   * so entsteht keine tote Lücke zwischen Temperatur und Icon und der Forecast
+   * bekommt den restlichen Raum. */
   .weather-widget__main {
-    flex: 0 0 min(42%, 260px);
+    flex: 0 1 auto;
+  }
+
+  .weather-widget__left {
+    flex: 0 1 auto;
   }
 
   .weather-forecast {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     border-top: none;
-    border-left: 1px solid var(--color-glass-border);
+    border-left: 1px solid color-mix(in srgb, white 20%, transparent);
     flex: 1;
     align-items: center;
     padding-top: 0;
-    padding-left: var(--space-4);
+    padding-left: var(--space-5);
   }
 }
 
@@ -1591,7 +1638,10 @@ svg.weather-forecast__icon {
 
 .today-cockpit__grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* auto-fit: das Raster passt sich der ANZAHL sichtbarer Karten an. Deckt der
+   * Nutzer Domänen über Widgets ab (Echo-Fix), füllen die verbliebenen Karten
+   * die Breite, statt leere Spalten zu hinterlassen. */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   grid-auto-rows: 1fr;
   gap: var(--space-3);
 }
@@ -1606,9 +1656,13 @@ svg.weather-forecast__icon {
   min-height: calc(var(--target-lg) + var(--space-12));
   height: 100%;
   padding: var(--space-3);
-  border: 1px solid var(--color-border);
+  /* Entrahmt: die Karten leben INNERHALB der Cockpit-Karte, daher am Ruhezustand
+   * kein eigener Vollrahmen (keine Karte-in-Karte) — nur eine dezente Domänen-
+   * tönung trennt die Zellen. Der Rahmen erscheint erst bei Hover/Fokus als
+   * Affordance. */
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--today-card-accent) 4%, var(--color-surface));
+  background: color-mix(in srgb, var(--today-card-accent) 7%, var(--color-surface));
   color: var(--color-text-primary);
   text-align: left;
   cursor: pointer;
@@ -1703,14 +1757,12 @@ svg.weather-forecast__icon {
   --today-card-accent: var(--module-meals);
 }
 
-@container today-cockpit (min-width: 680px) {
-  .today-cockpit__grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
+/* Spaltenzahl regelt jetzt auto-fit (minmax 150px) — passt sich Container-Breite
+ * UND Kartenzahl an, daher kein fester 4-Spalten-Override mehr. */
 
-/* Sehr schmale Container (iPhone-SE-Klasse): 2×2 würde zu eng — auf 1 Spalte
- * zurückfallen. Container-Query statt Viewport-Breakpoint (Token-Doktrin §11c). */
+/* Sehr schmale Container (iPhone-SE-Klasse): explizit auf eine Spalte — auto-fit
+ * täte dies zwar faktisch, die Regel bleibt aber als bewusster, getesteter
+ * Fallback erhalten (Container-Query statt Viewport-Breakpoint, Token-Doktrin §11c). */
 @container today-cockpit (max-width: 270px) {
   .today-cockpit__grid {
     grid-template-columns: 1fr;
@@ -2136,7 +2188,18 @@ svg.weather-forecast__icon {
 
 .dashboard .weather-widget {
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--color-accent-hover) 0%, var(--color-accent-deep) 100%);
+  /* Atmosphärischer Verlauf statt flachem dunklen Slab: ein weicher „Sonnen"-Glow
+   * in der oberen rechten Ecke gibt dem Modulton (Dashboard-Violett) Tiefe und Licht.
+   * Beide Verlaufs-Stops sind bewusst tiefviolett-dominant (Deep-Violet als Anker) —
+   * so bleibt weißer Text in Light UND Dark über AA (im Dark Mode ist --color-accent
+   * mit ~2.7:1 zu hell für weißen Text, daher nicht als heller Stop verwenden). */
+  background:
+    radial-gradient(120% 130% at 100% 0%,
+      color-mix(in srgb, white 18%, transparent) 0%,
+      transparent 55%),
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--color-accent) 45%, var(--color-accent-deep)) 0%,
+      var(--color-accent-deep) 100%);
   color: var(--color-text-on-accent);
   border-color: transparent;
   box-shadow: var(--shadow-md);
@@ -2148,6 +2211,21 @@ svg.weather-forecast__icon {
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
+  background: color-mix(in srgb, white 16%, transparent);
+}
+
+.dashboard .weather-widget__refresh:hover {
+  background: color-mix(in srgb, white 26%, transparent);
+}
+
+/* Haupt-Icon bekommt Tiefe gegen den Verlauf; die dünnen Lucide-Linien wirken so
+ * gesetzt statt aufgeklebt. Forecast-Icons nur minimal, um sie nicht zu beschweren. */
+.dashboard .weather-widget__icon {
+  filter: drop-shadow(0 2px 5px color-mix(in srgb, black 24%, transparent));
+}
+
+.dashboard .weather-forecast__icon {
+  filter: drop-shadow(0 1px 2px color-mix(in srgb, black 16%, transparent));
 }
 
 .birthday-widget-item {

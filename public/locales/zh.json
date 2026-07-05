@@ -147,6 +147,7 @@
         "customizeHide": "隐藏 {{widget}}",
         "widgetSizeTiny": "小 (1×1)",
         "widgetSizeNarrow": "窄 (2×1)",
+        "widgetSizeTall": "高 (1×2)",
         "widgetSizeStandard": "标准 (2×2)",
         "widgetSizeLarge": "大 (3×2)",
         "widgetSizeFull": "全宽 (4×2)",

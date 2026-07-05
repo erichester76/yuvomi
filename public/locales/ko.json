@@ -153,6 +153,7 @@
         "customizeHide": "{{widget}} 숨기기",
         "widgetSizeTiny": "작게 (1×1)",
         "widgetSizeNarrow": "좁게 (2×1)",
+        "widgetSizeTall": "세로형 (1×2)",
         "widgetSizeStandard": "표준 (2×2)",
         "widgetSizeLarge": "크게 (3×2)",
         "widgetSizeFull": "전체 (4×2)",

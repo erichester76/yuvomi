@@ -172,6 +172,7 @@ const WIDGET_IDS = ['tasks', 'calendar', 'meals', 'shopping', 'birthdays', 'budg
 const WIDGET_SIZE_PRESETS = [
   { value: '1x1', labelKey: 'dashboard.widgetSizeTiny'     },
   { value: '2x1', labelKey: 'dashboard.widgetSizeNarrow'   },
+  { value: '1x2', labelKey: 'dashboard.widgetSizeTall'     },
   { value: '2x2', labelKey: 'dashboard.widgetSizeStandard' },
   { value: '3x2', labelKey: 'dashboard.widgetSizeLarge'    },
   { value: '4x2', labelKey: 'dashboard.widgetSizeFull'     },
@@ -201,7 +202,11 @@ function widgetSizeOptionsHtml(currentSize) {
 }
 
 function defaultWidgetSize(id) {
-  if (['tasks', 'calendar'].includes(id)) return '2x2';
+  // Listen-Widgets defaulten auf schmal-hoch (1×2) statt breit-hoch (2×2): eine
+  // „Heute"-Liste braucht Höhe, nicht Breite — 1×2 halbiert die Grundfläche und
+  // packt sich sauber neben andere Widgets, statt als 2-spaltige Kachel eine
+  // ganze Rasterzeile zu belegen (löst die Masonry-Imbalance an der Wurzel).
+  if (['tasks', 'calendar'].includes(id)) return '1x2';
   if (['weather', 'shopping'].includes(id)) return '2x1';
   if (id === 'notes') return '2x1';
   return '1x1';
@@ -757,7 +762,7 @@ function renderTodayCard(icon, label, value, route, tone, count = null) {
   `;
 }
 
-function renderTodayCockpit(data) {
+function renderTodayCockpit(data, cfg = []) {
   const highlights = buildTodayHighlights(data);
   const taskTitle = highlights.urgentTask?.title ?? t('dashboard.todayNoTasks');
   const eventTitle = highlights.nextEvent?.title ?? t('dashboard.todayNoEvents');
@@ -765,16 +770,30 @@ function renderTodayCockpit(data) {
   const mealIcon = MEAL_ICONS[highlights.mealType] ?? 'utensils';
   const mealTitle = highlights.meal?.title ?? t('dashboard.todayNoDinner');
 
+  // Kein Echo: ist das Modul-Widget einer Domäne sichtbar, entfällt seine
+  // Cockpit-Karte — jede Domäne hat genau eine Repräsentation (Cockpit ODER
+  // Widget), statt dieselbe Aufgabe/Termin doppelt zu zeigen.
+  const widgetShown = (id) => Array.isArray(cfg) && cfg.some((w) => w.id === id && w.visible);
+  const showCard = (module) => !window.yuvomi?.isModuleDisabled(module) && !widgetShown(module);
+
+  const cards = [
+    showCard('tasks')    ? renderTodayCard('check-square', t('dashboard.todayTask'),     taskTitle, '/tasks', 'task', highlights.taskCount) : '',
+    showCard('calendar') ? renderTodayCard('calendar',     t('dashboard.todayEvent'),    eventTitle, calendarEventRoute(highlights.nextEvent), 'event', highlights.eventCount) : '',
+    showCard('shopping') ? renderTodayCard('shopping-cart', t('dashboard.todayShopping'), t('dashboard.todayShoppingCount', { count: highlights.openShoppingCount }), '/shopping', 'shopping') : '',
+    showCard('meals')    ? renderTodayCard(mealIcon,        mealLabel,   mealTitle, '/meals', 'dinner') : '',
+  ].filter(Boolean);
+
+  // Deckt der Nutzer alle vier Domänen über Widgets ab, wäre das Cockpit leer —
+  // dann entfällt der ganze Abschnitt statt einer leeren Kopfzeile.
+  if (!cards.length) return '';
+
   return `
     <section class="today-cockpit" aria-labelledby="today-cockpit-title">
       <div class="today-cockpit__header">
         <h2 id="today-cockpit-title">${esc(t('dashboard.todayTitle'))}</h2>
       </div>
       <div class="today-cockpit__grid">
-        ${!window.yuvomi?.isModuleDisabled('tasks')    ? renderTodayCard('check-square',   t('dashboard.todayTask'),     taskTitle, '/tasks', 'task', highlights.taskCount) : ''}
-        ${!window.yuvomi?.isModuleDisabled('calendar') ? renderTodayCard('calendar',        t('dashboard.todayEvent'),    eventTitle, calendarEventRoute(highlights.nextEvent), 'event', highlights.eventCount) : ''}
-        ${!window.yuvomi?.isModuleDisabled('shopping') ? renderTodayCard('shopping-cart',   t('dashboard.todayShopping'), t('dashboard.todayShoppingCount', { count: highlights.openShoppingCount }), '/shopping', 'shopping') : ''}
-        ${!window.yuvomi?.isModuleDisabled('meals')    ? renderTodayCard(mealIcon,          mealLabel,   mealTitle, '/meals', 'dinner') : ''}
+        ${cards.join('')}
       </div>
     </section>
   `;
@@ -1662,7 +1681,7 @@ export async function render(container, { user }) {
     }
     setHtml(shell, `
       ${renderDashboardOverview(user, isCustomizing)}
-      ${renderTodayCockpit(data)}
+      ${renderTodayCockpit(data, cfg)}
       ${renderDashboardLayout(cfg, data, weather, currency, { editing: isCustomizing, visibleMealTypes })}
     `);
     wireLinks(container, rerender, { editing: isCustomizing });

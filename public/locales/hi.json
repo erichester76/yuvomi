@@ -147,6 +147,7 @@
         "customizeHide": "{{widget}} छिपाएँ",
         "widgetSizeTiny": "छोटा (1×1)",
         "widgetSizeNarrow": "संकरा (2×1)",
+        "widgetSizeTall": "लंबा (1×2)",
         "widgetSizeStandard": "मानक (2×2)",
         "widgetSizeLarge": "बड़ा (3×2)",
         "widgetSizeFull": "पूर्ण (4×2)",

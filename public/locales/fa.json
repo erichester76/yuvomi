@@ -153,6 +153,7 @@
         "customizeHide": "پنهان کردن {{widget}}",
         "widgetSizeTiny": "کوچک (۱×۱)",
         "widgetSizeNarrow": "باریک (۲×۱)",
+        "widgetSizeTall": "بلند (1×2)",
         "widgetSizeStandard": "استاندارد (۲×۲)",
         "widgetSizeLarge": "بزرگ (۳×۲)",
         "widgetSizeFull": "کامل (۴×۲)",
