@@ -76,6 +76,7 @@
       --m-housekeeping: #7C3AED;
       --m-health: #9E1E88;
       --m-rewards: #BE4B6E;
+      --m-split: #2563EB;
 
       --code-bg: #1B1A22;
       --code-text: #E6E4F0;
@@ -93,7 +94,7 @@
       --glass-border: rgba(255,255,255,0.65);
       --glass-blur: blur(18px) saturate(180%);
 
-      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
       --maxw: 1200px;
@@ -132,6 +133,7 @@
       --m-housekeeping: #C4B5FD;
       --m-health: #DB60CB;
       --m-rewards: #E68CA6;
+      --m-split: #7DA3FF;
 
       --code-bg: #141413;
       --code-text: #E2E1DC;
@@ -156,7 +158,7 @@
         --accent-soft: #1E1040; --accent-light: #160B30; --accent-glow: rgba(167,139,250,0.22); --accent-ink: #1A1A18;
         --m-tasks: #4ADE80; --m-calendar: #A78BFA; --m-meals: #FB923C; --m-recipes: #2DD4BF;
         --m-shopping: #F472B6; --m-notes: #FCD34D; --m-contacts: #60A5FA; --m-birthdays: #FB7185;
-        --m-budget: #2DD4BF; --m-documents: #60A5FA; --m-housekeeping: #C4B5FD; --m-health: #DB60CB; --m-rewards: #E68CA6;
+        --m-budget: #2DD4BF; --m-documents: #60A5FA; --m-housekeeping: #C4B5FD; --m-health: #DB60CB; --m-rewards: #E68CA6; --m-split: #7DA3FF;
         --code-bg: #141413; --code-text: #E2E1DC; --code-comment: #7A786F;
         --shadow-sm: 0 1px 3px rgba(0,0,0,0.30); --shadow-md: 0 4px 12px rgba(0,0,0,0.38);
         --shadow-lg: 0 12px 30px rgba(0,0,0,0.48); --shadow-xl: 0 22px 60px rgba(0,0,0,0.60);
@@ -635,7 +637,7 @@
   <div class="wrap">
     <div class="sec-head center reveal">
       <h2 class="sec-title" data-t="why_title">Built for families, <em>not for profit.</em></h2>
-      <p class="sec-desc" data-t="why_desc">No subscriptions and no vendor lock-in. Your data never leaves your home. Just the tools your household actually uses.</p>
+      <p class="sec-desc" data-t="why_desc">It all runs on hardware you own, keeps working without any subscription, and never sends your data off your home network.</p>
     </div>
     <div class="phil-grid">
       <div class="phil-card reveal" style="--m: var(--m-budget)">
@@ -652,7 +654,7 @@
       </div>
       <div class="phil-card reveal d3" style="--m: var(--m-meals)">
         <div class="phil-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-        <div><h3 data-t="p_build_t">Zero build step</h3><p data-t="p_build_d">Pure ES modules, vanilla JS, plain CSS. No bundler, no transpiler, no framework. It ships what we write.</p></div>
+        <div><h3 data-t="p_build_t">Zero build step</h3><p data-t="p_build_d">Pure ES modules, vanilla JS and plain CSS. What we write is exactly what ships, with nothing to bundle or transpile.</p></div>
       </div>
     </div>
   </div>
@@ -751,6 +753,57 @@
         <img class="sc feat-mobile" data-light="screenshots/shopping-light-mobile.png" data-dark="screenshots/shopping-dark-mobile.png" src="screenshots/shopping-light-mobile.png" alt="Shopping on mobile" loading="lazy">
       </div>
     </div>
+
+    <div class="feat-row reverse reveal" style="--m: var(--m-health)">
+      <div class="feat-info">
+        <span class="feat-kicker"><span class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.7-1.5L12.5 16l2-8 1.5 4h4.8"/></svg></span><span data-t="f_health_k">Health</span></span>
+        <h3 data-t="f_health_t">Health that stays in the family.</h3>
+        <p data-t="f_health_d">Vitals, medications, lab results, activity and cycles, tracked per member, private by default, and never leaving your server.</p>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_health_l1">Cycle ring with period &amp; fertile-window predictions</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_health_l2">Medication reminders with refill alerts</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_health_l3">Per-entry visibility: private or shared</span></li>
+        </ul>
+      </div>
+      <div class="feat-visual">
+        <img class="sc shot" data-light="screenshots/health-cycle-light-web.png" data-dark="screenshots/health-cycle-dark-web.png" src="screenshots/health-cycle-light-web.png" alt="Health — menstrual cycle ring with period and fertile-window predictions" loading="lazy">
+        <img class="sc feat-mobile" data-light="screenshots/health-vitals-light-mobile.png" data-dark="screenshots/health-vitals-dark-mobile.png" src="screenshots/health-vitals-light-mobile.png" alt="Health vitals on mobile" loading="lazy" style="left:-20px;right:auto">
+      </div>
+    </div>
+
+    <div class="feat-row reveal" style="--m: var(--m-rewards)">
+      <div class="feat-info">
+        <span class="feat-kicker"><span class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span><span data-t="f_rewards_k">Rewards</span></span>
+        <h3 data-t="f_rewards_t">Chores that finally pay off.</h3>
+        <p data-t="f_rewards_d">Give any task a point value; finishing it credits the assigned kid. Points buy real rewards from a catalog you control, with a parent's approval.</p>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_rewards_l1">Point values on any task, credited automatically</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_rewards_l2">Reward catalog with parent-approved redemptions</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_rewards_l3">Per-member opt-in and a full point ledger</span></li>
+        </ul>
+      </div>
+      <div class="feat-visual">
+        <img class="sc shot" data-light="screenshots/rewards-light-web.png" data-dark="screenshots/rewards-dark-web.png" src="screenshots/rewards-light-web.png" alt="Rewards — point standings and a catalog of parent-approved rewards" loading="lazy">
+        <img class="sc feat-mobile" data-light="screenshots/rewards-light-mobile.png" data-dark="screenshots/rewards-dark-mobile.png" src="screenshots/rewards-light-mobile.png" alt="Rewards on mobile" loading="lazy">
+      </div>
+    </div>
+
+    <div class="feat-row reverse reveal" style="--m: var(--m-split)">
+      <div class="feat-info">
+        <span class="feat-kicker"><span class="k-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg></span><span data-t="f_split_k">Split expenses</span></span>
+        <h3 data-t="f_split_t">Who owes whom, settled automatically.</h3>
+        <p data-t="f_split_d">Track shared costs across the household, trips and events. Yuvomi simplifies the debts so everyone settles up with the fewest payments.</p>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_split_l1">Groups for household, trips and events</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_split_l2">Automatic debt simplification</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-t="f_split_l3">Multiple currencies with live conversion</span></li>
+        </ul>
+      </div>
+      <div class="feat-visual">
+        <img class="sc shot" data-light="screenshots/split-expenses-light-web.png" data-dark="screenshots/split-expenses-dark-web.png" src="screenshots/split-expenses-light-web.png" alt="Split expenses — shared cost groups with balances and settle-up" loading="lazy">
+        <img class="sc feat-mobile" data-light="screenshots/split-expenses-light-mobile.png" data-dark="screenshots/split-expenses-dark-mobile.png" src="screenshots/split-expenses-light-mobile.png" alt="Split expenses on mobile" loading="lazy" style="left:-20px;right:auto">
+      </div>
+    </div>
   </div>
 </section>
 
@@ -782,14 +835,6 @@
         <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2a2 2 0 0 0 2.8 0z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4z"/></svg></div>
         <h3 data-t="m_house_t">Housekeeping</h3><p data-t="m_house_d">Manage household staff: schedules, check-in/out, daily or hourly billing, chores and supplies.</p>
       </div>
-      <div class="mod-card reveal d2" style="--m: var(--m-health)">
-        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.49 4.04 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></div>
-        <h3 data-t="m_health_t">Health</h3><p data-t="m_health_d">Track vitals, medications with reminders, lab results, activity and menstrual cycles per family member, private or shared. Not a medical device.</p>
-      </div>
-      <div class="mod-card reveal d2" style="--m: var(--m-rewards)">
-        <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></div>
-        <h3 data-t="m_rewards_t">Rewards</h3><p data-t="m_rewards_d">Give tasks point values; finishing them credits the assigned members. A reward catalog with parent-approved redemptions, opt-in per member, bonus points and a full point ledger.</p>
-      </div>
       <div class="mod-card reveal d2" style="--m: var(--m-recipes)">
         <div class="mod-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3c1.8-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7z"/><line x1="9" y1="22" x2="15" y2="22"/></svg></div>
         <h3 data-t="m_recipes_t">Recipes</h3><p data-t="m_recipes_d">Create, duplicate and scale reusable recipes. Pre-fill meal slots or save any meal as a recipe.</p>
@@ -815,18 +860,22 @@
     </div>
   </div>
   <div class="carousel-track" id="track" tabindex="0" aria-label="App screenshots">
+    <div class="carousel-item"><img class="sc" data-light="screenshots/health-cycle-light-mobile.png" data-dark="screenshots/health-cycle-dark-mobile.png" src="screenshots/health-cycle-light-mobile.png" alt="Health cycle tracking" loading="lazy"><span data-t="cap_health">Health</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/rewards-light-mobile.png" data-dark="screenshots/rewards-dark-mobile.png" src="screenshots/rewards-light-mobile.png" alt="Rewards" loading="lazy"><span data-t="cap_rewards">Rewards</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/split-expenses-light-mobile.png" data-dark="screenshots/split-expenses-dark-mobile.png" src="screenshots/split-expenses-light-mobile.png" alt="Split expenses" loading="lazy"><span data-t="cap_split">Split expenses</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/dashboard-light-mobile.png" data-dark="screenshots/dashboard-dark-mobile.png" src="screenshots/dashboard-light-mobile.png" alt="Dashboard" loading="lazy"><span>Dashboard</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/tasks-light-mobile.png" data-dark="screenshots/tasks-dark-mobile.png" src="screenshots/tasks-light-mobile.png" alt="Tasks" loading="lazy"><span data-t="cap_tasks">Tasks</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/calendar-light-mobile.png" data-dark="screenshots/calendar-dark-mobile.png" src="screenshots/calendar-light-mobile.png" alt="Calendar" loading="lazy"><span data-t="cap_cal">Calendar</span></div>
-    <div class="carousel-item"><img class="sc" data-light="screenshots/shopping-light-mobile.png" data-dark="screenshots/shopping-dark-mobile.png" src="screenshots/shopping-light-mobile.png" alt="Shopping" loading="lazy"><span data-t="cap_shop">Shopping</span></div>
-    <div class="carousel-item"><img class="sc" data-light="screenshots/meals-light-mobile.png" data-dark="screenshots/meals-dark-mobile.png" src="screenshots/meals-light-mobile.png" alt="Meals" loading="lazy"><span data-t="cap_meals">Meals</span></div>
-    <div class="carousel-item"><img class="sc" data-light="screenshots/recipes-light-mobile.png" data-dark="screenshots/recipes-dark-mobile.png" src="screenshots/recipes-light-mobile.png" alt="Recipes" loading="lazy"><span data-t="cap_recipes">Recipes</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/budget-light-mobile.png" data-dark="screenshots/budget-dark-mobile.png" src="screenshots/budget-light-mobile.png" alt="Budget" loading="lazy"><span data-t="cap_budget">Budget</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/budget-subscriptions-light-mobile.png" data-dark="screenshots/budget-subscriptions-dark-mobile.png" src="screenshots/budget-subscriptions-light-mobile.png" alt="Subscription tracker" loading="lazy"><span data-t="cap_subs">Subscriptions</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/meals-light-mobile.png" data-dark="screenshots/meals-dark-mobile.png" src="screenshots/meals-light-mobile.png" alt="Meals" loading="lazy"><span data-t="cap_meals">Meals</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/shopping-light-mobile.png" data-dark="screenshots/shopping-dark-mobile.png" src="screenshots/shopping-light-mobile.png" alt="Shopping" loading="lazy"><span data-t="cap_shop">Shopping</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/recipes-light-mobile.png" data-dark="screenshots/recipes-dark-mobile.png" src="screenshots/recipes-light-mobile.png" alt="Recipes" loading="lazy"><span data-t="cap_recipes">Recipes</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/documents-light-mobile.png" data-dark="screenshots/documents-dark-mobile.png" src="screenshots/documents-light-mobile.png" alt="Documents" loading="lazy"><span data-t="cap_documents">Documents</span></div>
+    <div class="carousel-item"><img class="sc" data-light="screenshots/housekeeping-light-mobile.png" data-dark="screenshots/housekeeping-dark-mobile.png" src="screenshots/housekeeping-light-mobile.png" alt="Housekeeping" loading="lazy"><span data-t="cap_house">Housekeeping</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/notes-light-mobile.png" data-dark="screenshots/notes-dark-mobile.png" src="screenshots/notes-light-mobile.png" alt="Notes" loading="lazy"><span data-t="cap_notes">Notes</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/contacts-light-mobile.png" data-dark="screenshots/contacts-dark-mobile.png" src="screenshots/contacts-light-mobile.png" alt="Contacts" loading="lazy"><span data-t="cap_contacts">Contacts</span></div>
     <div class="carousel-item"><img class="sc" data-light="screenshots/birthdays-light-mobile.png" data-dark="screenshots/birthdays-dark-mobile.png" src="screenshots/birthdays-light-mobile.png" alt="Birthdays" loading="lazy"><span data-t="cap_bday">Birthdays</span></div>
-    <div class="carousel-item"><img class="sc" data-light="screenshots/housekeeping-light-mobile.png" data-dark="screenshots/housekeeping-dark-mobile.png" src="screenshots/housekeeping-light-mobile.png" alt="Housekeeping" loading="lazy"><span data-t="cap_house">Housekeeping</span></div>
-    <div class="carousel-item"><img class="sc" data-light="screenshots/documents-light-mobile.png" data-dark="screenshots/documents-dark-mobile.png" src="screenshots/documents-light-mobile.png" alt="Documents" loading="lazy"><span data-t="cap_documents">Documents</span></div>
   </div>
   <p class="carousel-hint" data-t="screens_hint">Drag, swipe or scroll to explore →</p>
 </section>
@@ -971,11 +1020,11 @@ cp .env.example .env  <span class="c"># set SESSION_SECRET and DB_ENCRYPTION_KEY
       prob_3_t:'Your data, everywhere', prob_3_d:"Your calendar on Google's servers, your notes on Dropbox. Who actually owns your family's data?",
       prob_cta:"There's a calmer way.",
       why_label:'Why Yuvomi', why_title:'Built for families, not for profit.',
-      why_desc:'No subscriptions and no vendor lock-in. Your data never leaves your home. Just the tools your household actually uses.',
+      why_desc:'It all runs on hardware you own, keeps working without any subscription, and never sends your data off your home network.',
       p_priv_t:'Privacy first', p_priv_d:'Optional AES-256 database encryption via SQLCipher (enabled in the recommended Docker setup). Zero telemetry. Your data never leaves your server.',
       p_self_t:'Fully self-hosted', p_self_d:'Runs on a Raspberry Pi, a NAS, or any server. Docker or Podman makes setup a one-liner.',
       p_open_t:'Open source', p_open_d:'MIT licensed. Inspect, modify, extend, contribute. Built in the open for families who value transparency.',
-      p_build_t:'Zero build step', p_build_d:'Pure ES modules, vanilla JS, plain CSS. No bundler, no transpiler, no framework. It ships what we write.',
+      p_build_t:'Zero build step', p_build_d:'Pure ES modules, vanilla JS and plain CSS. What we write is exactly what ships, with nothing to bundle or transpile.',
       feat_label:'Features', feat_title:'Everything your household needs',
       feat_desc:'A complete set of tools for families, designed to work together, not scattered across sixteen separate tabs.',
       f_tasks_k:'Tasks', f_tasks_t:'Everyone knows what needs doing.', f_tasks_d:'Shared tasks with deadlines, priorities, subtasks and recurring schedules, assignable to several family members at once.',
@@ -988,6 +1037,12 @@ cp .env.example .env  <span class="c"># set SESSION_SECRET and DB_ENCRYPTION_KEY
       f_budget_l1:'23 currencies, recurring entries, weekly/monthly/yearly statistics', f_budget_l2:'Split expenses with automatic debt simplification', f_budget_l3:'Subscription tracker with renewals, budgets & alerts',
       f_shop_k:'Shopping', f_shop_t:'The list everyone actually checks.', f_shop_d:'One shared shopping list for the whole family, organized by aisle and updating in real time.',
       f_shop_l1:'Aisle categories & swipe gestures', f_shop_l2:'Add a whole meal plan in one tap', f_shop_l3:'Touch-safe quick add on mobile',
+      f_health_k:'Health', f_health_t:'Health that stays in the family.', f_health_d:'Vitals, medications, lab results, activity and cycles, tracked per member, private by default, and never leaving your server.',
+      f_health_l1:'Cycle ring with period & fertile-window predictions', f_health_l2:'Medication reminders with refill alerts', f_health_l3:'Per-entry visibility: private or shared',
+      f_rewards_k:'Rewards', f_rewards_t:'Chores that finally pay off.', f_rewards_d:"Give any task a point value; finishing it credits the assigned kid. Points buy real rewards from a catalog you control, with a parent's approval.",
+      f_rewards_l1:'Point values on any task, credited automatically', f_rewards_l2:'Reward catalog with parent-approved redemptions', f_rewards_l3:'Per-member opt-in and a full point ledger',
+      f_split_k:'Split expenses', f_split_t:'Who owes whom, settled automatically.', f_split_d:'Track shared costs across the household, trips and events. Yuvomi simplifies the debts so everyone settles up with the fewest payments.',
+      f_split_l1:'Groups for household, trips and events', f_split_l2:'Automatic debt simplification', f_split_l3:'Multiple currencies with live conversion',
       more_label:"And there's more", more_title:'One app, sixteen modules', more_desc:"Each module is independent. Use what fits your family, skip what doesn't.",
       m_docs_t:'Documents', m_docs_d:'Family files with previews, visibility controls and storage badges. New uploads and calendar attachments can use WebDAV; Paperless-ngx and Papra DMS integration is optional.',
       m_notes_t:'Notes', m_notes_d:'Colored sticky notes with Markdown. Perfect for recipes, family memos and quick reminders.',
@@ -1004,6 +1059,7 @@ cp .env.example .env  <span class="c"># set SESSION_SECRET and DB_ENCRYPTION_KEY
       screens_hint:'Drag, swipe or scroll to explore →',
       cap_tasks:'Tasks', cap_cal:'Calendar', cap_shop:'Shopping', cap_meals:'Meals', cap_recipes:'Recipes',
       cap_budget:'Budget', cap_notes:'Notes', cap_contacts:'Contacts', cap_bday:'Birthdays', cap_house:'Housekeeping', cap_documents:'Documents',
+      cap_health:'Health', cap_rewards:'Rewards', cap_split:'Split expenses', cap_subs:'Subscriptions',
       plat_label:'Install anywhere', plat_title:'Runs on your hardware',
       plat_desc:"A Docker or Podman container that drops onto any home server or NAS. Or install it in a couple of clicks from your platform's app store.",
       plat_docker:'Pre-built image, up and running with a single compose command.',
@@ -1040,11 +1096,11 @@ cp .env.example .env  <span class="c"># set SESSION_SECRET and DB_ENCRYPTION_KEY
       prob_3_t:'Eure Daten, überall', prob_3_d:'Euer Kalender auf Googles Servern, eure Notizen auf Dropbox. Wem gehören eure Familiendaten wirklich?',
       prob_cta:'Es geht auch ruhiger.',
       why_label:'Warum Yuvomi', why_title:'Für Familien gebaut, nicht für Profit.',
-      why_desc:'Keine Abos und kein Vendor-Lock-in. Eure Daten verlassen niemals euer Zuhause. Nur die Werkzeuge, die euer Haushalt wirklich nutzt.',
+      why_desc:'Alles läuft auf Hardware, die euch gehört, funktioniert ganz ohne Abo und schickt eure Daten nie aus eurem Heimnetz.',
       p_priv_t:'Datenschutz zuerst', p_priv_d:'Optionale AES-256-Datenbankverschlüsselung via SQLCipher (im empfohlenen Docker-Setup aktiviert). Keine Telemetrie. Eure Daten verlassen nie euren Server.',
       p_self_t:'Vollständig selbstgehostet', p_self_d:'Läuft auf einem Raspberry Pi, NAS oder jedem Server. Docker oder Podman macht das Setup zum Einzeiler.',
       p_open_t:'Open Source', p_open_d:'MIT-lizenziert. Einsehen, anpassen, erweitern, beitragen. Offen gebaut für Familien, die Transparenz schätzen.',
-      p_build_t:'Kein Build-Schritt', p_build_d:'Pure ES-Module, Vanilla JS, reines CSS. Kein Bundler, kein Transpiler, kein Framework. Es läuft, was wir schreiben.',
+      p_build_t:'Kein Build-Schritt', p_build_d:'Pure ES-Module, Vanilla JS und reines CSS. Was wir schreiben, läuft genau so, ganz ohne Bundler oder Transpiler.',
       feat_label:'Funktionen', feat_title:'Alles, was euer Haushalt braucht',
       feat_desc:'Ein vollständiges Werkzeugset für Familien, aufeinander abgestimmt statt verstreut auf sechzehn getrennte Tabs.',
       f_tasks_k:'Aufgaben', f_tasks_t:'Alle wissen, was zu tun ist.', f_tasks_d:'Gemeinsame Aufgaben mit Fristen, Prioritäten, Unteraufgaben und Wiederholungen, mehreren Mitgliedern gleichzeitig zuweisbar.',
@@ -1057,6 +1113,12 @@ cp .env.example .env  <span class="c"># set SESSION_SECRET and DB_ENCRYPTION_KEY
       f_budget_l1:'23 Währungen, wiederkehrende Einträge, Wochen-/Monats-/Jahresstatistik', f_budget_l2:'Geteilte Ausgaben mit automatischer Schulden-Vereinfachung', f_budget_l3:'Abo-Tracker mit Verlängerungen, Budgets & Erinnerungen',
       f_shop_k:'Einkauf', f_shop_t:'Die Liste, die alle wirklich nutzen.', f_shop_d:'Eine gemeinsame Einkaufsliste für die ganze Familie, nach Gang sortiert und in Echtzeit aktualisiert.',
       f_shop_l1:'Gang-Kategorien & Wisch-Gesten', f_shop_l2:'Ganzen Mahlzeitenplan per Tipp hinzufügen', f_shop_l3:'Touch-sicheres Schnell-Hinzufügen mobil',
+      f_health_k:'Gesundheit', f_health_t:'Gesundheit, die in der Familie bleibt.', f_health_d:'Vitalwerte, Medikamente, Laborwerte, Aktivität und Zyklen, pro Mitglied erfasst, standardmäßig privat und ohne euren Server zu verlassen.',
+      f_health_l1:'Zyklus-Ring mit Perioden- & fruchtbare-Tage-Prognose', f_health_l2:'Medikamenten-Erinnerungen mit Nachfüll-Warnung', f_health_l3:'Sichtbarkeit pro Eintrag: privat oder geteilt',
+      f_rewards_k:'Belohnungen', f_rewards_t:'Aufgaben, die sich endlich lohnen.', f_rewards_d:'Gib jeder Aufgabe einen Punktwert; wer sie erledigt, bekommt ihn gutgeschrieben. Punkte gegen echte Belohnungen aus einem selbst gepflegten Katalog einlösen, mit Freigabe der Eltern.',
+      f_rewards_l1:'Punktwerte auf jeder Aufgabe, automatisch gutgeschrieben', f_rewards_l2:'Prämienkatalog mit Eltern-Freigabe beim Einlösen', f_rewards_l3:'Opt-in je Mitglied und vollständiges Punktekonto',
+      f_split_k:'Geteilte Kosten', f_split_t:'Wer wem was schuldet — automatisch ausgeglichen.', f_split_d:'Erfasst gemeinsame Kosten für Haushalt, Reisen und Events. Yuvomi vereinfacht die Schulden, sodass alle mit möglichst wenigen Zahlungen quitt sind.',
+      f_split_l1:'Gruppen für Haushalt, Reisen und Events', f_split_l2:'Automatische Schuldenvereinfachung', f_split_l3:'Mehrere Währungen mit Live-Umrechnung',
       more_label:'Und da ist noch mehr', more_title:'Eine App, sechzehn Module', more_desc:'Jedes Modul ist eigenständig. Nutzt, was zu eurer Familie passt, lasst den Rest weg.',
       m_docs_t:'Dokumente', m_docs_d:'Familiendateien mit Vorschau, Sichtbarkeitsregeln und Speicher-Badges. Neue Uploads und Kalenderanh\u00e4nge k\u00f6nnen WebDAV nutzen; Paperless-ngx und Papra als DMS sind optional.',
       m_notes_t:'Notizen', m_notes_d:'Farbige Haftnotizen mit Markdown. Perfekt für Rezepte, Familien-Memos und schnelle Erinnerungen.',
@@ -1073,6 +1135,7 @@ cp .env.example .env  <span class="c"># set SESSION_SECRET and DB_ENCRYPTION_KEY
       screens_hint:'Ziehen, wischen oder scrollen zum Erkunden →',
       cap_tasks:'Aufgaben', cap_cal:'Kalender', cap_shop:'Einkauf', cap_meals:'Mahlzeiten', cap_recipes:'Rezepte',
       cap_budget:'Budget', cap_notes:'Notizen', cap_contacts:'Kontakte', cap_bday:'Geburtstage', cap_house:'Haushaltshilfe', cap_documents:'Dokumente',
+      cap_health:'Gesundheit', cap_rewards:'Belohnungen', cap_split:'Geteilte Kosten', cap_subs:'Abonnements',
       plat_label:'Überall installierbar', plat_title:'Läuft auf eurer Hardware',
       plat_desc:'Ein Docker- oder Podman-Container, der auf jeden Heimserver oder jedes NAS passt. Oder in wenigen Klicks aus dem App-Store eurer Plattform.',
       plat_docker:'Fertiges Image, mit einem einzigen compose-Befehl einsatzbereit.',

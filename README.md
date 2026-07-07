@@ -105,13 +105,49 @@ New home: **https://yuvomi.cloud/** · Questions? Open a [discussion](https://gi
     <tr>
       <td align="center" width="50%">
         <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/health-cycle-dark-web.png">
+          <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/health-cycle-light-web.png">
+          <img src="docs/screenshots/health-cycle-light-web.png" alt="Health — menstrual cycle ring with period and fertile-window predictions">
+        </picture>
+        <br><sub><b>Health</b> — Vitals, meds, labs, activity & cycle tracking, per member</sub>
+      </td>
+      <td align="center" width="50%">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/rewards-dark-web.png">
+          <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/rewards-light-web.png">
+          <img src="docs/screenshots/rewards-light-web.png" alt="Rewards — point standings and a parent-approved reward catalog">
+        </picture>
+        <br><sub><b>Rewards</b> — Points for chores, parent-approved catalog & ledger</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/split-expenses-dark-web.png">
+          <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/split-expenses-light-web.png">
+          <img src="docs/screenshots/split-expenses-light-web.png" alt="Split expenses — shared cost groups with balances and settle-up">
+        </picture>
+        <br><sub><b>Split expenses</b> — Shared costs with automatic debt simplification</sub>
+      </td>
+      <td align="center">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/budget-dark-web.png">
+          <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/budget-light-web.png">
+          <img src="docs/screenshots/budget-light-web.png" alt="Budget — income, expenses and split costs with debt simplification">
+        </picture>
+        <br><sub><b>Budget</b> — Income, expenses, subscriptions, CSV export</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/tasks-dark-web.png">
           <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/tasks-light-web.png">
           <img src="docs/screenshots/tasks-light-web.png" alt="Tasks — Kanban board with priorities, deadlines and multi-member assignment">
         </picture>
         <br><sub><b>Tasks</b> — Kanban board, recurring schedules, multi-assignment</sub>
       </td>
-      <td align="center" width="50%">
+      <td align="center">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/calendar-dark-web.png">
           <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/calendar-light-web.png">
@@ -123,22 +159,12 @@ New home: **https://yuvomi.cloud/** · Questions? Open a [discussion](https://gi
     <tr>
       <td align="center">
         <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/budget-dark-web.png">
-          <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/budget-light-web.png">
-          <img src="docs/screenshots/budget-light-web.png" alt="Budget — income, expenses and split costs with debt simplification">
-        </picture>
-        <br><sub><b>Budget</b> — Income, expenses, split costs, CSV export</sub>
-      </td>
-      <td align="center">
-        <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/meals-dark-web.png">
           <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/meals-light-web.png">
           <img src="docs/screenshots/meals-light-web.png" alt="Meals — weekly drag-and-drop planner with recipe import">
         </picture>
         <br><sub><b>Meals</b> — Weekly planner, recipes, one-click shopping export</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/shopping-dark-web.png">
@@ -147,16 +173,36 @@ New home: **https://yuvomi.cloud/** · Questions? Open a [discussion](https://gi
         </picture>
         <br><sub><b>Shopping</b> — Shared lists, aisle groups, swipe gestures</sub>
       </td>
-      <td align="center">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/contacts-dark-web.png">
-          <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/contacts-light-web.png">
-          <img src="docs/screenshots/contacts-light-web.png" alt="Contacts — family directory with CardDAV sync">
-        </picture>
-        <br><sub><b>Contacts</b> — Family directory, CardDAV sync</sub>
-      </td>
     </tr>
   </table>
+
+  <sub>On mobile, too — every module adapts to phone-sized screens:</sub>
+  <br>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/health-cycle-dark-mobile.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/health-cycle-light-mobile.png">
+    <img src="docs/screenshots/health-cycle-light-mobile.png" alt="Health on mobile" height="380">
+  </picture>
+  &nbsp;
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/rewards-dark-mobile.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/rewards-light-mobile.png">
+    <img src="docs/screenshots/rewards-light-mobile.png" alt="Rewards on mobile" height="380">
+  </picture>
+  &nbsp;
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/tasks-dark-mobile.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/tasks-light-mobile.png">
+    <img src="docs/screenshots/tasks-light-mobile.png" alt="Tasks on mobile" height="380">
+  </picture>
+  &nbsp;
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/calendar-dark-mobile.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/calendar-light-mobile.png">
+    <img src="docs/screenshots/calendar-light-mobile.png" alt="Calendar on mobile" height="380">
+  </picture>
+
+  <br><br>
   <a href="https://yuvomi.cloud/">See all screenshots →</a>
 </div>
 
