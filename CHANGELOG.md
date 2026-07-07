@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.98.3] - 2026-07-07
+## [0.99.0] - 2026-07-07
+
+### Added
+- **Multiple reminders per calendar event** — an event can now carry several reminders (e.g. 15 minutes before *and* 1 day before) instead of just one. The event dialog manages them as an add/remove list (up to 5 per event); each reminder is delivered independently via in-app badges, Web Push, and notification channels (#436).
+- **Default appointment duration** — Settings → Modules → Calendar lets you choose a default duration (15–120 minutes) that sets the end time of new events automatically from the start. Inside the event dialog the duration is remembered dynamically: adjust the end and a later change to the start re-applies your chosen length (#441).
+- **Flexible time entry** — time fields now accept compact and separator notation (`0930`, `930`, `09.30`, `9,30`, `9h30`) in addition to `09:30`, normalizing to your locale's format on blur. Applies to every time input across the app, making entry easier on keyboards where the colon is awkward (#442).
 
 ### Added
 - **Settings → Modules → Health** page: admins can show or hide the Cycle tab household-wide (opt-in, on by default). When off, the tab is hidden and its route redirects to the Health overview.

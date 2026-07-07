@@ -29,6 +29,12 @@ const DEFAULT_DATE_FORMAT = 'dmy';
 const VALID_TIME_FORMATS = ['24h', '12h'];
 const DEFAULT_TIME_FORMAT = '24h';
 
+// Standard-Termindauer (Minuten): setzt das Ende neuer Kalender-Termine relativ
+// zum Start und dient dem Modal als Ausgangs-Dauer. Grenzen: 5 Min bis 24 h.
+const DEFAULT_CALENDAR_DURATION = 60;
+const MIN_CALENDAR_DURATION = 5;
+const MAX_CALENDAR_DURATION = 1440;
+
 const VALID_WEATHER_PROVIDERS = ['open-meteo', 'openweathermap'];
 const VALID_WEATHER_UNITS = ['metric', 'imperial'];
 
@@ -225,6 +231,7 @@ router.get('/', (req, res) => {
         module_order: moduleOrder,
         mobile_nav_order: mobileNavOrder,
         housekeeping_payment_tasks: cfgGet('housekeeping_payment_tasks') === '1',
+        calendar_default_duration: Number(cfgGet('calendar_default_duration')) || DEFAULT_CALENDAR_DURATION,
         // Modul-Feature-Schalter (haushaltweit). Default an: fehlender Wert =>
         // Feature aktiv, damit Bestandshaushalte ihr Verhalten behalten.
         health_cycle_enabled: cfgGet('health_cycle_enabled') !== '0',
@@ -260,7 +267,7 @@ router.get('/', (req, res) => {
 
 router.put('/', (req, res) => {
   try {
-    const { visible_meal_types, currency, date_format, time_format, app_name, dashboard_widgets, disabled_modules, module_order, mobile_nav_order, housekeeping_payment_tasks, health_cycle_enabled, rewards_require_approval, weather_provider, weather_lat, weather_lon, weather_city, weather_units, weather_auto_locate, weather_user, holiday_country, holiday_subdivision, holiday_show_public, holiday_show_school, holiday_public_color, holiday_school_color } = req.body;
+    const { visible_meal_types, currency, date_format, time_format, app_name, dashboard_widgets, disabled_modules, module_order, mobile_nav_order, housekeeping_payment_tasks, calendar_default_duration, health_cycle_enabled, rewards_require_approval, weather_provider, weather_lat, weather_lon, weather_city, weather_units, weather_auto_locate, weather_user, holiday_country, holiday_subdivision, holiday_show_public, holiday_show_school, holiday_public_color, holiday_school_color } = req.body;
 
     if (visible_meal_types !== undefined) {
       if (!Array.isArray(visible_meal_types)) {
@@ -346,6 +353,14 @@ router.put('/', (req, res) => {
         return res.status(400).json({ error: 'housekeeping_payment_tasks must be a boolean', code: 400 });
       }
       cfgSet('housekeeping_payment_tasks', housekeeping_payment_tasks ? '1' : '0');
+    }
+
+    if (calendar_default_duration !== undefined) {
+      const minutes = Number(calendar_default_duration);
+      if (!Number.isInteger(minutes) || minutes < MIN_CALENDAR_DURATION || minutes > MAX_CALENDAR_DURATION) {
+        return res.status(400).json({ error: `calendar_default_duration must be an integer between ${MIN_CALENDAR_DURATION} and ${MAX_CALENDAR_DURATION}`, code: 400 });
+      }
+      cfgSet('calendar_default_duration', String(minutes));
     }
 
     // Haushaltweite Modul-Feature-Schalter — nur Admins.
@@ -557,6 +572,7 @@ router.put('/', (req, res) => {
         module_order: savedModuleOrder,
         mobile_nav_order: savedMobileNavOrder,
         housekeeping_payment_tasks: savedHousekeepingPaymentTasks,
+        calendar_default_duration: Number(cfgGet('calendar_default_duration')) || DEFAULT_CALENDAR_DURATION,
         health_cycle_enabled: cfgGet('health_cycle_enabled') !== '0',
         rewards_require_approval: cfgGet('rewards_require_approval') !== '0',
         weather_provider: cfgGet('weather_provider') ?? null,

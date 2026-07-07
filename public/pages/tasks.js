@@ -593,7 +593,7 @@ function openTaskModal({ task = null, users = [], reminder = null } = {}, contai
         input.addEventListener('keydown', (e) => {
           if (e.ctrlKey || e.metaKey || e.altKey) return;
           if (e.key.length !== 1) return;
-          if (!/[\d: apmAPM]/.test(e.key)) e.preventDefault();
+          if (!/[\d:.,hH apmAPM]/.test(e.key)) e.preventDefault();
         });
         input.addEventListener('blur', () => {
           const parsed = parseTimeInput(input.value);

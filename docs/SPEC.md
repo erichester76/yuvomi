@@ -529,6 +529,13 @@ Per-user reminders attached to tasks, calendar events, or subscriptions.
 | pushed_at | TEXT | ISO 8601 datetime, nullable — set once all active notification targets have been sent, skipped, or exhausted, so the reminder is not processed indefinitely |
 | created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
 
+Calendar events support **multiple reminders** (e.g. "15 minutes before" *and* "1 day before").
+Each reminder is an independent row and is delivered separately by the notification scheduler.
+The event dialog manages the set via `GET /api/v1/reminders/all?entity_type=event&entity_id=…`
+(returns the full list) and `PUT /api/v1/reminders?entity_type=event&entity_id=…` with
+`{ remind_ats: [...] }` (replace-set semantics: deduplicated, max 5). Tasks and subscriptions keep
+using the single-reminder endpoints (`GET`/`POST /api/v1/reminders`).
+
 ### Push Subscriptions
 
 Per-device Web Push subscriptions (one row per browser/device endpoint). Used by the push
@@ -1214,6 +1221,9 @@ Reusable recipe cards linked to meal slots.
 **Views:** Month (default on desktop, dot indicators), Week (hour grid), Day (timeline), Agenda (list). On mobile the first load defaults to Agenda view; after the user manually switches views the selected view is persisted for subsequent visits.
 
 - CRUD: title, description, start/end, all-day, location, color, assignment
+- **Flexible time entry (Discussion #442):** the time inputs accept compact (`0930`, `930`) and separator (`09.30`, `9,30`, `9h30`) notation in addition to `09:30`, `9`, and `9 am`; on blur the value is normalized to the locale's display format. Centralized in `parseTimeInput()`/`toTimeParts()` (`public/i18n.js`), so it applies to every time input in the app (calendar, tasks).
+- **Default appointment duration (Discussion #441):** a household-wide default duration (Settings → Modules → Calendar; `sync_config.calendar_default_duration`, minutes, default 60) sets the end time of new events relative to the start. Inside the event dialog the duration is remembered dynamically: editing the end updates the remembered duration, and a subsequent change to the start re-derives the end from it (with roll-over past midnight). Timed events only.
+- **Multiple reminders per event (Discussion #436):** an event can carry several reminders (e.g. "15 minutes before" *and* "1 day before"), managed as a row list in the event dialog (add/remove, max 5). See the Reminders data-model section for the API.
 - **Multi-person assignment:** events can be assigned to multiple family members via the same `UserMultiSelect` component as tasks
 - Color-coding per person
 - Recurring via iCal RRULE (daily, weekly, monthly, yearly)

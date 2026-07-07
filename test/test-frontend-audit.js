@@ -397,6 +397,7 @@ test('module-specific settings leaves only reference their owned preferences and
         '/preferences/holidays/sync',
       ],
       preferences: [
+        'calendar_default_duration',
         'holiday_country',
         'holiday_subdivision',
         'holiday_show_public',

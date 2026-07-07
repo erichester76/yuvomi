@@ -382,6 +382,7 @@ let state = {
   layerHolidays: true,     // toggle for public holiday layer
   layerSchool:   true,     // toggle for school holiday layer
   offlineSince:  null,     // Date des letzten Cache-Stands, wenn offline bedient
+  defaultDuration: 60,     // Standard-Termindauer (Minuten) aus den Präferenzen
 };
 let _container = null;
 
@@ -904,6 +905,7 @@ export async function render(container, { user }) {
     api.get('/documents/meta/options').catch(() => ({ data: {} })),
   ]);
   state.holidayPrefs  = prefsRes.data ?? {};
+  state.defaultDuration = Number(prefsRes.data?.calendar_default_duration) || 60;
   state.documentUploadBackend = documentOptionsRes.data?.active_upload_backend ?? 'local';
   state.layerHolidays = localStorage.getItem(LAYER_HOLIDAYS_KEY) !== 'false';
   state.layerSchool   = localStorage.getItem(LAYER_SCHOOL_KEY)   !== 'false';
@@ -1418,6 +1420,21 @@ function timeToMinutes(timeStr) {
   return h * 60 + (m || 0);
 }
 
+/**
+ * Addiert eine Minutendauer auf eine Datum/Zeit-Kombination und trägt den
+ * Überlauf über Mitternacht auf das Datum über.
+ * @returns {{ date: string, time: string }} lokaler Datums-Key (YYYY-MM-DD) + HH:MM
+ */
+function addDurationToDateTime(dateKey, timeStr, minutes) {
+  const total    = timeToMinutes(timeStr) + Math.max(0, minutes);
+  const dayShift = Math.floor(total / (24 * 60));
+  const dayMins  = ((total % (24 * 60)) + 24 * 60) % (24 * 60);
+  return {
+    date: dayShift ? addDays(dateKey, dayShift) : dateKey,
+    time: `${pad(Math.floor(dayMins / 60))}:${pad(dayMins % 60)}`,
+  };
+}
+
 function nowTop() {
   const now = new Date();
   const minutes = now.getHours() * 60 + now.getMinutes();
@@ -1799,12 +1816,16 @@ function showEventPopup(ev, anchor) {
 
 async function loadReminderForEvent(eventId) {
   try {
-    const data = await api.get(`/reminders?entity_type=event&entity_id=${eventId}`);
-    return data.data;
+    const data = await api.get(`/reminders/all?entity_type=event&entity_id=${eventId}`);
+    return Array.isArray(data.data) ? data.data : [];
   } catch {
-    return null;
+    return [];
   }
 }
+
+// Obergrenze für mehrere Erinnerungen je Termin — muss mit dem Server-Cap
+// (MAX_REMINDERS_PER_ENTITY in server/routes/reminders.js) übereinstimmen.
+const MAX_CALENDAR_REMINDERS = 5;
 
 const REMINDER_OFFSETS = () => [
   { value: '',     label: t('reminders.offsetNone')   },
@@ -1852,10 +1873,51 @@ function reminderStartValue(startDatetime) {
   return startDatetime?.includes('T') ? startDatetime : `${startDatetime}T09:00`;
 }
 
-function renderCalendarReminderSection(reminder = null, event = null) {
-  const currentOffset = event ? reminderOffsetFromEvent(event, reminder) : '';
-  const custom = customReminderFromEvent(event, reminder);
-  const enabled = currentOffset !== '';
+/**
+ * Rendert eine einzelne Erinnerungs-Zeile (Offset-Select + Custom-Felder +
+ * Entfernen-Button). Ohne Argument entsteht eine leere Standardzeile (#436).
+ */
+function reminderRowHtml({ offset = '0', amount = 1, unit = 'days' } = {}) {
+  const isCustom = offset === 'custom';
+  return `
+    <div class="reminder-row" data-reminder-row>
+      <div class="reminder-row__main">
+        <select class="form-input js-reminder-offset" aria-label="${esc(t('reminders.offsetLabel'))}">
+          ${REMINDER_OFFSETS().filter((o) => o.value !== '').map((o) =>
+            `<option value="${o.value}" ${offset === o.value ? 'selected' : ''}>${esc(o.label)}</option>`
+          ).join('')}
+        </select>
+        <button type="button" class="btn btn--ghost btn--icon js-reminder-remove" aria-label="${esc(t('reminders.removeReminder'))}">
+          <i data-lucide="x" class="icon-md" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="modal-grid modal-grid--2 reminder-custom js-reminder-custom" ${isCustom ? '' : 'hidden'}>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">${t('reminders.customAmountLabel')}</label>
+          <input class="form-input js-reminder-custom-amount" type="number" min="1" max="999" value="${amount}">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">${t('reminders.customUnitLabel')}</label>
+          <select class="form-input js-reminder-custom-unit">
+            <option value="minutes" ${unit === 'minutes' ? 'selected' : ''}>${t('reminders.customMinutes')}</option>
+            <option value="hours" ${unit === 'hours' ? 'selected' : ''}>${t('reminders.customHours')}</option>
+            <option value="days" ${unit === 'days' ? 'selected' : ''}>${t('reminders.customDays')}</option>
+            <option value="weeks" ${unit === 'weeks' ? 'selected' : ''}>${t('reminders.customWeeks')}</option>
+          </select>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderCalendarReminderSection(reminders = [], event = null) {
+  const list = Array.isArray(reminders) ? reminders : (reminders ? [reminders] : []);
+  const rows = list.map((rem) => ({
+    offset: reminderOffsetFromEvent(event, rem) || '0',
+    ...customReminderFromEvent(event, rem),
+  }));
+  const enabled = rows.length > 0;
+  const rowsHtml = (enabled ? rows : [{ offset: '0', amount: 1, unit: 'days' }])
+    .map((r) => reminderRowHtml(r)).join('');
   return `
     <div class="reminder-section">
       <div class="reminder-section__header">
@@ -1866,31 +1928,68 @@ function renderCalendarReminderSection(reminder = null, event = null) {
         </label>
       </div>
       <div id="modal-reminder-fields" class="reminder-fields" ${enabled ? '' : 'style="display:none"'}>
-        <div class="form-group reminder-section__group">
-          <label class="form-label" for="modal-reminder-offset">${t('reminders.offsetLabel')}</label>
-          <select class="form-input" id="modal-reminder-offset">
-            ${REMINDER_OFFSETS().map((o) =>
-              `<option value="${o.value}" ${currentOffset === o.value ? 'selected' : ''}>${esc(o.label)}</option>`
-            ).join('')}
-          </select>
+        <div class="reminder-rows" id="modal-reminder-rows">
+          ${rowsHtml}
         </div>
-        <div class="modal-grid modal-grid--2 reminder-custom" id="modal-reminder-custom" ${currentOffset === 'custom' ? '' : 'hidden'}>
-          <div class="form-group" style="margin:0">
-            <label class="form-label" for="modal-reminder-custom-amount">${t('reminders.customAmountLabel')}</label>
-            <input class="form-input" type="number" id="modal-reminder-custom-amount" min="1" max="999" value="${custom.amount}">
-          </div>
-          <div class="form-group" style="margin:0">
-            <label class="form-label" for="modal-reminder-custom-unit">${t('reminders.customUnitLabel')}</label>
-            <select class="form-input" id="modal-reminder-custom-unit">
-              <option value="minutes" ${custom.unit === 'minutes' ? 'selected' : ''}>${t('reminders.customMinutes')}</option>
-              <option value="hours" ${custom.unit === 'hours' ? 'selected' : ''}>${t('reminders.customHours')}</option>
-              <option value="days" ${custom.unit === 'days' ? 'selected' : ''}>${t('reminders.customDays')}</option>
-              <option value="weeks" ${custom.unit === 'weeks' ? 'selected' : ''}>${t('reminders.customWeeks')}</option>
-            </select>
-          </div>
-        </div>
+        <button type="button" class="btn btn--secondary btn--sm" id="modal-reminder-add">
+          <i data-lucide="plus" class="icon-sm" aria-hidden="true"></i>
+          ${t('reminders.addReminder')}
+        </button>
       </div>
     </div>`;
+}
+
+/**
+ * Verdrahtet die Mehrfach-Erinnerungs-Liste im Event-Modal (#436):
+ * Toggle, „Hinzufügen"/„Entfernen" und die Custom-Feld-Umschaltung je Zeile.
+ */
+function wireReminderRows(panel) {
+  const toggle = panel.querySelector('#modal-reminder-toggle');
+  const fields = panel.querySelector('#modal-reminder-fields');
+  const rowsEl = panel.querySelector('#modal-reminder-rows');
+  const addBtn = panel.querySelector('#modal-reminder-add');
+  if (!rowsEl) return;
+
+  const rowCount = () => rowsEl.querySelectorAll('[data-reminder-row]').length;
+  const syncAddState = () => {
+    if (addBtn) addBtn.disabled = rowCount() >= MAX_CALENDAR_REMINDERS;
+  };
+
+  const appendRow = () => {
+    rowsEl.insertAdjacentHTML('beforeend', reminderRowHtml());
+    const newRow = rowsEl.lastElementChild;
+    if (window.lucide && newRow) lucide.createIcons({ el: newRow });
+    syncAddState();
+  };
+
+  // Custom-Felder je Zeile ein-/ausblenden.
+  rowsEl.addEventListener('change', (e) => {
+    const sel = e.target.closest('.js-reminder-offset');
+    if (!sel) return;
+    const custom = sel.closest('[data-reminder-row]')?.querySelector('.js-reminder-custom');
+    if (custom) custom.hidden = sel.value !== 'custom';
+  });
+
+  // Zeile entfernen.
+  rowsEl.addEventListener('click', (e) => {
+    const rm = e.target.closest('.js-reminder-remove');
+    if (!rm) return;
+    rm.closest('[data-reminder-row]')?.remove();
+    syncAddState();
+  });
+
+  addBtn?.addEventListener('click', () => {
+    if (rowCount() >= MAX_CALENDAR_REMINDERS) return;
+    appendRow();
+  });
+
+  toggle?.addEventListener('change', () => {
+    const on = toggle.checked;
+    if (fields) fields.style.display = on ? '' : 'none';
+    if (on && rowCount() === 0) appendRow();
+  });
+
+  syncAddState();
 }
 
 function bindTimeInputs(root) {
@@ -1898,7 +1997,7 @@ function bindTimeInputs(root) {
     input.addEventListener('keydown', (e) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key.length !== 1) return;
-      if (!/[\d: apmAPM]/.test(e.key)) e.preventDefault();
+      if (!/[\d:.,hH apmAPM]/.test(e.key)) e.preventDefault();
     });
     input.addEventListener('blur', () => {
       const parsed = parseTimeInput(input.value);
@@ -2105,8 +2204,6 @@ function openEventModal({ mode, event = null, date = null, reminder = null, time
         });
       });
 
-      const reminderOffset = panel.querySelector('#modal-reminder-offset');
-      const reminderCustom = panel.querySelector('#modal-reminder-custom');
       const attachmentInput = panel.querySelector('#modal-attachment');
       const selectedAttachment = panel.querySelector('#modal-selected-attachment');
       const attachmentPreview = panel.querySelector('#modal-attachment-preview');
@@ -2187,26 +2284,10 @@ function openEventModal({ mode, event = null, date = null, reminder = null, time
       }
 
       syncSelectedAttachment();
-      reminderOffset?.addEventListener('change', () => {
-        if (reminderCustom) reminderCustom.hidden = reminderOffset.value !== 'custom';
-      });
 
-      // Erinnerungs-Toggle (konsistent zum Aufgaben-Modul): An/Aus blendet die
-      // Felder ein/aus. „Aus" setzt den Offset auf '' (= keine Erinnerung, wie
-      // vom Save interpretiert); „An" wählt bei leerem Wert die Startzeit.
-      const reminderToggle = panel.querySelector('#modal-reminder-toggle');
-      const reminderFields  = panel.querySelector('#modal-reminder-fields');
-      reminderToggle?.addEventListener('change', () => {
-        const on = reminderToggle.checked;
-        if (reminderFields) reminderFields.style.display = on ? '' : 'none';
-        if (!reminderOffset) return;
-        if (!on) {
-          reminderOffset.value = '';
-          if (reminderCustom) reminderCustom.hidden = true;
-        } else if (reminderOffset.value === '') {
-          reminderOffset.value = '0';
-        }
-      });
+      // Erinnerungen: Toggle blendet die Zeilenliste ein/aus; „Hinzufügen" und
+      // „Entfernen" verwalten mehrere Erinnerungen je Termin (#436).
+      wireReminderRows(panel);
 
       // Load unified sync targets (Google + CalDAV)
       const syncTargetSelect = panel.querySelector('#event-sync-target');
@@ -2236,6 +2317,11 @@ function openEventModal({ mode, event = null, date = null, reminder = null, time
       wireDateFollow('#modal-start-date', '#modal-end-date');
       wireDateFollow('#modal-allday-start', '#modal-allday-end');
 
+      // Dynamische Termindauer (#441): das Ende folgt dem Start um die gemerkte
+      // Dauer. Ändert der Nutzer das Ende, wird die neue Dauer übernommen und bei
+      // der nächsten Start-Änderung angewendet. Nur für Zeit-Termine.
+      wireDurationMemory(panel);
+
       panel.querySelector('#modal-cancel').addEventListener('click', closeModal);
 
       panel.querySelector('#modal-delete')?.addEventListener('click', async () => {
@@ -2249,6 +2335,50 @@ function openEventModal({ mode, event = null, date = null, reminder = null, time
   });
 }
 
+/**
+ * Verdrahtet die dynamische Termindauer (#441) im Event-Modal.
+ * - Start-Zeit ändern → Ende = Start + gemerkte Dauer (mit Datums-Übertrag).
+ * - Ende-Zeit ändern → gemerkte Dauer = Ende − Start (nur wenn positiv).
+ * Wirkt nur auf die Zeit-Felder; „Ganztägig" bleibt unberührt.
+ */
+function wireDurationMemory(panel) {
+  const startDateEl = panel.querySelector('#modal-start-date');
+  const startTimeEl = panel.querySelector('#modal-start-time');
+  const endDateEl   = panel.querySelector('#modal-end-date');
+  const endTimeEl   = panel.querySelector('#modal-end-time');
+  if (!startDateEl || !startTimeEl || !endDateEl || !endTimeEl) return;
+
+  const daysBetween = (fromKey, toKey) =>
+    Math.round((new Date(toKey + 'T00:00:00') - new Date(fromKey + 'T00:00:00')) / 86400000);
+
+  const readDuration = () => {
+    const sd = parseDateInput(startDateEl.value);
+    const st = parseTimeInput(startTimeEl.value);
+    const ed = parseDateInput(endDateEl.value);
+    const et = parseTimeInput(endTimeEl.value);
+    if (!sd || !st || !ed || !et) return null;
+    const diff = daysBetween(sd, ed) * 1440 + (timeToMinutes(et) - timeToMinutes(st));
+    return diff > 0 ? diff : null;
+  };
+
+  // Init: bereits gesetzte Dauer übernehmen, sonst Präferenz-Default.
+  let durationMin = readDuration() ?? (state.defaultDuration || 60);
+
+  startTimeEl.addEventListener('change', () => {
+    const sd = parseDateInput(startDateEl.value);
+    const st = parseTimeInput(startTimeEl.value);
+    if (!sd || !st) return;
+    const next = addDurationToDateTime(sd, st, durationMin);
+    endTimeEl.value = formatTimeInput(next.time);
+    if (isDateInputValid(endDateEl.value)) endDateEl.value = formatDateInput(next.date);
+  });
+
+  endTimeEl.addEventListener('change', () => {
+    const dur = readDuration();
+    if (dur) durationMin = dur;
+  });
+}
+
 function buildEventModalContent({ mode, event, date, reminder = null, time = null }) {
   const isEdit = mode === 'edit';
   const today  = date || state.today;
@@ -2256,15 +2386,14 @@ function buildEventModalContent({ mode, event, date, reminder = null, time = nul
   const startDate = isEdit ? localDate(event.start_datetime) : today;
   const startTime = isEdit && event.start_datetime.length > 10
     ? localTime(event.start_datetime) : (time ?? '09:00');
-  const endDate   = isEdit && event.end_datetime ? localDate(event.end_datetime) : startDate;
+  // Standard-Termindauer aus den Präferenzen: neue Termine erhalten ein Ende,
+  // das um die konfigurierte Dauer nach dem Start liegt (#441).
+  const durationMin = state.defaultDuration || 60;
+  const derivedEnd  = addDurationToDateTime(startDate, startTime, durationMin);
+  const endDate   = isEdit && event.end_datetime ? localDate(event.end_datetime) : derivedEnd.date;
   const endTime   = isEdit && event.end_datetime && event.end_datetime.length > 10
     ? localTime(event.end_datetime)
-    : (() => {
-        if (!time) return '10:00';
-        const totalMins = timeToMinutes(time) + 60;
-        const clamped   = Math.min(totalMins, 24 * 60 - 1);
-        return `${pad(Math.floor(clamped / 60))}:${pad(clamped % 60)}`;
-      })();
+    : derivedEnd.time;
   const selectedIcon = eventIconName(isEdit ? event.icon : 'calendar');
 
   const selectedUserIds = isEdit
@@ -2551,27 +2680,34 @@ async function saveEvent(overlay, mode, eventId, existingReminder = null, attach
       if (idx !== -1) state.events[idx] = res.data;
     }
 
-    // Erinnerung speichern oder löschen
+    // Erinnerungen speichern oder löschen (mehrere je Termin möglich, #436).
     if (savedEventId) {
-      const offsetSel = overlay.querySelector('#modal-reminder-offset');
-      const offsetVal = offsetSel?.value;
+      const reminderOn = overlay.querySelector('#modal-reminder-toggle')?.checked;
+      const rowsEl     = overlay.querySelector('#modal-reminder-rows');
+      const startMs    = new Date(reminderStartValue(start_datetime)).getTime();
+      let remindAts = [];
 
-      if (offsetVal !== '' && offsetVal !== undefined) {
-        // Remind-Zeitpunkt = start_datetime - offset (in Minuten)
-        const startMs  = new Date(reminderStartValue(start_datetime)).getTime();
-        const offsetMinutes = offsetVal === 'custom'
-          ? customReminderMinutes(
-              overlay.querySelector('#modal-reminder-custom-amount')?.value,
-              overlay.querySelector('#modal-reminder-custom-unit')?.value
-            )
-          : parseInt(offsetVal, 10);
-        const remindAt = new Date(startMs - offsetMinutes * 60000).toISOString().slice(0, 19);
-        await api.post('/reminders', { entity_type: 'event', entity_id: savedEventId, remind_at: remindAt });
-        refreshReminders();
-      } else {
-        api.delete(`/reminders?entity_type=event&entity_id=${savedEventId}`).catch(() => {});
-        refreshReminders();
+      if (reminderOn && rowsEl) {
+        for (const row of rowsEl.querySelectorAll('[data-reminder-row]')) {
+          const offsetVal = row.querySelector('.js-reminder-offset')?.value;
+          if (offsetVal == null || offsetVal === '') continue;
+          const offsetMinutes = offsetVal === 'custom'
+            ? customReminderMinutes(
+                row.querySelector('.js-reminder-custom-amount')?.value,
+                row.querySelector('.js-reminder-custom-unit')?.value
+              )
+            : parseInt(offsetVal, 10);
+          remindAts.push(new Date(startMs - offsetMinutes * 60000).toISOString().slice(0, 19));
+        }
+        remindAts = [...new Set(remindAts)].slice(0, MAX_CALENDAR_REMINDERS);
       }
+
+      if (remindAts.length) {
+        await api.put(`/reminders?entity_type=event&entity_id=${savedEventId}`, { remind_ats: remindAts });
+      } else {
+        await api.delete(`/reminders?entity_type=event&entity_id=${savedEventId}`).catch(() => {});
+      }
+      refreshReminders();
     }
 
     closeModal({ force: true });

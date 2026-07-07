@@ -11,9 +11,36 @@ function formatSyncTime(value) {
   });
 }
 
+const DURATION_OPTIONS = [15, 30, 45, 60, 90, 120];
+
+function durationOptionLabel(minutes) {
+  return t('settings.calendarDurationMinutes', { count: minutes });
+}
+
 function renderPage(container, preferences) {
+  const currentDuration = Number(preferences.calendar_default_duration) || 60;
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
+    <section class="settings-section">
+      <h2 class="settings-section__title">${t('settings.calendarSectionEvents')}</h2>
+      <div class="settings-card">
+        <h3 class="settings-card__title">${t('settings.calendarDurationTitle')}</h3>
+        <p class="settings-card-description">${t('settings.calendarDurationDescription')}</p>
+
+        <form class="settings-form settings-form--compact" id="calendar-events-form" novalidate autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="calendar-default-duration">${t('settings.calendarDurationLabel')}</label>
+            <select class="form-input" id="calendar-default-duration">
+              ${DURATION_OPTIONS.map((m) => `<option value="${m}"${m === currentDuration ? ' selected' : ''}>${esc(durationOptionLabel(m))}</option>`).join('')}
+            </select>
+          </div>
+          <div class="settings-form-actions">
+            <button type="submit" class="btn btn--primary">${t('settings.calendarDurationSaveBtn')}</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
     <section class="settings-section">
       <h2 class="settings-section__title">${t('settings.sectionHolidays')}</h2>
       <div class="settings-card">
@@ -209,6 +236,19 @@ function holidayPreferenceData(container, discoveryState) {
 }
 
 async function bindEvents(container, preferences) {
+  const eventsForm = container.querySelector('#calendar-events-form');
+  eventsForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const select = container.querySelector('#calendar-default-duration');
+    const minutes = Number(select?.value) || 60;
+    try {
+      await api.put('/preferences', { calendar_default_duration: minutes });
+      window.yuvomi?.showToast(t('settings.calendarDurationSaved'), 'success');
+    } catch (error) {
+      window.yuvomi?.showToast(error.message || t('common.errorGeneric'), 'danger');
+    }
+  });
+
   const form = container.querySelector('#holidays-form');
   const countrySelect = container.querySelector('#holiday-country');
   const subdivisionSelect = container.querySelector('#holiday-subdivision');

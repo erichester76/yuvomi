@@ -1077,9 +1077,11 @@ function buildPaths() {
     '/api/v1/preferences/holidays/subdivisions/{countryCode}': { get: op({ summary: 'List subdivisions for a country', tag: 'Preferences', params: [{ name: 'countryCode', in: 'path', required: true, schema: { type: 'string', pattern: '^[A-Z]{2}$' } }], description: 'Proxies the OpenHolidays API. Returns `{ data: [{ isoCode, name }] }` for the state/region dropdown.' }) },
     '/api/v1/preferences/holidays/sync': { post: op({ summary: 'Sync holidays for the configured country', tag: 'Preferences', admin: true, stateChanging: true, description: 'Fetches public/school holidays from OpenHolidays for the configured country/subdivision and caches them. Returns `{ data: { last_sync } }`.' }) },
     '/api/v1/reminders/pending': { get: op({ summary: 'List pending reminders', tag: 'Reminders' }) },
+    '/api/v1/reminders/all': { get: op({ summary: 'List all reminders for an entity', tag: 'Reminders', description: 'Returns every non-dismissed reminder for the given entity (calendar events support multiple reminders).' }) },
     '/api/v1/reminders': {
       get: op({ summary: 'List reminders', tag: 'Reminders' }),
       post: op({ summary: 'Create reminder', tag: 'Reminders', stateChanging: true, requestBody: jsonBody(null) }),
+      put: op({ summary: 'Replace reminder set for an entity', tag: 'Reminders', stateChanging: true, requestBody: jsonBody(null), description: 'Replaces all reminders of an entity with the given `remind_ats` list (deduplicated, max 5).' }),
       delete: op({ summary: 'Delete reminders by filter', tag: 'Reminders', stateChanging: true }),
     },
     '/api/v1/reminders/{id}/dismiss': {
