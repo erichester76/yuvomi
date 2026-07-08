@@ -6,6 +6,7 @@
  */
 
 import { DatabaseSync } from 'node:sqlite';
+import { readFileSync } from 'node:fs';
 import { MIGRATIONS_SQL } from '../server/db-schema-test.js';
 import { datesForTemplateInRange, mealWeekday } from '../server/services/meal-recurrence.js';
 import { __test as mealsUi } from '../public/pages/meals.js';
@@ -489,6 +490,13 @@ test('Randomize-Helfer vermeidet gleiche Rezepte in benachbarten Mahlzeiten dess
   const lunch = plan.assignments.find((item) => item.date === '2026-03-23' && item.mealType === 'lunch');
   assert(breakfast && lunch, 'benachbarte Mahlzeiten desselben Tages müssen geplant sein');
   assert(breakfast.recipe.id !== lunch.recipe.id, 'benachbarte Mahlzeiten desselben Tages sollen unterschiedliche Rezepte nutzen');
+});
+
+test('Meals-Route bietet einen atomaren apply-plan Endpunkt für Replace-Flows', () => {
+  const source = readFileSync(new URL('../server/routes/meals.js', import.meta.url), 'utf8');
+  assert(/router\.post\('\/apply-plan'/.test(source), 'apply-plan Route muss existieren');
+  assert(/db\.transaction\(\(\) => \{[\s\S]*replaceExisting/.test(source), 'apply-plan muss als DB-Transaktion laufen');
+  assert(/deleteMealOccurrence/.test(source), 'apply-plan soll bestehende Mahlzeiten serverseitig mit Wiederholungs-Semantik ersetzen');
 });
 
 // --------------------------------------------------------

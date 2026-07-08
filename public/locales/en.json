@@ -367,6 +367,7 @@
         "randomizePlan": "Randomize plan",
         "randomizeTitle": "Randomize meal plan",
         "randomizeReplaceExisting": "Replace existing meals",
+        "replaceExistingConfirm": "Replace existing meals?",
         "randomizeSuccess": "{{count}} meals planned.",
         "randomizeNoRecipes": "No compatible recipes are available for the current week.",
         "ingredientCount": "{{count}} ingredient",
@@ -1756,6 +1757,7 @@
         "duplicate": "Duplicate",
         "duplicated": "Recipe duplicated.",
         "copySuffix": "copy",
+        "dragToMealsHint": "Drag recipes onto meal slots to plan them quickly.",
         "emptyAction": "Create recipe"
     },
     "search": {

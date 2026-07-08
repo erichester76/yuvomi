@@ -367,6 +367,7 @@
         "randomizePlan": "Rellenar plan al azar",
         "randomizeTitle": "Rellenar plan de comidas al azar",
         "randomizeReplaceExisting": "Reemplazar comidas existentes",
+        "replaceExistingConfirm": "¿Reemplazar las comidas existentes?",
         "randomizeSuccess": "{{count}} comidas planificadas.",
         "randomizeNoRecipes": "No hay recetas compatibles disponibles para la semana actual.",
         "ingredientCount": "{{count}} ingrediente",
@@ -1694,6 +1695,7 @@
         "duplicate": "Duplicar",
         "duplicated": "Receta duplicada.",
         "copySuffix": "copia",
+        "dragToMealsHint": "Arrastra recetas a las franjas de comida para planificarlas rápidamente.",
         "emptyAction": "Crear receta"
     },
     "search": {

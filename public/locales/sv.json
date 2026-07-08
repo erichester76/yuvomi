@@ -367,6 +367,7 @@
         "randomizePlan": "Fyll planen slumpmässigt",
         "randomizeTitle": "Fyll matplanen slumpmässigt",
         "randomizeReplaceExisting": "Ersätt befintliga måltider",
+        "replaceExistingConfirm": "Ersätta befintliga måltider?",
         "randomizeSuccess": "{{count}} måltider planerade.",
         "randomizeNoRecipes": "Inga passande recept finns för den aktuella veckan.",
         "ingredientCount": "{{count}} ingrediens",
@@ -1694,6 +1695,7 @@
         "duplicate": "Duplicera",
         "duplicated": "Recept duplicerat.",
         "copySuffix": "kopia",
+        "dragToMealsHint": "Dra recept till måltidsfälten för att snabbt planera dem.",
         "emptyAction": "Skapa recept"
     },
     "search": {

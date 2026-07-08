@@ -367,6 +367,7 @@
         "randomizePlan": "Điền kế hoạch ngẫu nhiên",
         "randomizeTitle": "Lập kế hoạch bữa ăn ngẫu nhiên",
         "randomizeReplaceExisting": "Thay thế các bữa ăn hiện có",
+        "replaceExistingConfirm": "Thay thế các bữa ăn hiện có?",
         "randomizeSuccess": "Đã lên kế hoạch {{count}} bữa ăn.",
         "randomizeNoRecipes": "Không có công thức phù hợp cho tuần hiện tại.",
         "ingredientCount": "{{count}} nguyên liệu",
@@ -1756,6 +1757,7 @@
         "duplicate": "Nhân bản",
         "duplicated": "Công thức đã được nhân bản.",
         "copySuffix": "bản sao",
+        "dragToMealsHint": "Kéo công thức vào ô bữa ăn để lên kế hoạch nhanh hơn.",
         "emptyAction": "Tạo công thức"
     },
     "search": {

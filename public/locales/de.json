@@ -373,6 +373,7 @@
         "randomizePlan": "Plan zufällig füllen",
         "randomizeTitle": "Essensplan zufällig füllen",
         "randomizeReplaceExisting": "Vorhandene Mahlzeiten ersetzen",
+        "replaceExistingConfirm": "Vorhandene Mahlzeiten ersetzen?",
         "randomizeSuccess": "{{count}} Mahlzeiten geplant.",
         "randomizeNoRecipes": "Für die aktuelle Woche sind keine passenden Rezepte verfügbar.",
         "ingredientCount": "{{count}} Zutat",
@@ -1762,7 +1763,8 @@
         "titleRequired": "Titel ist erforderlich.",
         "duplicate": "Duplizieren",
         "duplicated": "Rezept dupliziert.",
-        "copySuffix": "Kopie"
+        "copySuffix": "Kopie",
+        "dragToMealsHint": "Ziehe Rezepte auf Essens-Slots, um sie schnell einzuplanen."
     },
     "onboarding": {
         "step1Title": "Willkommen bei {{name}}",

@@ -316,6 +316,11 @@ function renderRecipeSidebar() {
   title.textContent = t('recipes.title');
   sidebar.appendChild(title);
 
+  const hint = document.createElement('p');
+  hint.className = 'recipe-sidebar__hint';
+  hint.textContent = t('recipes.dragToMealsHint');
+  sidebar.appendChild(hint);
+
   if (!state.recipes.length) {
     const empty = document.createElement('div');
     empty.className = 'recipe-sidebar__empty';
@@ -539,7 +544,7 @@ function wireGrid(grid) {
     e.preventDefault();
     const slotMeals = state.meals.filter((meal) => meal.date === slot.dataset.date && meal.meal_type === slot.dataset.type);
     if (slotMeals.length) {
-      const confirmed = await confirmModal(`${t('meals.randomizeReplaceExisting')}?`, { confirmLabel: t('common.confirm') });
+      const confirmed = await confirmModal(t('meals.replaceExistingConfirm'), { confirmLabel: t('common.confirm') });
       if (!confirmed) return;
     }
     await addRecipeToSlot(recipe, slot.dataset.date, slot.dataset.type, { replaceMeals: slotMeals });
@@ -575,12 +580,15 @@ function clearRecipeDropTargets() {
 
 async function addRecipeToSlot(recipe, date, mealType, { replaceMeals = [] } = {}) {
   try {
-    for (const meal of replaceMeals) {
-      await api.delete(`/meals/${meal.id}`);
-      state.meals = state.meals.filter((entry) => entry.id !== meal.id);
+    const payload = mealPayloadFromRecipe(recipe, date, mealType);
+    if (replaceMeals.length) {
+      const res = await api.post('/meals/apply-plan', { assignments: [payload], replace_existing: true });
+      state.meals = state.meals.filter((entry) => !(entry.date === date && entry.meal_type === mealType));
+      state.meals.push(...(res.data || []));
+    } else {
+      const res = await api.post('/meals', payload);
+      state.meals.push(res.data);
     }
-    const res = await api.post('/meals', mealPayloadFromRecipe(recipe, date, mealType));
-    state.meals.push(res.data);
     renderWeekGrid();
   } catch (err) {
     window.yuvomi?.showToast(err.data?.error ?? t('common.errorGeneric'), 'error');
@@ -628,12 +636,7 @@ async function runRandomize(panel) {
 
   runBtn.disabled = true;
   try {
-    for (const mealId of plan.deleteMealIds) {
-      await api.delete(`/meals/${mealId}`);
-    }
-    for (const assignment of plan.assignments) {
-      await api.post('/meals', assignment.payload);
-    }
+    await api.post('/meals/apply-plan', { assignments: plan.assignments.map((assignment) => assignment.payload), replace_existing: replaceExisting });
     await loadWeek(state.currentWeek);
     closeModal({ force: true });
     renderWeekGrid();

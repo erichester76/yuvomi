@@ -367,6 +367,7 @@
         "randomizePlan": "Vyplnit plán náhodně",
         "randomizeTitle": "Náhodně vyplnit jídelníček",
         "randomizeReplaceExisting": "Nahradit existující jídla",
+        "replaceExistingConfirm": "Nahradit existující jídla?",
         "randomizeSuccess": "Naplánováno {{count}} jídel.",
         "randomizeNoRecipes": "Pro aktuální týden nejsou k dispozici žádné vhodné recepty.",
         "ingredientCount": "{{count}} ingredience",
@@ -2178,7 +2179,8 @@
         "titleRequired": "Název je povinný.",
         "duplicate": "Duplikovat",
         "duplicated": "Recept duplikován.",
-        "copySuffix": "kopie"
+        "copySuffix": "kopie",
+        "dragToMealsHint": "Přetáhněte recepty do slotů jídel a rychle je naplánujte."
     },
     "wmo": {
         "0": "Jasno",

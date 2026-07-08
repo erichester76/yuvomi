@@ -367,6 +367,7 @@
         "randomizePlan": "Plan willekeurig vullen",
         "randomizeTitle": "Maaltijdplan willekeurig vullen",
         "randomizeReplaceExisting": "Bestaande maaltijden vervangen",
+        "replaceExistingConfirm": "Bestaande maaltijden vervangen?",
         "randomizeSuccess": "{{count}} maaltijden gepland.",
         "randomizeNoRecipes": "Er zijn geen passende recepten beschikbaar voor de huidige week.",
         "ingredientCount": "{{count}} ingrediënt",
@@ -1756,6 +1757,7 @@
         "duplicate": "Dupliceren",
         "duplicated": "Recept gedupliceerd.",
         "copySuffix": "kopie",
+        "dragToMealsHint": "Sleep recepten naar maaltijdvakken om ze snel in te plannen.",
         "emptyAction": "Recept aanmaken"
     },
     "search": {

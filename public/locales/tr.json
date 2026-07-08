@@ -367,6 +367,7 @@
         "randomizePlan": "Planı rastgele doldur",
         "randomizeTitle": "Yemek planını rastgele doldur",
         "randomizeReplaceExisting": "Mevcut öğünleri değiştir",
+        "replaceExistingConfirm": "Mevcut öğünler değiştirilsin mi?",
         "randomizeSuccess": "{{count}} öğün planlandı.",
         "randomizeNoRecipes": "Geçerli hafta için uygun tarif bulunmuyor.",
         "ingredientCount": "{{count}} malzeme",
@@ -1694,6 +1695,7 @@
         "duplicate": "Çoğalt",
         "duplicated": "Tarif çoğaltıldı.",
         "copySuffix": "kopya",
+        "dragToMealsHint": "Tarifleri öğün alanlarına sürükleyerek hızlıca planlayın.",
         "emptyAction": "Tarif oluştur"
     },
     "search": {

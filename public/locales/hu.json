@@ -367,6 +367,7 @@
         "randomizePlan": "Terv véletlenszerű kitöltése",
         "randomizeTitle": "Étrend véletlenszerű kitöltése",
         "randomizeReplaceExisting": "Meglévő ételek lecserélése",
+        "replaceExistingConfirm": "Lecseréljük a meglévő ételeket?",
         "randomizeSuccess": "{{count}} étel megtervezve.",
         "randomizeNoRecipes": "Nincs megfelelő recept az aktuális hétre.",
         "ingredientCount": "{{count}} hozzávaló",
@@ -1756,6 +1757,7 @@
         "duplicate": "Másolat",
         "duplicated": "Recept másolva.",
         "copySuffix": "másolat",
+        "dragToMealsHint": "Húzza a recepteket az étkezési helyekre a gyors tervezéshez.",
         "emptyAction": "Recept létrehozása"
     },
     "search": {

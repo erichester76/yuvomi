@@ -367,6 +367,7 @@
         "randomizePlan": "Заполнить план случайно",
         "randomizeTitle": "Случайно заполнить план питания",
         "randomizeReplaceExisting": "Заменить существующие блюда",
+        "replaceExistingConfirm": "Заменить существующие блюда?",
         "randomizeSuccess": "Запланировано {{count}} блюд.",
         "randomizeNoRecipes": "Для текущей недели нет подходящих рецептов.",
         "ingredientCount": "{{count}} ингредиент",
@@ -1694,6 +1695,7 @@
         "duplicate": "Дублировать",
         "duplicated": "Рецепт дублирован.",
         "copySuffix": "копия",
+        "dragToMealsHint": "Перетаскивайте рецепты в слоты приёмов пищи, чтобы быстро составить план.",
         "emptyAction": "Создать рецепт"
     },
     "search": {

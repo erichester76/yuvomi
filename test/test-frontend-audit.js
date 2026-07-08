@@ -847,6 +847,7 @@ test('Recipes expose meal-type suitability controls for planner integrations', (
   const recipesCss = read('../public/styles/recipes.css');
 
   assert.match(recipesPage, /normalizeRecipeMealTypes/);
+  assertKeysExistInEveryLocale(['recipes.dragToMealsHint']);
   assert.match(recipesPage, /id="recipe-meal-types"/);
   assert.match(recipesPage, /input type="checkbox" value="\$\{option\.key\}" checked/);
   assert.match(recipesPage, /meal_types/);
@@ -860,10 +861,11 @@ test('Meals page adds a recipe sidebar and randomize planner controls', () => {
 
   assert.match(mealsPage, /id="week-randomize"/);
   assert.match(mealsPage, /id="recipe-sidebar"/);
+  assert.match(mealsPage, /recipes\.dragToMealsHint/);
   assert.match(mealsPage, /function renderRecipeSidebar/);
   assert.match(mealsPage, /function openRandomizeModal/);
   assert.match(mealsPage, /function wireRecipeSidebar/);
-  assert.match(mealsPage, /confirmModal\(`\$\{t\('meals\.randomizeReplaceExisting'\)\}\?/, 'dropping onto occupied slots should confirm replacement');
+  assert.match(mealsPage, /confirmModal\(t\('meals\.replaceExistingConfirm'\)/, 'dropping onto occupied slots should use a dedicated localized confirmation string');
   assert.match(mealsPage, /recipeSupportsMealType/);
   assert.match(mealsCss, /\.meals-layout\s*\{/);
   assert.match(mealsCss, /\.recipe-sidebar\s*\{/);
@@ -872,6 +874,7 @@ test('Meals page adds a recipe sidebar and randomize planner controls', () => {
     'meals.randomizePlan',
     'meals.randomizeTitle',
     'meals.randomizeReplaceExisting',
+    'meals.replaceExistingConfirm',
     'meals.randomizeSuccess',
     'meals.randomizeNoRecipes',
   ]);

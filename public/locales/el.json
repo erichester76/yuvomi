@@ -367,6 +367,7 @@
         "randomizePlan": "Τυχαία συμπλήρωση πλάνου",
         "randomizeTitle": "Τυχαία συμπλήρωση πλάνου γευμάτων",
         "randomizeReplaceExisting": "Αντικατάσταση υπαρχόντων γευμάτων",
+        "replaceExistingConfirm": "Να αντικατασταθούν τα υπάρχοντα γεύματα;",
         "randomizeSuccess": "Προγραμματίστηκαν {{count}} γεύματα.",
         "randomizeNoRecipes": "Δεν υπάρχουν κατάλληλες συνταγές για την τρέχουσα εβδομάδα.",
         "ingredientCount": "{{count}} υλικό",
@@ -1694,6 +1695,7 @@
         "duplicate": "Διπλότυπο",
         "duplicated": "Η συνταγή αντιγράφηκε.",
         "copySuffix": "αντίγραφο",
+        "dragToMealsHint": "Σύρετε συνταγές στα πλαίσια γευμάτων για γρήγορο προγραμματισμό.",
         "emptyAction": "Δημιουργία συνταγής"
     },
     "search": {

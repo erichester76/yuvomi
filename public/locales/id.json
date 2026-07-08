@@ -373,6 +373,7 @@
         "randomizePlan": "Isi rencana secara acak",
         "randomizeTitle": "Acak rencana makan",
         "randomizeReplaceExisting": "Ganti makanan yang ada",
+        "replaceExistingConfirm": "Ganti makanan yang sudah ada?",
         "randomizeSuccess": "{{count}} makanan direncanakan.",
         "randomizeNoRecipes": "Tidak ada resep yang cocok untuk minggu ini.",
         "ingredientCount": "{{count}} bahan",
@@ -1762,7 +1763,8 @@
         "titleRequired": "Judul wajib diisi.",
         "duplicate": "Duplikat",
         "duplicated": "Resep diduplikat.",
-        "copySuffix": "Salinan"
+        "copySuffix": "Salinan",
+        "dragToMealsHint": "Seret resep ke slot makan untuk merencanakannya dengan cepat."
     },
     "onboarding": {
         "step1Title": "Selamat datang di {{name}}",

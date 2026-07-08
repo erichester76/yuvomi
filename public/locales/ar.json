@@ -367,6 +367,7 @@
         "randomizePlan": "تعبئة الخطة عشوائياً",
         "randomizeTitle": "تعبئة خطة الوجبات عشوائياً",
         "randomizeReplaceExisting": "استبدال الوجبات الحالية",
+        "replaceExistingConfirm": "هل تريد استبدال الوجبات الحالية؟",
         "randomizeSuccess": "تم تخطيط {{count}} وجبات.",
         "randomizeNoRecipes": "لا توجد وصفات مناسبة متاحة للأسبوع الحالي.",
         "ingredientCount": "{{count}} مكون",
@@ -1694,6 +1695,7 @@
         "duplicate": "نسخ",
         "duplicated": "تم نسخ الوصفة.",
         "copySuffix": "نسخة",
+        "dragToMealsHint": "اسحب الوصفات إلى خانات الوجبات لتخطيطها بسرعة.",
         "emptyAction": "إنشاء وصفة"
     },
     "search": {
