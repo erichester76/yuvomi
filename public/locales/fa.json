@@ -402,7 +402,9 @@
         "deleteRecurringTitle": "حذف وعده تکرارشونده",
         "deleteScopeSingle": "فقط این تاریخ",
         "deleteScopeSeries": "کل مجموعه (همه هفته‌ها)",
-        "seriesDeletedToast": "مجموعه حذف شد"
+        "seriesDeletedToast": "مجموعه حذف شد",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "تقویم",
@@ -1769,7 +1771,8 @@
         "duplicate": "تکثیر",
         "duplicated": "دستور غذا تکثیر شد.",
         "copySuffix": "کپی",
-        "dragToMealsHint": "برای برنامه\u200cریزی سریع، دستورها را روی خانه\u200cهای وعده بکشید."
+        "dragToMealsHint": "برای برنامه‌ریزی سریع، دستورها را روی خانه‌های وعده بکشید.",
+        "typeRestaurant": "Restaurant"
     },
     "onboarding": {
         "step1Title": "به {{name}} خوش آمدید",

@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "Видалити повторюваний прийом їжі",
         "deleteScopeSingle": "Лише ця дата",
         "deleteScopeSeries": "Уся серія (усі тижні)",
-        "seriesDeletedToast": "Серію видалено"
+        "seriesDeletedToast": "Серію видалено",
+        "randomizeMaxRepeats": "Макс. повторів рецепта",
+        "randomizeMaxRestaurants": "Макс. ресторанних страв"
     },
     "calendar": {
         "title": "Календар",
@@ -1734,7 +1736,8 @@
         "duplicated": "Рецепт продубльовано.",
         "copySuffix": "копія",
         "dragToMealsHint": "Перетягуйте рецепти в слоти прийомів їжі, щоб швидко скласти план.",
-        "emptyAction": "Створити рецепт"
+        "emptyAction": "Створити рецепт",
+        "typeRestaurant": "Ресторан"
     },
     "search": {
         "title": "Пошук",

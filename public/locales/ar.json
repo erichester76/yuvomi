@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "حذف الوجبة المتكررة",
         "deleteScopeSingle": "هذا التاريخ فقط",
         "deleteScopeSeries": "السلسلة كاملة (كل الأسابيع)",
-        "seriesDeletedToast": "تم حذف السلسلة"
+        "seriesDeletedToast": "تم حذف السلسلة",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "التقويم",
@@ -1701,7 +1703,8 @@
         "duplicated": "تم نسخ الوصفة.",
         "copySuffix": "نسخة",
         "dragToMealsHint": "اسحب الوصفات إلى خانات الوجبات لتخطيطها بسرعة.",
-        "emptyAction": "إنشاء وصفة"
+        "emptyAction": "إنشاء وصفة",
+        "typeRestaurant": "Restaurant"
     },
     "search": {
         "title": "بحث",

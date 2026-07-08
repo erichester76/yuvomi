@@ -402,7 +402,9 @@
         "deleteRecurringTitle": "Wiederkehrende Mahlzeit löschen",
         "deleteScopeSingle": "Nur dieses Datum",
         "deleteScopeSeries": "Ganze Serie (alle Wochen)",
-        "seriesDeletedToast": "Serie gelöscht"
+        "seriesDeletedToast": "Serie gelöscht",
+        "randomizeMaxRepeats": "Max. Wiederholungen pro Rezept",
+        "randomizeMaxRestaurants": "Max. Restaurant-Mahlzeiten"
     },
     "calendar": {
         "title": "Kalender",
@@ -1769,7 +1771,8 @@
         "duplicate": "Duplizieren",
         "duplicated": "Rezept dupliziert.",
         "copySuffix": "Kopie",
-        "dragToMealsHint": "Ziehe Rezepte auf Essens-Slots, um sie schnell einzuplanen."
+        "dragToMealsHint": "Ziehe Rezepte auf Essens-Slots, um sie schnell einzuplanen.",
+        "typeRestaurant": "Restaurant"
     },
     "onboarding": {
         "step1Title": "Willkommen bei {{name}}",

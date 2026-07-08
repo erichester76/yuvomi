@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "आवर्ती भोजन हटाएं",
         "deleteScopeSingle": "केवल यह तारीख",
         "deleteScopeSeries": "पूरी शृंखला (सभी सप्ताह)",
-        "seriesDeletedToast": "शृंखला हटाई गई"
+        "seriesDeletedToast": "शृंखला हटाई गई",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "कैलेंडर",
@@ -1701,7 +1703,8 @@
         "duplicated": "रेसिपी डुप्लिकेट की गई।",
         "copySuffix": "कॉपी",
         "dragToMealsHint": "रेसिपी को भोजन स्लॉट पर खींचकर जल्दी योजना बनाएं।",
-        "emptyAction": "रेसिपी बनाएं"
+        "emptyAction": "रेसिपी बनाएं",
+        "typeRestaurant": "Restaurant"
     },
     "search": {
         "title": "खोज",

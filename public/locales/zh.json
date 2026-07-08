@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "删除重复餐食",
         "deleteScopeSingle": "仅此日期",
         "deleteScopeSeries": "整个系列（所有周）",
-        "seriesDeletedToast": "已删除系列"
+        "seriesDeletedToast": "已删除系列",
+        "randomizeMaxRepeats": "每个食谱最多重复次数",
+        "randomizeMaxRestaurants": "外食最多次数"
     },
     "calendar": {
         "title": "日历",
@@ -1701,7 +1703,8 @@
         "duplicated": "食谱已复制。",
         "copySuffix": "副本",
         "dragToMealsHint": "将食谱拖到餐次格中即可快速安排。",
-        "emptyAction": "创建食谱"
+        "emptyAction": "创建食谱",
+        "typeRestaurant": "餐厅"
     },
     "search": {
         "title": "搜索",

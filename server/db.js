@@ -2863,6 +2863,13 @@ const MIGRATIONS = [
       ALTER TABLE recipes ADD COLUMN meal_types TEXT NOT NULL DEFAULT 'breakfast,lunch,dinner,snack';
     `,
   },
+  {
+    version: 74,
+    description: 'recipe restaurant classification for meal randomizer limits',
+    up: `
+      ALTER TABLE recipes ADD COLUMN is_restaurant INTEGER NOT NULL DEFAULT 0;
+    `,
+  },
 ];
 
 /**

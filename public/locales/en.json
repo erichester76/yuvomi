@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "Delete recurring meal",
         "deleteScopeSingle": "Only this date",
         "deleteScopeSeries": "Whole series (all weeks)",
-        "seriesDeletedToast": "Series deleted"
+        "seriesDeletedToast": "Series deleted",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "Calendar",
@@ -1763,7 +1765,8 @@
         "duplicated": "Recipe duplicated.",
         "copySuffix": "copy",
         "dragToMealsHint": "Drag recipes onto meal slots to plan them quickly.",
-        "emptyAction": "Create recipe"
+        "emptyAction": "Create recipe",
+        "typeRestaurant": "Restaurant"
     },
     "search": {
         "title": "Search",

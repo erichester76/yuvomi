@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "Ismétlődő étkezés törlése",
         "deleteScopeSingle": "Csak ez a dátum",
         "deleteScopeSeries": "Teljes sorozat (minden hét)",
-        "seriesDeletedToast": "Sorozat törölve"
+        "seriesDeletedToast": "Sorozat törölve",
+        "randomizeMaxRepeats": "Max. ismétlés receptenkként",
+        "randomizeMaxRestaurants": "Max. éttermi étkezések"
     },
     "calendar": {
         "title": "Naptár",
@@ -1763,7 +1765,8 @@
         "duplicated": "Recept másolva.",
         "copySuffix": "másolat",
         "dragToMealsHint": "Húzza a recepteket az étkezési helyekre a gyors tervezéshez.",
-        "emptyAction": "Recept létrehozása"
+        "emptyAction": "Recept létrehozása",
+        "typeRestaurant": "Étterem"
     },
     "search": {
         "title": "Keresés",

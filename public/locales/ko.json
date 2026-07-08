@@ -402,7 +402,9 @@
         "deleteRecurringTitle": "반복 식사 삭제",
         "deleteScopeSingle": "이 날짜만",
         "deleteScopeSeries": "전체 시리즈(모든 주)",
-        "seriesDeletedToast": "시리즈가 삭제되었습니다"
+        "seriesDeletedToast": "시리즈가 삭제되었습니다",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "캘린더",
@@ -1769,7 +1771,8 @@
         "duplicate": "복제",
         "duplicated": "레시피가 복제되었습니다.",
         "copySuffix": "복사본",
-        "dragToMealsHint": "레시피를 식사 슬롯으로 끌어 놓아 빠르게 계획하세요."
+        "dragToMealsHint": "레시피를 식사 슬롯으로 끌어 놓아 빠르게 계획하세요.",
+        "typeRestaurant": "Restaurant"
     },
     "onboarding": {
         "step1Title": "{{name}}에 오신 것을 환영합니다",

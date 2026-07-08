@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "繰り返しの食事を削除",
         "deleteScopeSingle": "この日付のみ",
         "deleteScopeSeries": "シリーズ全体（毎週）",
-        "seriesDeletedToast": "シリーズを削除しました"
+        "seriesDeletedToast": "シリーズを削除しました",
+        "randomizeMaxRepeats": "レシピごとの最大回数",
+        "randomizeMaxRestaurants": "外食の最大回数"
     },
     "calendar": {
         "title": "カレンダー",
@@ -1701,7 +1703,8 @@
         "duplicated": "レシピが複製されました。",
         "copySuffix": "コピー",
         "dragToMealsHint": "レシピを食事スロットにドラッグして、すばやく献立を組めます。",
-        "emptyAction": "レシピを作成"
+        "emptyAction": "レシピを作成",
+        "typeRestaurant": "外食"
     },
     "search": {
         "title": "検索",

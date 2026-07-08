@@ -396,7 +396,9 @@
         "deleteRecurringTitle": "Xóa bữa ăn lặp lại",
         "deleteScopeSingle": "Chỉ ngày này",
         "deleteScopeSeries": "Toàn bộ chuỗi (tất cả các tuần)",
-        "seriesDeletedToast": "Đã xóa chuỗi"
+        "seriesDeletedToast": "Đã xóa chuỗi",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "Lịch",
@@ -1763,7 +1765,8 @@
         "duplicated": "Công thức đã được nhân bản.",
         "copySuffix": "bản sao",
         "dragToMealsHint": "Kéo công thức vào ô bữa ăn để lên kế hoạch nhanh hơn.",
-        "emptyAction": "Tạo công thức"
+        "emptyAction": "Tạo công thức",
+        "typeRestaurant": "Restaurant"
     },
     "search": {
         "title": "Tìm kiếm",
