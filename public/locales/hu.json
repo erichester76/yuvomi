@@ -320,10 +320,10 @@
         "catDrugstore": "Gyógyszertár",
         "catMisc": "Vegyes",
         "emptyAction": "Elem hozzáadása",
-        "importMeals": "From meal plan",
-        "importMealsTitle": "Import from meal plan",
-        "importMealsAction": "Import",
-        "importMealsEmpty": "No meal ingredients were found in the selected range.",
+        "importMeals": "Étkezési tervből",
+        "importMealsTitle": "Importálás az étkezési tervből",
+        "importMealsAction": "Importálás",
+        "importMealsEmpty": "A kiválasztott időszakban nem találhatók étkezési hozzávalók.",
         "manageCategories": "Kategóriák kezelése"
     },
     "meals": {

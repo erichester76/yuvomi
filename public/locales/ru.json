@@ -320,10 +320,10 @@
         "catDrugstore": "Аптека",
         "catMisc": "Разное",
         "emptyAction": "Добавить товар",
-        "importMeals": "From meal plan",
-        "importMealsTitle": "Import from meal plan",
-        "importMealsAction": "Import",
-        "importMealsEmpty": "No meal ingredients were found in the selected range.",
+        "importMeals": "Из плана питания",
+        "importMealsTitle": "Импорт из плана питания",
+        "importMealsAction": "Импортировать",
+        "importMealsEmpty": "В выбранном диапазоне не найдено ингредиентов блюд.",
         "manageCategories": "Управление категориями"
     },
     "meals": {
