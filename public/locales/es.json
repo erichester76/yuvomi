@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Eliminar comida recurrente",
         "deleteScopeSingle": "Solo esta fecha",
         "deleteScopeSeries": "Toda la serie (todas las semanas)",
-        "seriesDeletedToast": "Serie eliminada"
+        "seriesDeletedToast": "Serie eliminada",
+        "randomizeMaxRepeats": "Máx. repeticiones por receta",
+        "randomizeMaxRestaurants": "Máx. comidas de restaurante"
     },
     "calendar": {
         "title": "Calendario",
@@ -1697,7 +1699,8 @@
         "duplicated": "Receta duplicada.",
         "copySuffix": "copia",
         "dragToMealsHint": "Arrastra recetas a las franjas de comida para planificarlas rápidamente.",
-        "emptyAction": "Crear receta"
+        "emptyAction": "Crear receta",
+        "typeRestaurant": "Restaurante"
     },
     "search": {
         "title": "Búsqueda",

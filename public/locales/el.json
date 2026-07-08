@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Διαγραφή επαναλαμβανόμενου γεύματος",
         "deleteScopeSingle": "Μόνο αυτή η ημερομηνία",
         "deleteScopeSeries": "Ολόκληρη η σειρά (όλες οι εβδομάδες)",
-        "seriesDeletedToast": "Η σειρά διαγράφηκε"
+        "seriesDeletedToast": "Η σειρά διαγράφηκε",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "Ημερολόγιο",
@@ -1697,7 +1699,8 @@
         "duplicated": "Η συνταγή αντιγράφηκε.",
         "copySuffix": "αντίγραφο",
         "dragToMealsHint": "Σύρετε συνταγές στα πλαίσια γευμάτων για γρήγορο προγραμματισμό.",
-        "emptyAction": "Δημιουργία συνταγής"
+        "emptyAction": "Δημιουργία συνταγής",
+        "typeRestaurant": "Restaurant"
     },
     "search": {
         "title": "Αναζήτηση",

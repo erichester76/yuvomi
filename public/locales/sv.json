@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Ta bort återkommande måltid",
         "deleteScopeSingle": "Endast detta datum",
         "deleteScopeSeries": "Hela serien (alla veckor)",
-        "seriesDeletedToast": "Serien borttagen"
+        "seriesDeletedToast": "Serien borttagen",
+        "randomizeMaxRepeats": "Max upprepningar per recept",
+        "randomizeMaxRestaurants": "Max restaurangmåltider"
     },
     "calendar": {
         "title": "Kalender",
@@ -1697,7 +1699,8 @@
         "duplicated": "Recept duplicerat.",
         "copySuffix": "kopia",
         "dragToMealsHint": "Dra recept till måltidsfälten för att snabbt planera dem.",
-        "emptyAction": "Skapa recept"
+        "emptyAction": "Skapa recept",
+        "typeRestaurant": "Restaurang"
     },
     "search": {
         "title": "Sök",

@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Terugkerende maaltijd verwijderen",
         "deleteScopeSingle": "Alleen deze datum",
         "deleteScopeSeries": "Hele reeks (alle weken)",
-        "seriesDeletedToast": "Reeks verwijderd"
+        "seriesDeletedToast": "Reeks verwijderd",
+        "randomizeMaxRepeats": "Max. herhalingen per recept",
+        "randomizeMaxRestaurants": "Max. restaurantmaaltijden"
     },
     "calendar": {
         "title": "Agenda",
@@ -1759,7 +1761,8 @@
         "duplicated": "Recept gedupliceerd.",
         "copySuffix": "kopie",
         "dragToMealsHint": "Sleep recepten naar maaltijdvakken om ze snel in te plannen.",
-        "emptyAction": "Recept aanmaken"
+        "emptyAction": "Recept aanmaken",
+        "typeRestaurant": "Restaurant"
     },
     "search": {
         "title": "Zoeken",

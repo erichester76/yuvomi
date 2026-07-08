@@ -30,6 +30,7 @@ db.exec(MIGRATIONS_SQL[1]);
 db.exec(MIGRATIONS_SQL[13]);
 db.exec(MIGRATIONS_SQL[64]);
 db.exec(MIGRATIONS_SQL[73]);
+db.exec(MIGRATIONS_SQL[74]);
 
 // Test-Benutzer
 const u1 = db.prepare(`INSERT INTO users (username, display_name, password_hash, role)
@@ -422,6 +423,15 @@ test('Rezepte speichern passende meal_types für Planer-Features', () => {
   assert(recipe.meal_types === 'breakfast,snack', `meal_types gespeichert: ${recipe.meal_types}`);
 });
 
+test('Rezepte speichern Restaurant-Klassifikation für Randomizer-Limits', () => {
+  const recipeId = db.prepare(`
+    INSERT INTO recipes (title, meal_types, is_restaurant, created_by)
+    VALUES ('Takeout Sushi', 'dinner', 1, ?)
+  `).run(uid).lastInsertRowid;
+  const recipe = db.prepare('SELECT is_restaurant FROM recipes WHERE id = ?').get(recipeId);
+  assert(recipe.is_restaurant === 1, `is_restaurant gespeichert: ${recipe.is_restaurant}`);
+});
+
 test('Randomize-Helfer plant nur kompatible Rezepte in freie Slots', () => {
   const plan = mealsUi.buildRandomMealAssignments({
     weekStart: '2026-03-23',
@@ -466,6 +476,44 @@ test('Randomize-Helfer meldet volle Wochen getrennt von Rezeptmangel', () => {
 
   assert(plan.assignments.length === 0, 'bei voller Woche werden keine neuen Mahlzeiten geplant');
   assert(plan.reason === 'week_full', `Erwarteter Grund week_full, erhalten ${plan.reason}`);
+});
+
+test('Randomize-Helfer respektiert die maximale Wiederholungszahl pro Rezept', () => {
+  const plan = mealsUi.buildRandomMealAssignments({
+    weekStart: '2026-03-23',
+    visibleMealTypes: ['dinner'],
+    meals: [],
+    recipes: [
+      { id: 1, title: 'Pasta', meal_types: ['dinner'], is_restaurant: 0, ingredients: [] },
+      { id: 2, title: 'Soup', meal_types: ['dinner'], is_restaurant: 0, ingredients: [] },
+    ],
+    maxRepeatsPerRecipe: 1,
+    maxRestaurantMeals: 7,
+    replaceExisting: false,
+    pick: () => 0,
+  });
+
+  const recipeIds = plan.assignments.map((item) => item.recipe.id);
+  assert(recipeIds.includes(1) && recipeIds.includes(2), 'beide Rezepte sollen verwendet werden, bevor eines wiederholt wird');
+});
+
+test('Randomize-Helfer respektiert die maximale Zahl von Restaurant-Mahlzeiten', () => {
+  const plan = mealsUi.buildRandomMealAssignments({
+    weekStart: '2026-03-23',
+    visibleMealTypes: ['dinner'],
+    meals: [],
+    recipes: [
+      { id: 1, title: 'Takeout', meal_types: ['dinner'], is_restaurant: 1, ingredients: [] },
+      { id: 2, title: 'Home Pasta', meal_types: ['dinner'], is_restaurant: 0, ingredients: [] },
+    ],
+    maxRepeatsPerRecipe: 7,
+    maxRestaurantMeals: 1,
+    replaceExisting: false,
+    pick: () => 0,
+  });
+
+  const restaurantCount = plan.assignments.filter((item) => item.recipe.is_restaurant === 1).length;
+  assert(restaurantCount <= 1, `maximal 1 Restaurant-Mahlzeit erwartet, erhalten ${restaurantCount}`);
 });
 
 test('Randomize-Helfer vermeidet gleiche Rezepte in benachbarten Tages-Slots wenn Alternativen existieren', () => {

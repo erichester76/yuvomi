@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Elimina pasto ricorrente",
         "deleteScopeSingle": "Solo questa data",
         "deleteScopeSeries": "Tutta la serie (tutte le settimane)",
-        "seriesDeletedToast": "Serie eliminata"
+        "seriesDeletedToast": "Serie eliminata",
+        "randomizeMaxRepeats": "Ripetizioni max per ricetta",
+        "randomizeMaxRestaurants": "Pasti al ristorante max"
     },
     "calendar": {
         "title": "Calendario",
@@ -1697,7 +1699,8 @@
         "duplicated": "Ricetta duplicata.",
         "copySuffix": "copia",
         "dragToMealsHint": "Trascina le ricette negli slot dei pasti per pianificarli rapidamente.",
-        "emptyAction": "Crea ricetta"
+        "emptyAction": "Crea ricetta",
+        "typeRestaurant": "Ristorante"
     },
     "search": {
         "title": "Ricerca",

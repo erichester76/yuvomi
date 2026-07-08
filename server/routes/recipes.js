@@ -29,7 +29,12 @@ function loadRecipeWithIngredients(id) {
     ORDER BY id ASC
   `).all(id);
 
-  return { ...recipe, meal_types: normalizeRecipeMealTypes(recipe.meal_types), ingredients };
+  return {
+    ...recipe,
+    is_restaurant: Number(recipe.is_restaurant) || 0,
+    meal_types: normalizeRecipeMealTypes(recipe.meal_types),
+    ingredients,
+  };
 }
 
 router.get('/', (_req, res) => {
@@ -60,6 +65,7 @@ router.get('/', (_req, res) => {
 
     res.json({ data: recipes.map((r) => ({
       ...r,
+      is_restaurant: Number(r.is_restaurant) || 0,
       meal_types: normalizeRecipeMealTypes(r.meal_types),
       ingredients: ingredientMap[r.id] || [],
     })) });
@@ -77,15 +83,16 @@ router.post('/', (req, res) => {
     const vNotes = str(req.body.notes, 'Notizen', { max: MAX_TEXT, required: false });
     const vRecipeUrl = str(req.body.recipe_url, 'Rezept-URL', { max: MAX_TEXT, required: false });
     const mealTypes = normalizeRecipeMealTypes(req.body.meal_types);
+    const isRestaurant = req.body.is_restaurant === true || req.body.is_restaurant === 1;
 
     const errors = collectErrors([vTitle, vNotes, vRecipeUrl]);
     if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
 
     const recipeId = db.transaction(() => {
       const result = db.get().prepare(`
-        INSERT INTO recipes (title, notes, recipe_url, meal_types, created_by)
-        VALUES (?, ?, ?, ?, ?)
-      `).run(vTitle.value, vNotes.value, vRecipeUrl.value, mealTypes.join(','), req.authUserId || req.session.userId);
+        INSERT INTO recipes (title, notes, recipe_url, meal_types, is_restaurant, created_by)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run(vTitle.value, vNotes.value, vRecipeUrl.value, mealTypes.join(','), isRestaurant ? 1 : 0, req.authUserId || req.session.userId);
 
       const rid = Number(result.lastInsertRowid);
       const insertIng = db.get().prepare(`
@@ -126,15 +133,16 @@ router.put('/:id', (req, res) => {
     const vNotes = str(req.body.notes, 'Notizen', { max: MAX_TEXT, required: false });
     const vRecipeUrl = str(req.body.recipe_url, 'Rezept-URL', { max: MAX_TEXT, required: false });
     const mealTypes = normalizeRecipeMealTypes(req.body.meal_types);
+    const isRestaurant = req.body.is_restaurant === true || req.body.is_restaurant === 1;
     const errors = collectErrors([vTitle, vNotes, vRecipeUrl]);
     if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
 
     db.transaction(() => {
       db.get().prepare(`
         UPDATE recipes
-        SET title = ?, notes = ?, recipe_url = ?, meal_types = ?
+        SET title = ?, notes = ?, recipe_url = ?, meal_types = ?, is_restaurant = ?
         WHERE id = ?
-      `).run(vTitle.value, vNotes.value, vRecipeUrl.value, mealTypes.join(','), id);
+      `).run(vTitle.value, vNotes.value, vRecipeUrl.value, mealTypes.join(','), isRestaurant ? 1 : 0, id);
 
       db.get().prepare('DELETE FROM recipe_ingredients WHERE recipe_id = ?').run(id);
 

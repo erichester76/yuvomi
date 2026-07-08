@@ -9,7 +9,7 @@ import { openModal as openSharedModal, closeModal as closeSharedModal, advancedS
 import { DEFAULT_CATEGORY_NAME } from '/utils/shopping-categories.js';
 import { renderKitchenTabsBar } from '/utils/kitchen-tabs.js';
 import { ingredientRowHTML } from '/utils/ingredient-row.js';
-import { normalizeRecipeMealTypes, RECIPE_MEAL_TYPE_KEYS } from '/utils/recipe-meal-types.js';
+import { normalizeRecipeMealTypes, RECIPE_MEAL_TYPE_KEYS, recipeIsRestaurant } from '/utils/recipe-meal-types.js';
 import { renderSkeletonList } from '/utils/skeleton.js';
 
 let _container = null;
@@ -181,6 +181,12 @@ function renderRecipeList() {
         badge.textContent = option.label;
         return badge;
       }));
+    if (recipeIsRestaurant(recipe)) {
+      const badge = document.createElement('span');
+      badge.className = 'recipe-card__origin-badge';
+      badge.textContent = t('recipes.typeRestaurant');
+      badges.appendChild(badge);
+    }
     card.appendChild(badges);
 
     if (recipe.recipe_url) {
@@ -285,6 +291,13 @@ function openRecipeModal(mode, recipe = null) {
         </div>
       </div>
       <div class="form-group">
+        <label class="toggle">
+          <input type="checkbox" id="recipe-is-restaurant">
+          <span class="toggle__track"></span>
+          <span>${t('recipes.typeRestaurant')}</span>
+        </label>
+      </div>
+      <div class="form-group">
         <label class="form-label">${t('recipes.ingredientsLabel')}</label>
         <div class="recipe-ingredient-list" id="recipe-ingredient-list"></div>
         <button class="btn btn--secondary recipe-add-ingredient" type="button" id="recipe-add-ingredient">${t('meals.addIngredient')}</button>
@@ -312,6 +325,7 @@ function openRecipeModal(mode, recipe = null) {
       panel.querySelectorAll('#recipe-meal-types input[type="checkbox"]').forEach((input) => {
         input.checked = selectedMealTypes.includes(input.value);
       });
+      panel.querySelector('#recipe-is-restaurant').checked = isEdit ? recipeIsRestaurant(recipe) : false;
 
       const ingList = panel.querySelector('#recipe-ingredient-list');
       if (isEdit && recipe.ingredients?.length) {
@@ -352,6 +366,7 @@ async function saveRecipe(panel, mode, recipe) {
   const notes = panel.querySelector('#recipe-notes')?.value.trim() || null;
   const recipe_url = panel.querySelector('#recipe-url')?.value.trim() || null;
   const meal_types = [...panel.querySelectorAll('#recipe-meal-types input[type="checkbox"]:checked')].map((input) => input.value);
+  const is_restaurant = panel.querySelector('#recipe-is-restaurant')?.checked === true;
 
   if (!title) {
     window.yuvomi?.showToast(t('recipes.titleRequired'), 'error');
@@ -370,10 +385,10 @@ async function saveRecipe(panel, mode, recipe) {
 
   try {
     if (mode === 'create') {
-      const res = await api.post('/recipes', { title, notes, recipe_url, meal_types, ingredients });
+      const res = await api.post('/recipes', { title, notes, recipe_url, meal_types, is_restaurant, ingredients });
       state.recipes.push(res.data);
     } else {
-      const res = await api.put(`/recipes/${recipe.id}`, { title, notes, recipe_url, meal_types, ingredients });
+      const res = await api.put(`/recipes/${recipe.id}`, { title, notes, recipe_url, meal_types, is_restaurant, ingredients });
       const idx = state.recipes.findIndex((r) => r.id === recipe.id);
       if (idx >= 0) state.recipes[idx] = res.data;
     }

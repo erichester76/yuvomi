@@ -14,7 +14,7 @@ import { DEFAULT_CATEGORY_NAME } from '/utils/shopping-categories.js';
 import { renderKitchenTabsBar } from '/utils/kitchen-tabs.js';
 import { ingredientRowHTML } from '/utils/ingredient-row.js';
 import { addLocalDays, startOfLocalWeekKey, toLocalDateKey } from '/utils/date.js';
-import { normalizeRecipeMealTypes, recipeSupportsMealType } from '/utils/recipe-meal-types.js';
+import { normalizeRecipeMealTypes, recipeSupportsMealType, recipeIsRestaurant } from '/utils/recipe-meal-types.js';
 
 // --------------------------------------------------------
 // Konstanten
@@ -106,16 +106,29 @@ function mealPayloadFromRecipe(recipe, date, mealType) {
   };
 }
 
-function buildRandomMealAssignments({ weekStart, visibleMealTypes, meals, recipes, replaceExisting = false, pick = Math.random }) {
+function buildRandomMealAssignments({
+  weekStart,
+  visibleMealTypes,
+  meals,
+  recipes,
+  replaceExisting = false,
+  maxRepeatsPerRecipe = 2,
+  maxRestaurantMeals = 1,
+  pick = Math.random,
+}) {
   const assignments = [];
   const deleteMealIds = [];
   const previousDayByMealType = new Map();
+  let previousDayRecipeIds = new Set();
   let hasOpenSlot = false;
   let hasCompatibleSlot = false;
+  const recipeCounts = new Map();
+  let restaurantCount = 0;
 
   for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
     const date = addDays(weekStart, dayOffset);
     let previousRecipeIdSameDay = null;
+    const currentDayRecipeIds = new Set();
     for (const mealType of visibleMealTypes) {
       const slotMeals = meals.filter((meal) => meal.date === date && meal.meal_type === mealType);
       if (!replaceExisting && slotMeals.length) continue;
@@ -123,9 +136,20 @@ function buildRandomMealAssignments({ weekStart, visibleMealTypes, meals, recipe
       const compatible = recipes.filter((recipe) => recipeSupportsMealType(recipe, mealType));
       if (!compatible.length) continue;
       hasCompatibleSlot = true;
-      const blockedIds = new Set([previousRecipeIdSameDay, previousDayByMealType.get(mealType)].filter(Boolean));
-      const preferred = compatible.filter((recipe) => !blockedIds.has(recipe.id));
-      const pool = preferred.length ? preferred : compatible;
+      const capLimited = compatible.filter((recipe) => {
+        const seen = recipeCounts.get(recipe.id) || 0;
+        if (seen >= maxRepeatsPerRecipe) return false;
+        if (recipeIsRestaurant(recipe) && restaurantCount >= maxRestaurantMeals) return false;
+        return true;
+      });
+      const cappedPool = capLimited.length ? capLimited : compatible;
+      const blockedIds = new Set([
+        previousRecipeIdSameDay,
+        previousDayByMealType.get(mealType),
+        ...previousDayRecipeIds,
+      ].filter(Boolean));
+      const preferred = cappedPool.filter((recipe) => !blockedIds.has(recipe.id));
+      const pool = preferred.length ? preferred : cappedPool;
       const index = Math.floor(Math.max(0, Math.min(0.999999, Number(pick()) || 0)) * pool.length);
       const recipe = pool[index] || pool[0];
       assignments.push({
@@ -136,8 +160,12 @@ function buildRandomMealAssignments({ weekStart, visibleMealTypes, meals, recipe
       });
       previousRecipeIdSameDay = recipe.id;
       previousDayByMealType.set(mealType, recipe.id);
+      currentDayRecipeIds.add(recipe.id);
+      recipeCounts.set(recipe.id, (recipeCounts.get(recipe.id) || 0) + 1);
+      if (recipeIsRestaurant(recipe)) restaurantCount += 1;
       if (replaceExisting) deleteMealIds.push(...slotMeals.map((meal) => meal.id));
     }
+    previousDayRecipeIds = currentDayRecipeIds;
   }
 
   const reason = assignments.length
@@ -365,6 +393,12 @@ function renderRecipeSidebar() {
         badge.textContent = option.label;
         types.appendChild(badge);
       });
+    if (recipeIsRestaurant(recipe)) {
+      const badge = document.createElement('span');
+      badge.className = 'recipe-sidebar__card-origin';
+      badge.textContent = t('recipes.typeRestaurant');
+      types.appendChild(badge);
+    }
     card.appendChild(types);
 
     list.appendChild(card);
@@ -618,6 +652,16 @@ function openRandomizeModal() {
           <span class="toggle__track"></span>
           <span>${t('meals.randomizeReplaceExisting')}</span>
         </label>
+        <div class="modal-grid modal-grid--2">
+          <div class="form-group">
+            <label class="form-label" for="meal-randomize-max-repeats">${t('meals.randomizeMaxRepeats')}</label>
+            <input class="form-input" type="number" min="1" max="7" step="1" id="meal-randomize-max-repeats" value="2">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="meal-randomize-max-restaurants">${t('meals.randomizeMaxRestaurants')}</label>
+            <input class="form-input" type="number" min="0" max="7" step="1" id="meal-randomize-max-restaurants" value="1">
+          </div>
+        </div>
         <div class="modal-panel__footer" style="border:none;padding:0;margin-top:var(--space-4)">
           <button class="btn btn--secondary" id="meal-randomize-cancel">${t('common.cancel')}</button>
           <button class="btn btn--primary" id="meal-randomize-run">${t('meals.randomizePlan')}</button>
@@ -632,6 +676,8 @@ function openRandomizeModal() {
 
 async function runRandomize(panel) {
   const replaceExisting = Boolean(panel.querySelector('#meal-randomize-replace')?.checked);
+  const maxRepeatsPerRecipe = Math.max(1, Number(panel.querySelector('#meal-randomize-max-repeats')?.value || 2));
+  const maxRestaurantMeals = Math.max(0, Number(panel.querySelector('#meal-randomize-max-restaurants')?.value || 1));
   const runBtn = panel.querySelector('#meal-randomize-run');
   const plan = buildRandomMealAssignments({
     weekStart: state.currentWeek,
@@ -639,6 +685,8 @@ async function runRandomize(panel) {
     meals: state.meals,
     recipes: state.recipes,
     replaceExisting,
+    maxRepeatsPerRecipe,
+    maxRestaurantMeals,
   });
 
   if (!plan.assignments.length) {

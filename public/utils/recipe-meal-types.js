@@ -15,4 +15,8 @@ function recipeSupportsMealType(recipe, mealType) {
   return normalizeRecipeMealTypes(recipe?.meal_types).includes(mealType);
 }
 
-export { RECIPE_MEAL_TYPE_KEYS, normalizeRecipeMealTypes, recipeSupportsMealType };
+function recipeIsRestaurant(recipe) {
+  return recipe?.is_restaurant === 1 || recipe?.is_restaurant === true;
+}
+
+export { RECIPE_MEAL_TYPE_KEYS, normalizeRecipeMealTypes, recipeSupportsMealType, recipeIsRestaurant };

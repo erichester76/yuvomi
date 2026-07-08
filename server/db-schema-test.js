@@ -749,6 +749,9 @@ const MIGRATIONS_SQL = {
   73: `
     ALTER TABLE recipes ADD COLUMN meal_types TEXT NOT NULL DEFAULT 'breakfast,lunch,dinner,snack';
   `,
+  74: `
+    ALTER TABLE recipes ADD COLUMN is_restaurant INTEGER NOT NULL DEFAULT 0;
+  `,
 };
 
 export { MIGRATIONS_SQL };

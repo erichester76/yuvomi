@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Yinelenen öğünü sil",
         "deleteScopeSingle": "Yalnızca bu tarih",
         "deleteScopeSeries": "Tüm seri (tüm haftalar)",
-        "seriesDeletedToast": "Seri silindi"
+        "seriesDeletedToast": "Seri silindi",
+        "randomizeMaxRepeats": "Tarif başına maks. tekrar",
+        "randomizeMaxRestaurants": "Maks. dışarıdan öğün"
     },
     "calendar": {
         "title": "Takvim",
@@ -1697,7 +1699,8 @@
         "duplicated": "Tarif çoğaltıldı.",
         "copySuffix": "kopya",
         "dragToMealsHint": "Tarifleri öğün alanlarına sürükleyerek hızlıca planlayın.",
-        "emptyAction": "Tarif oluştur"
+        "emptyAction": "Tarif oluştur",
+        "typeRestaurant": "Restoran"
     },
     "search": {
         "title": "Arama",

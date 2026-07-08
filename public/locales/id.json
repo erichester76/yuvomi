@@ -398,7 +398,9 @@
         "deleteRecurringTitle": "Hapus makanan berulang",
         "deleteScopeSingle": "Hanya tanggal ini",
         "deleteScopeSeries": "Seluruh rangkaian (semua minggu)",
-        "seriesDeletedToast": "Rangkaian dihapus"
+        "seriesDeletedToast": "Rangkaian dihapus",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "Kalender",
@@ -1765,7 +1767,8 @@
         "duplicate": "Duplikat",
         "duplicated": "Resep diduplikat.",
         "copySuffix": "Salinan",
-        "dragToMealsHint": "Seret resep ke slot makan untuk merencanakannya dengan cepat."
+        "dragToMealsHint": "Seret resep ke slot makan untuk merencanakannya dengan cepat.",
+        "typeRestaurant": "Restaurant"
     },
     "onboarding": {
         "step1Title": "Selamat datang di {{name}}",

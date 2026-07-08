@@ -392,7 +392,9 @@
         "deleteRecurringTitle": "Smazat opakující se jídlo",
         "deleteScopeSingle": "Pouze toto datum",
         "deleteScopeSeries": "Celá série (všechny týdny)",
-        "seriesDeletedToast": "Série smazána"
+        "seriesDeletedToast": "Série smazána",
+        "randomizeMaxRepeats": "Max repeats per recipe",
+        "randomizeMaxRestaurants": "Max restaurant meals"
     },
     "calendar": {
         "title": "Kalendář",
@@ -2181,7 +2183,8 @@
         "duplicate": "Duplikovat",
         "duplicated": "Recept duplikován.",
         "copySuffix": "kopie",
-        "dragToMealsHint": "Přetáhněte recepty do slotů jídel a rychle je naplánujte."
+        "dragToMealsHint": "Přetáhněte recepty do slotů jídel a rychle je naplánujte.",
+        "typeRestaurant": "Restaurant"
     },
     "wmo": {
         "0": "Jasno",
