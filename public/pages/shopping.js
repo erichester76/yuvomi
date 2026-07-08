@@ -90,7 +90,7 @@ async function toggleShoppingItem(id, checked, container) {
       updateListCounter(state.activeListId, 0, newVal ? -1 : 1);
       renderTabs(container);
     }
-    window.yuvomi.showToast(err.message, 'danger');
+    window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
   }
 }
 
@@ -113,7 +113,10 @@ function renderTabs(container) {
   }).join('');
 
   bar.replaceChildren();
+  // Führender Listen-Marker: signalisiert „das hier sind Listen" und grenzt die
+  // Leiste sichtbar von den Küchen-Modul-Tabs darüber ab (dekorativ, aria-hidden).
   bar.insertAdjacentHTML('beforeend', `
+    <i data-lucide="list" class="list-tabs-bar__marker" aria-hidden="true"></i>
     ${tabsHtml}
     <button class="list-tab__new" data-action="new-list" aria-label="${t('shopping.newListButton')}">
       <i data-lucide="plus" class="icon-md" aria-hidden="true"></i>
@@ -125,18 +128,26 @@ function renderTabs(container) {
 function renderListContent(container) {
   const content = container.querySelector('#list-content');
   if (!content) return;
+  content.removeAttribute('aria-busy');
 
   if (!state.activeList) {
     content.replaceChildren();
+    // Geteilte .empty-state-Grammatik (wie Rezepte + leere Liste): Titel,
+    // Beschreibung und eine primäre CTA — nicht nur ein Textverweis auf das +.
     content.insertAdjacentHTML('beforeend', `
-      <div class="no-lists">
-        <i data-lucide="shopping-cart" class="no-lists__icon" aria-hidden="true"></i>
-        <div style="font-size:var(--text-lg);font-weight:var(--font-weight-semibold)">${t('shopping.noLists')}</div>
-        <div style="font-size:var(--text-sm);color:var(--color-text-secondary)">
-          ${t('shopping.noListsDescription')}
-        </div>
+      <div class="empty-state">
+        <i data-lucide="shopping-cart" class="empty-state__icon" aria-hidden="true"></i>
+        <div class="empty-state__title">${t('shopping.noLists')}</div>
+        <div class="empty-state__description">${t('shopping.noListsDescription')}</div>
+        <button class="btn btn--primary empty-state__cta" id="empty-cta-newlist">
+          <i data-lucide="plus" aria-hidden="true" class="icon-md"></i>
+          ${t('shopping.newListButton')}
+        </button>
       </div>`);
     if (window.lucide) window.lucide.createIcons({ el: content });
+    content.querySelector('#empty-cta-newlist')?.addEventListener('click', () => {
+      container.querySelector('[data-action="new-list"]')?.click();
+    });
     return;
   }
 
@@ -414,7 +425,7 @@ function wireQuickAdd(container) {
       nameInput.classList.add('quick-add__input--flash');
       nameInput.addEventListener('animationend', () => nameInput.classList.remove('quick-add__input--flash'), { once: true });
     } catch (err) {
-      window.yuvomi.showToast(err.message, 'danger');
+      window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
     }
   });
 }
@@ -557,7 +568,7 @@ function wireSwipeGestures(container) {
               updateListCounter(state.activeListId, 0, newVal ? -1 : 1);
               renderTabs(container);
             }
-            window.yuvomi.showToast(err.message, 'danger');
+            window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
           }
         }, 200);
 
@@ -576,7 +587,7 @@ function wireSwipeGestures(container) {
             renderTabs(container);
           } catch (err) {
             resetCard(true);
-            window.yuvomi.showToast(err.message, 'danger');
+            window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
           }
         }, 200);
 
@@ -705,7 +716,7 @@ function openItemDetails(itemId, container) {
           refreshItemMeta(container, item);
           closeModal();
         } catch (err) {
-          window.yuvomi.showToast(err.message, 'danger');
+          window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
         }
       });
     },
@@ -799,6 +810,9 @@ async function loadItems(listId) {
 async function switchList(listId, container) {
   state.activeListId = listId;
   renderTabs(container);
+  // Lade-Feedback beim Listenwechsel: dimmt den alten Inhalt (CSS), meldet
+  // Screenreadern „busy" — bis renderListContent den neuen Inhalt setzt.
+  container.querySelector('#list-content')?.setAttribute('aria-busy', 'true');
   try {
     await loadItems(listId);
   } catch (err) {
@@ -832,7 +846,7 @@ function wireTabBar(container) {
         state.lists.push({ ...data.data, item_total: 0, item_checked: 0 });
         await switchList(data.data.id, container);
       } catch (err) {
-        window.yuvomi.showToast(err.message, 'danger');
+        window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
       }
     }
   });
@@ -921,7 +935,7 @@ function wireListContentEvents(container) {
             updateListCounter(state.activeListId, 1, snapshot.is_checked ? 1 : 0);
             renderTabs(container);
           }
-          window.yuvomi.showToast(err.message, 'danger');
+          window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
         }
       }, 5100);
     }
@@ -965,7 +979,7 @@ function wireListContentEvents(container) {
           updateItemsList(container);
           updateListCounter(state.activeListId, count, count);
           renderTabs(container);
-          window.yuvomi.showToast(err.message, 'danger');
+          window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
         }
       }, 5100);
     }
@@ -988,7 +1002,7 @@ function wireListContentEvents(container) {
         renderListContent(container);
         wireListContentEvents(container);
       } catch (err) {
-        window.yuvomi.showToast(err.message, 'danger');
+        window.yuvomi.showToast(err.data?.error ?? t('common.errorGeneric'), 'danger');
       }
     }
 
@@ -1017,7 +1031,7 @@ function wireListContentEvents(container) {
             renderListContent(container);
           }
         } catch (err) {
-          window.yuvomi.showToast(err.message ?? t('common.unknownError'), 'danger');
+          window.yuvomi.showToast(err.data?.error ?? t('common.unknownError'), 'danger');
           await loadLists();
           renderTabs(container);
         }
@@ -1147,8 +1161,12 @@ export async function render(container, { user }) {
   container.querySelector('#fab-new-item')?.addEventListener('click', () => {
     const input = container.querySelector('#item-name-input');
     if (input) {
+      // FAB = Erstell-Flow (wie Meals/Recipes): die Quick-Add-Fläche sichtbar
+      // aktivieren — Scroll + Fokus + kurzer Puls als „hier entsteht das Neue".
       input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       input.focus();
+      input.classList.add('quick-add__input--flash');
+      input.addEventListener('animationend', () => input.classList.remove('quick-add__input--flash'), { once: true });
     } else {
       // Keine Liste aktiv → neue Liste erstellen
       container.querySelector('[data-action="new-list"]')?.click();

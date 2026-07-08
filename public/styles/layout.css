@@ -1743,6 +1743,59 @@ html.fab-anim-done .page-fab {
 }
 
 /* --------------------------------------------------------
+ * Zutaten-Zeile (geteilt: Mahlzeiten- + Rezept-Modal)
+ * Global statt modul-scoped, weil Modals im geteilten Overlay rendern und der
+ * Router immer nur EIN Modul-Stylesheet aktiv hält. Markup: ingredient-row.js.
+ * -------------------------------------------------------- */
+.ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-glass-inner);
+}
+
+.ingredient-row__name {
+  flex: 2;
+}
+
+.ingredient-row__qty {
+  flex: 1;
+  min-width: 0;
+}
+
+.ingredient-row__cat {
+  flex: 1.5;
+  min-width: 0;
+  font-size: var(--type-body);
+}
+
+.ingredient-row__remove {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-disabled);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.ingredient-row__remove::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+.ingredient-row__remove:hover {
+  color: var(--color-danger);
+}
+
+/* --------------------------------------------------------
  * Toggle-Switch
  * Custom iOS-style toggle, ersetzt native Checkboxen.
  * Usage: <label class="toggle"><input type="checkbox"><span class="toggle__track"></span></label>

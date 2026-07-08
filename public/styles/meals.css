@@ -76,12 +76,23 @@
   container: week-grid / inline-size;
 }
 
+/* Lade-Feedback beim Wochenwechsel: dimmt das alte Raster, bis das neue steht. */
+.week-grid[aria-busy="true"] {
+  opacity: 0.55;
+  transition: opacity var(--transition-fast);
+}
+
 .day-column {
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .day-column:last-child {
   border-bottom: none;
+}
+
+/* Per-Tag-Add-Button: nur Mobile (Desktop behält die Per-Slot-Add-Affordanz). */
+.day-add {
+  display: none;
 }
 
 .day-header {
@@ -136,6 +147,36 @@
     gap: var(--space-2);
   }
 
+  /* Kernentschärfung: leere Slots nicht als große gestrichelte Boxen stapeln
+   * (7 Tage × 4 Typen = bis zu 28). Belegte Slots bleiben; pro Tag ein
+   * gesammelter Add-Button, der das Modal mit Typ-Auswahl öffnet. */
+  .meal-slot--empty {
+    display: none;
+  }
+
+  .day-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    width: calc(100% - 2 * var(--space-4));
+    margin: 0 var(--space-4) var(--space-3);
+    min-height: var(--target-md);
+    padding: var(--space-2);
+    border: 1.5px dashed var(--color-border);
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .day-add:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
   .meal-slot {
     min-height: var(--target-lg);
   }
@@ -171,16 +212,29 @@
 }
 
 .meal-slot__type-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   color: var(--color-text-secondary);
   padding: var(--space-1) var(--space-2) 0;
   text-align: left;
 }
 
-/* Slot-Typ-Farben - zentrale Tokens aus tokens.css */
-.meal-slot[data-type="breakfast"] .meal-slot__type-label { color: var(--meal-breakfast); }
-.meal-slot[data-type="lunch"]     .meal-slot__type-label { color: var(--meal-lunch); }
-.meal-slot[data-type="dinner"]    .meal-slot__type-label { color: var(--meal-dinner); }
-.meal-slot[data-type="snack"]     .meal-slot__type-label { color: var(--meal-snack); }
+/* Farbiger Typ-Punkt als klarer Anker; das Label bleibt neutrale, lesbare
+ * Ink-Farbe statt kleinem farbigem Text. Punktfarbe je Mahlzeit-Typ (tokens.css). */
+.meal-slot__type-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--meal-type-dot, var(--color-text-disabled));
+  flex-shrink: 0;
+}
+
+.meal-slot[data-type="breakfast"] .meal-slot__type-label { --meal-type-dot: var(--meal-breakfast); }
+.meal-slot[data-type="lunch"]     .meal-slot__type-label { --meal-type-dot: var(--meal-lunch); }
+.meal-slot[data-type="dinner"]    .meal-slot__type-label { --meal-type-dot: var(--meal-dinner); }
+.meal-slot[data-type="snack"]     .meal-slot__type-label { --meal-type-dot: var(--meal-snack); }
 
 .meal-slot__add-btn {
   flex: 1;
@@ -391,53 +445,9 @@
   gap: var(--space-2);
 }
 
-.ingredient-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  border-radius: var(--radius-glass-inner);
-}
-
-.ingredient-row__name {
-  flex: 2;
-}
-
-.ingredient-row__qty {
-  flex: 1;
-  min-width: 0;
-}
-
-.ingredient-row__cat {
-  flex: 1.5;
-  min-width: 0;
-  font-size: var(--type-body);
-}
-
-.ingredient-row__remove {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-disabled);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-  transition: color var(--transition-fast);
-}
-
-.ingredient-row__remove::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-}
-
-.ingredient-row__remove:hover {
-  color: var(--color-danger);
-}
+/* .ingredient-row* lebt jetzt global in layout.css (geteilt mit Rezepte-Modal,
+ * das im modul-fremden Overlay rendert). Hier bleibt nur der meals-eigene
+ * Container .ingredient-list und der Add-Button. */
 
 .add-ingredient-btn {
   display: flex;
@@ -528,15 +538,8 @@
 .meal-type-badge--dinner    { background: var(--meal-dinner-light);   color: var(--meal-dinner); }
 .meal-type-badge--snack     { background: var(--meal-snack-light);    color: var(--meal-snack); }
 
-/* --------------------------------------------------------
- * Leer-Zustand (leere Slots im Wochenplan)
- * -------------------------------------------------------- */
-/* Leerer Slot recessed, aber ohne die Add-Affordanz zu verschlucken:
- * gezielte AA-sichere Tertiärfarbe am Text statt Blanket-opacity:0.6 auf dem
- * ganzen Slot (das dimmte auch den Add-Button und riskierte Kontrast). */
-.meal-slot--empty .empty-state__description {
-  color: var(--color-text-tertiary);
-}
+/* Leere Slots tragen keinen „Kein Essen geplant"-Text mehr (Rauschen auf dem
+ * Planer-Raster) — nur noch Typ-Label + Plus-Affordanz. */
 
 /* --------------------------------------------------------
  * Drag & Drop
@@ -588,5 +591,39 @@
 
   .meal-card__action-btn::before {
     inset: 0;
+  }
+}
+
+/* --------------------------------------------------------
+ * Desktop: Woche als 7-Spalten-Canvas (Tage = Spalten)
+ * Ersetzt die gestapelte Tages-Liste ab ≥1024px durch ein Wochen-Board —
+ * „Woche auf einen Blick" statt Scrollen. Mobile/Tablet bleiben gestapelt.
+ * Späte Quell-Order: überschreibt die .day-slots-Container-Query bewusst.
+ * -------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    align-items: start;
+    gap: 0;
+    padding: 0 var(--space-4) var(--space-8);
+  }
+
+  .day-column {
+    border-bottom: none;
+  }
+
+  .day-column:not(:last-child) {
+    border-right: 1px solid var(--color-border-subtle);
+  }
+
+  /* Mahlzeit-Typen je Tag vertikal stapeln (Spalte ist schmal). */
+  .day-slots {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-2) var(--space-3);
+  }
+
+  .day-header {
+    padding: var(--space-3) var(--space-2) var(--space-2);
   }
 }

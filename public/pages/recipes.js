@@ -6,8 +6,9 @@
 import { api } from '/api.js';
 import { t } from '/i18n.js';
 import { openModal as openSharedModal, closeModal as closeSharedModal, advancedSection } from '/components/modal.js';
-import { DEFAULT_CATEGORY_NAME, categoryLabel } from '/utils/shopping-categories.js';
+import { DEFAULT_CATEGORY_NAME } from '/utils/shopping-categories.js';
 import { renderKitchenTabsBar } from '/utils/kitchen-tabs.js';
+import { ingredientRowHTML } from '/utils/ingredient-row.js';
 import { renderSkeletonList } from '/utils/skeleton.js';
 
 let _container = null;
@@ -173,12 +174,22 @@ function renderRecipeList() {
     if (ingredients.length) {
       const ul = document.createElement('ul');
       ul.className = 'recipe-card__ingredients';
-      for (const ing of ingredients) {
+      // Auf die ersten 4 kürzen: begrenzt die Kartenhöhe → ruhigeres Raster.
+      // Vollständige Liste bleibt über „Bearbeiten" erreichbar.
+      const MAX_INGREDIENTS = 4;
+      for (const ing of ingredients.slice(0, MAX_INGREDIENTS)) {
         const li = document.createElement('li');
         li.className = 'recipe-card__ingredient';
         const qty = ing.quantity ? `${ing.quantity} · ` : '';
         li.textContent = `${qty}${ing.name}`;
         ul.appendChild(li);
+      }
+      if (ingredients.length > MAX_INGREDIENTS) {
+        const more = document.createElement('li');
+        more.className = 'recipe-card__ingredient recipe-card__ingredient--more';
+        // Sprachneutraler Rest-Indikator (kein neuer Locale-Key nötig).
+        more.textContent = `+${ingredients.length - MAX_INGREDIENTS}`;
+        ul.appendChild(more);
       }
       card.appendChild(ul);
     }
@@ -190,7 +201,7 @@ function renderRecipeList() {
     // de-emphasierte Icon-Buttons — konsistent mit dem Icon-Action-Muster
     // des Einkaufs (statt vier gleichrangiger Buttons inkl. lautem roten Delete).
     const addToMeals = document.createElement('button');
-    addToMeals.className = 'btn btn--primary recipe-card__primary';
+    addToMeals.className = 'btn recipe-card__primary';
     addToMeals.type = 'button';
     addToMeals.dataset.action = 'add-to-meals';
     addToMeals.dataset.id = String(recipe.id);
@@ -226,61 +237,6 @@ function renderRecipeList() {
   }
 
   if (window.lucide) window.lucide.createIcons({ el: list });
-}
-
-function buildIngredientRow(name, qty, category = DEFAULT_CATEGORY_NAME) {
-  const categories = mealCategories();
-  const resolvedCategory = categories.some((c) => c.name === category)
-    ? category
-    : (categories[0]?.name ?? DEFAULT_CATEGORY_NAME);
-
-  const row = document.createElement('div');
-  row.className = 'recipe-ingredient-row';
-
-  const nameInput = document.createElement('input');
-  nameInput.type = 'text';
-  nameInput.className = 'form-input recipe-ingredient-row__name';
-  nameInput.placeholder = t('meals.ingredientNamePlaceholder');
-  nameInput.value = name;
-
-  const qtyInput = document.createElement('input');
-  qtyInput.type = 'text';
-  qtyInput.className = 'form-input recipe-ingredient-row__qty';
-  qtyInput.placeholder = t('meals.ingredientQtyPlaceholder');
-  qtyInput.value = qty;
-
-  const catSelect = document.createElement('select');
-  catSelect.className = 'form-input recipe-ingredient-row__cat';
-  catSelect.setAttribute('aria-label', t('meals.ingredientCategoryLabel'));
-  if (categories.length) {
-    for (const c of categories) {
-      const opt = document.createElement('option');
-      opt.value = c.name;
-      opt.textContent = categoryLabel(c.name);
-      if (c.name === resolvedCategory) opt.selected = true;
-      catSelect.appendChild(opt);
-    }
-  } else {
-    const opt = document.createElement('option');
-    opt.value = DEFAULT_CATEGORY_NAME;
-    opt.textContent = t('meals.ingredientCategoryDefault');
-    opt.selected = true;
-    catSelect.appendChild(opt);
-  }
-
-  const removeBtn = document.createElement('button');
-  removeBtn.className = 'recipe-ingredient-row__remove';
-  removeBtn.dataset.action = 'remove-ingredient';
-  removeBtn.type = 'button';
-  removeBtn.setAttribute('aria-label', t('meals.removeIngredient'));
-  const icon = document.createElement('i');
-  icon.dataset.lucide = 'x';
-  icon.className = 'icon-sm';
-  icon.setAttribute('aria-hidden', 'true');
-  removeBtn.appendChild(icon);
-
-  row.append(nameInput, qtyInput, catSelect, removeBtn);
-  return row;
 }
 
 function openRecipeModal(mode, recipe = null) {
@@ -321,20 +277,23 @@ function openRecipeModal(mode, recipe = null) {
 
       const ingList = panel.querySelector('#recipe-ingredient-list');
       if (isEdit && recipe.ingredients?.length) {
-        for (const i of recipe.ingredients) {
-          ingList.appendChild(buildIngredientRow(i.name, i.quantity ?? '', i.category ?? DEFAULT_CATEGORY_NAME));
-        }
+        ingList.insertAdjacentHTML('beforeend', recipe.ingredients.map((i) => ingredientRowHTML({
+          name: i.name,
+          quantity: i.quantity ?? '',
+          category: i.category ?? DEFAULT_CATEGORY_NAME,
+          categories: mealCategories(),
+        })).join(''));
       }
 
       panel.querySelector('#recipe-add-ingredient')?.addEventListener('click', () => {
-        ingList.appendChild(buildIngredientRow('', '', null));
+        ingList.insertAdjacentHTML('beforeend', ingredientRowHTML({ categories: mealCategories() }));
         if (window.lucide) window.lucide.createIcons({ el: ingList });
       });
 
       ingList.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-action="remove-ingredient"]');
         if (!btn) return;
-        btn.closest('.recipe-ingredient-row')?.remove();
+        btn.closest('.ingredient-row')?.remove();
       });
 
       panel.querySelector('#recipe-cancel')?.addEventListener('click', closeModal);
@@ -361,10 +320,10 @@ async function saveRecipe(panel, mode, recipe) {
   }
 
   const ingredients = [];
-  panel.querySelectorAll('.recipe-ingredient-row').forEach((row) => {
-    const name = row.querySelector('.recipe-ingredient-row__name')?.value.trim() || '';
-    const quantity = row.querySelector('.recipe-ingredient-row__qty')?.value.trim() || null;
-    const category = row.querySelector('.recipe-ingredient-row__cat')?.value || DEFAULT_CATEGORY_NAME;
+  panel.querySelectorAll('.ingredient-row').forEach((row) => {
+    const name = row.querySelector('.ingredient-row__name')?.value.trim() || '';
+    const quantity = row.querySelector('.ingredient-row__qty')?.value.trim() || null;
+    const category = row.querySelector('.ingredient-row__cat')?.value || DEFAULT_CATEGORY_NAME;
     if (name) ingredients.push({ name, quantity, category });
   });
 

@@ -10,8 +10,9 @@ import { stagger } from '/utils/ux.js';
 import { t, formatDate, dateInputPlaceholder, formatDateInput, parseDateInput, isDateInputValid } from '/i18n.js';
 import { esc } from '/utils/html.js';
 import { renderSkeletonList } from '/utils/skeleton.js';
-import { DEFAULT_CATEGORY_NAME, categoryLabel } from '/utils/shopping-categories.js';
+import { DEFAULT_CATEGORY_NAME } from '/utils/shopping-categories.js';
 import { renderKitchenTabsBar } from '/utils/kitchen-tabs.js';
+import { ingredientRowHTML } from '/utils/ingredient-row.js';
 import { addLocalDays, startOfLocalWeekKey, toLocalDateKey } from '/utils/date.js';
 
 // --------------------------------------------------------
@@ -199,6 +200,8 @@ function renderWeekGrid() {
 
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(state.currentWeek, i));
   const dayNames = DAY_NAMES();
+  // Default-Typ für den mobilen Per-Tag-Add-Button (Modal lässt den Typ ändern).
+  const firstType = state.visibleMealTypes[0] ?? 'lunch';
 
   grid.replaceChildren();
   grid.insertAdjacentHTML('beforeend', weekDays.map((date) => {
@@ -215,10 +218,15 @@ function renderWeekGrid() {
         <div class="day-slots">
           ${MEAL_TYPES().filter((type) => state.visibleMealTypes.includes(type.key)).map((type) => renderSlot(date, type, mealsForDay)).join('')}
         </div>
+        <button class="day-add" data-action="add-meal" data-date="${date}" data-type="${firstType}" aria-label="${t('meals.addMealTitle')}">
+          <i data-lucide="plus" class="icon-sm" aria-hidden="true"></i>
+          <span>${t('meals.addMealTitle')}</span>
+        </button>
       </div>
     `;
   }).join(''));
 
+  grid.removeAttribute('aria-busy');
   if (window.lucide) lucide.createIcons({ el: grid });
   stagger(grid.querySelectorAll('.meal-card'));
   wireGrid(grid);
@@ -237,9 +245,6 @@ function renderSlot(date, type, mealsForDay) {
     return `
       <div class="meal-slot meal-slot--empty" data-date="${date}" data-type="${type.key}">
         <div class="meal-slot__type-label">${type.label}</div>
-        <div class="empty-state empty-state--compact">
-          <div class="empty-state__description">${t('meals.noMealPlanned')}</div>
-        </div>
         <button
           class="meal-slot__add-btn"
           data-action="add-meal"
@@ -314,13 +319,21 @@ function renderSlot(date, type, mealsForDay) {
 // Event-Delegation
 // --------------------------------------------------------
 
+function setWeekBusy() {
+  // Sichtbares Lade-Feedback beim Wochenwechsel (dimmt das Raster via CSS,
+  // meldet Screenreadern „busy"), bis renderWeekGrid das Attribut wieder entfernt.
+  _container.querySelector('#week-grid')?.setAttribute('aria-busy', 'true');
+}
+
 function wireNav() {
   _container.querySelector('#week-prev')?.addEventListener('click', async () => {
+    setWeekBusy();
     await loadWeek(addDays(state.currentWeek, -7));
     renderWeekGrid();
   });
 
   _container.querySelector('#week-next')?.addEventListener('click', async () => {
+    setWeekBusy();
     await loadWeek(addDays(state.currentWeek, 7));
     renderWeekGrid();
   });
@@ -328,12 +341,20 @@ function wireNav() {
   _container.querySelector('#week-today')?.addEventListener('click', async () => {
     const monday = getMondayOf(toLocalDateKey(new Date()));
     if (monday === state.currentWeek) return;
+    setWeekBusy();
     await loadWeek(monday);
     renderWeekGrid();
   });
 }
 
 function wireGrid(grid) {
+  // Delegation am stabilen #week-grid nur EINMAL binden. renderWeekGrid läuft bei
+  // jedem Wochenwechsel erneut, ersetzt aber nur die Kinder (replaceChildren) —
+  // ohne Guard akkumulierten click/keydown/pointerdown-Listener und feuerten
+  // add-/delete-/transfer-meal mehrfach (Muster wie shopping.js#wireListContentEvents).
+  if (grid.dataset.eventsWired) return;
+  grid.dataset.eventsWired = 'true';
+
   grid.addEventListener('click', async (e) => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
@@ -618,10 +639,12 @@ function openMealModal(opts) {
 
         ingList.replaceChildren();
         ingList.insertAdjacentHTML('beforeend', (recipe.ingredients || [])
-          .map((ing) => {
-            const scaledQty = scaleQuantityText(ing.quantity ?? '', factor);
-            return ingredientRowHTML(ing.name, scaledQty, null, ing.category ?? DEFAULT_CATEGORY_NAME);
-          })
+          .map((ing) => ingredientRowHTML({
+            name: ing.name,
+            quantity: scaleQuantityText(ing.quantity ?? '', factor),
+            category: ing.category ?? DEFAULT_CATEGORY_NAME,
+            categories: mealCategories(),
+          }))
           .join(''));
 
         if (window.lucide) lucide.createIcons({ el: ingList });
@@ -641,12 +664,12 @@ function openMealModal(opts) {
 
         ingList.replaceChildren();
         ingList.insertAdjacentHTML('beforeend', (currentAppliedRecipe.ingredients || [])
-          .map((ing) => ingredientRowHTML(
-            ing.name,
-            scaleQuantityText(ing.quantity ?? '', Math.max(factor, 0.1)),
-            null,
-            ing.category ?? DEFAULT_CATEGORY_NAME
-          ))
+          .map((ing) => ingredientRowHTML({
+            name: ing.name,
+            quantity: scaleQuantityText(ing.quantity ?? '', Math.max(factor, 0.1)),
+            category: ing.category ?? DEFAULT_CATEGORY_NAME,
+            categories: mealCategories(),
+          }))
           .join(''));
 
         if (window.lucide) lucide.createIcons({ el: ingList });
@@ -706,7 +729,7 @@ function openMealModal(opts) {
 
       addIngBtn.addEventListener('click', () => {
         const tmp  = document.createElement('div');
-        tmp.insertAdjacentHTML('beforeend', ingredientRowHTML('', '', null));
+        tmp.insertAdjacentHTML('beforeend', ingredientRowHTML({ categories: mealCategories() }));
         const row = tmp.firstElementChild;
         ingList.appendChild(row);
         if (window.lucide) lucide.createIcons({ el: ingList });
@@ -760,7 +783,13 @@ function buildModalContent({ mode, date, mealType, meal, presetRecipeId = null }
     : `<option value="" disabled>${t('meals.noShoppingLists')}</option>`;
 
   const ingRows = isEdit && meal.ingredients?.length
-    ? meal.ingredients.map((ing) => ingredientRowHTML(ing.name, ing.quantity ?? '', ing.id, ing.category ?? DEFAULT_CATEGORY_NAME)).join('')
+    ? meal.ingredients.map((ing) => ingredientRowHTML({
+        name: ing.name,
+        quantity: ing.quantity ?? '',
+        id: ing.id,
+        category: ing.category ?? DEFAULT_CATEGORY_NAME,
+        categories: mealCategories(),
+      })).join('')
     : '';
 
   const hasIngOpen = isEdit && meal.ingredients?.some((i) => !i.on_shopping_list);
@@ -864,27 +893,6 @@ function buildModalContent({ mode, date, mealType, meal, presetRecipeId = null }
       <button class="btn btn--secondary" id="modal-cancel">${t('common.cancel')}</button>
       <button class="btn btn--primary" id="modal-save">${isEdit ? t('common.save') : t('common.add')}</button>
     </div>`;
-}
-
-function ingredientRowHTML(name, qty, id, category = DEFAULT_CATEGORY_NAME) {
-  const availableCategories = mealCategories();
-  const resolvedCategory = availableCategories.some((c) => c.name === category)
-    ? category
-    : (availableCategories[0]?.name ?? DEFAULT_CATEGORY_NAME);
-  const catOptions = availableCategories.length
-    ? availableCategories.map((c) => `<option value="${esc(c.name)}" ${c.name === resolvedCategory ? 'selected' : ''}>${esc(categoryLabel(c.name))}</option>`).join('')
-    : `<option value="${DEFAULT_CATEGORY_NAME}" selected>${t('meals.ingredientCategoryDefault')}</option>`;
-
-  return `
-    <div class="ingredient-row" data-ing-id="${id ?? ''}">
-      <input type="text" class="form-input ingredient-row__name" placeholder="${t('meals.ingredientNamePlaceholder')}" value="${esc(name)}">
-      <input type="text" class="form-input ingredient-row__qty" placeholder="${t('meals.ingredientQtyPlaceholder')}" value="${esc(qty)}">
-      <select class="form-input ingredient-row__cat" aria-label="${t('meals.ingredientCategoryLabel')}">${catOptions}</select>
-      <button class="ingredient-row__remove" data-action="remove-ingredient" type="button" aria-label="${t('meals.removeIngredient')}">
-        <i data-lucide="x" class="icon-sm" aria-hidden="true"></i>
-      </button>
-    </div>
-  `;
 }
 
 function closeModal({ force = false } = {}) {
