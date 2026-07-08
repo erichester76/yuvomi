@@ -320,10 +320,10 @@
         "catDrugstore": "Pharmacie",
         "catMisc": "Divers",
         "emptyAction": "Ajouter un article",
-        "importMeals": "From meal plan",
-        "importMealsTitle": "Import from meal plan",
-        "importMealsAction": "Import",
-        "importMealsEmpty": "No meal ingredients were found in the selected range.",
+        "importMeals": "Depuis le plan de repas",
+        "importMealsTitle": "Importer depuis le plan de repas",
+        "importMealsAction": "Importer",
+        "importMealsEmpty": "Aucun ingrédient de repas n'a été trouvé dans la période sélectionnée.",
         "manageCategories": "Gérer les catégories"
     },
     "meals": {

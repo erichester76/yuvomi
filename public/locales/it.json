@@ -320,10 +320,10 @@
         "catDrugstore": "Drogheria",
         "catMisc": "Varie",
         "emptyAction": "Aggiungi articolo",
-        "importMeals": "From meal plan",
-        "importMealsTitle": "Import from meal plan",
-        "importMealsAction": "Import",
-        "importMealsEmpty": "No meal ingredients were found in the selected range.",
+        "importMeals": "Dal piano pasti",
+        "importMealsTitle": "Importa dal piano pasti",
+        "importMealsAction": "Importa",
+        "importMealsEmpty": "Nell'intervallo selezionato non sono stati trovati ingredienti dei pasti.",
         "manageCategories": "Gestisci categorie"
     },
     "meals": {

@@ -326,10 +326,10 @@
         "catHousehold": "Rumah tangga",
         "catDrugstore": "Perlengkapan mandi",
         "catMisc": "Lainnya",
-        "importMeals": "From meal plan",
-        "importMealsTitle": "Import from meal plan",
-        "importMealsAction": "Import",
-        "importMealsEmpty": "No meal ingredients were found in the selected range.",
+        "importMeals": "Dari rencana makan",
+        "importMealsTitle": "Impor dari rencana makan",
+        "importMealsAction": "Impor",
+        "importMealsEmpty": "Tidak ada bahan makanan yang ditemukan dalam rentang yang dipilih.",
         "manageCategories": "Kelola kategori"
     },
     "meals": {
