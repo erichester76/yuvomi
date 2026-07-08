@@ -817,7 +817,7 @@ function openMealPlanImport(container) {
         try {
           const data = await api.post(`/shopping/${state.activeListId}/import-meal-plan`, { from, to });
           if (!data.data?.transferred) {
-            window.yuvomi.showToast(t('meals.transferAlreadyDone'), 'default');
+            window.yuvomi.showToast(t('shopping.importMealsEmpty'), 'default');
             return;
           }
           await Promise.all([loadLists(), loadItems(state.activeListId)]);

@@ -59,6 +59,7 @@ test('Shopping-Seite bietet einen Essensplan-Import mit Datumsbereich an', () =>
   assert(/data-action="import-meals"/.test(source), 'Shopping-Header muss eine Import-Aktion aus dem Essensplan anbieten');
   assert(/function openMealPlanImport/.test(source), 'Shopping-Seite muss einen Import-Dialog für den Essensplan besitzen');
   assert(/api\.post\(`\/shopping\/\$\{state\.activeListId\}\/import-meal-plan`/.test(source), 'Import-Dialog muss die Shopping-Range-Import-Route aufrufen');
+  assert(/shopping\.importMealsEmpty/.test(source), 'Import-Dialog muss leere Bereiche mit einer Shopping-spezifischen Meldung behandeln');
   assert(/type="date" id="shopping-import-from"/.test(source), 'Import-Dialog muss ein Von-Datum anbieten');
   assert(/type="date" id="shopping-import-to"/.test(source), 'Import-Dialog muss ein Bis-Datum anbieten');
   assert(/addLocalDays\(today, 6\)/.test(source), 'Import-Dialog muss standardmäßig 7 Tage (heute + 6) vorauswählen');
