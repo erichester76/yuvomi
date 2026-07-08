@@ -323,6 +323,7 @@
         "importMeals": "From meal plan",
         "importMealsTitle": "Import from meal plan",
         "importMealsAction": "Import",
+        "importMealsEmpty": "No meal ingredients were found in the selected range.",
         "manageCategories": "Gestionar categorías"
     },
     "meals": {
