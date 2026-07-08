@@ -858,10 +858,16 @@ function renderAppShell(container) {
   _toggleIcon.dataset.lucide = _sidebarInitCollapsed ? 'panel-left-open' : 'panel-left-close';
   _toggleIcon.setAttribute('aria-hidden', 'true');
   sidebarToggle.appendChild(_toggleIcon);
-  sidebarToggle.addEventListener('click', () => {
+  sidebarToggle.addEventListener('click', (event) => {
     const nowCollapsed = !document.documentElement.classList.contains('sidebar-collapsed');
     localStorage.setItem(SIDEBAR_COLLAPSED_KEY, nowCollapsed ? '1' : '0');
     applySidebarCollapsed(nowCollapsed);
+    // Pointer clicks leave the toggle focused, which immediately re-expands the
+    // collapsed rail via .nav-sidebar:focus-within. Blur only for pointer-driven
+    // activation so keyboard users keep the expected focus behavior.
+    if (nowCollapsed && event.detail > 0) {
+      requestAnimationFrame(() => sidebarToggle.blur());
+    }
     const lbl = nowCollapsed ? t('nav.sidebarExpand') : t('nav.sidebarCollapse');
     sidebarToggle.setAttribute('aria-label', lbl);
     sidebarToggle.setAttribute('title', lbl);
