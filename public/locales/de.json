@@ -1860,7 +1860,7 @@
         "staleData": "Offline – Stand: {{time}}"
     },
     "emptyHint": {
-        "tasks": "Tippe auf + um deine erste Aufgabe zu erstellen. Wische eine Karte nach links zum Löschen.",
+        "tasks": "Tippe auf + um deine erste Aufgabe zu erstellen. Wische eine Karte nach links zum Abhaken, nach rechts zum Bearbeiten.",
         "calendar": "Verbinde Google Kalender unter Einstellungen → Integrationen für automatische Synchronisation.",
         "shopping": "Füge Artikel hinzu und wische zum Abhaken oder Löschen.",
         "notes": "Tippe auf + für eine neue Notiz. Notizen werden im Volltext durchsucht.",

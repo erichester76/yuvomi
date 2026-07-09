@@ -1872,7 +1872,7 @@
         "goHealth": "Health"
     },
     "emptyHint": {
-        "tasks": "Tap + to create your first task. Swipe a card left to delete.",
+        "tasks": "Tap + to create your first task. Swipe a card left to check off, right to edit.",
         "calendar": "Connect Google Calendar under Settings → Integrations for automatic sync.",
         "shopping": "Add items and swipe to check off or delete.",
         "notes": "Tap + for a new note. Notes are full-text searchable.",

@@ -1868,7 +1868,7 @@
         "meals": "Planeje as refeições da semana e vincule receitas.",
         "notes": "Toque em + para uma nova nota. As notas são pesquisadas em texto completo.",
         "shopping": "Adicione itens e deslize para marcar ou excluir.",
-        "tasks": "Toque em + para criar sua primeira tarefa. Deslize um cartão para a esquerda para excluir."
+        "tasks": "Toque em + para criar sua primeira tarefa. Deslize um cartão para a esquerda para concluir, para a direita para editar."
     },
     "documents": {
         "title": "Documentos",

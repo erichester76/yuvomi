@@ -1868,7 +1868,7 @@
         "meals": "Haftalık öğünleri planlayın ve tarifleri bağlayın.",
         "notes": "Yeni not için + tuşuna dokunun. Notlar tam metin olarak aranır.",
         "shopping": "Öğeleri ekleyin ve işaretlemek ya da silmek için kaydırın.",
-        "tasks": "İlk görevinizi oluşturmak için + tuşuna dokunun. Silmek için kartı sola kaydırın."
+        "tasks": "İlk görevinizi oluşturmak için + tuşuna dokunun. Tamamlamak için kartı sola, düzenlemek için sağa kaydırın."
     },
     "documents": {
         "title": "Belgeler",

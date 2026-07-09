@@ -1861,7 +1861,7 @@
     },
     "emptyHint": {
         "recipes": "Skapa recept och koppla dem till din måltidsplanering.",
-        "tasks": "Tryck på + för att skapa din första uppgift. Svep ett kort åt vänster för att ta bort.",
+        "tasks": "Tryck på + för att skapa din första uppgift. Svep ett kort åt vänster för att bocka av, åt höger för att redigera.",
         "calendar": "Koppla Google Kalender under Inställningar → Integrationer för automatisk synkronisering.",
         "shopping": "Lägg till artiklar och svep för att markera eller ta bort.",
         "notes": "Tryck på + för en ny anteckning. Anteckningar söks i fulltext.",

@@ -1868,7 +1868,7 @@
         "meals": "Pianifica i pasti della settimana e collega le ricette.",
         "notes": "Tocca + per una nuova nota. Le note vengono cercate nel testo completo.",
         "shopping": "Aggiungi articoli e scorri per contrassegnare o eliminare.",
-        "tasks": "Tocca + per creare il tuo primo compito. Scorri una scheda a sinistra per eliminare."
+        "tasks": "Tocca + per creare il tuo primo compito. Scorri una scheda a sinistra per completare, a destra per modificare."
     },
     "documents": {
         "title": "Documenti",

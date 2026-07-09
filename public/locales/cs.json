@@ -1743,7 +1743,7 @@
         "goHealth": "Zdraví"
     },
     "emptyHint": {
-        "tasks": "Klepněte na + a vytvořte svůj první úkol. Přejetím karty doleva ji smažete.",
+        "tasks": "Klepněte na + a vytvořte svůj první úkol. Přejetím karty doleva ji označíte za hotovou, doprava upravíte.",
         "calendar": "Propojte Kalendář Google v Nastavení → Integrace pro automatickou synchronizaci.",
         "shopping": "Přidejte položky a přejetím je odškrtněte nebo smažte.",
         "notes": "Klepněte na + pro novou poznámku. Poznámky jsou prohledávány v plném textu.",

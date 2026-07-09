@@ -1860,7 +1860,7 @@
         "staleData": "Offline – per: {{time}}"
     },
     "emptyHint": {
-        "tasks": "Ketuk + untuk membuat tugas pertama Anda. Geser kartu ke kiri untuk menghapus.",
+        "tasks": "Ketuk + untuk membuat tugas pertama Anda. Geser kartu ke kiri untuk menyelesaikan, ke kanan untuk mengedit.",
         "calendar": "Sambungkan Google Calendar di Pengaturan → Integrasi untuk sinkronisasi otomatis.",
         "shopping": "Tambahkan item dan geser untuk mencentang atau menghapus.",
         "notes": "Ketuk + untuk catatan baru. Catatan dicari secara teks lengkap.",

@@ -1868,7 +1868,7 @@
         "meals": "Planifiez les repas de la semaine et associez des recettes.",
         "notes": "Appuyez sur + pour une nouvelle note. Les notes sont indexées en texte intégral.",
         "shopping": "Ajoutez des articles et glissez pour cocher ou supprimer.",
-        "tasks": "Appuyez sur + pour créer votre première tâche. Glissez une carte à gauche pour supprimer."
+        "tasks": "Appuyez sur + pour créer votre première tâche. Glissez une carte à gauche pour cocher, à droite pour modifier."
     },
     "documents": {
         "title": "Documents",

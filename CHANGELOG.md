@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-07-09
+
+### Fixed
+- Tasks: the empty-state hint now matches the actual swipe gestures — swipe a card left to check it off, right to edit. It previously said "swipe left to delete", which instead toggled the task done.
+- Tasks: reminder settings are now validated before the task is saved, so choosing a reminder without a due date or offset no longer shows an error on top of an already-saved task.
+
+### Changed
+- Tasks: bulk-deleting selected tasks now uses the same optimistic 5-second undo as single delete, instead of a native browser confirmation dialog, so a bulk delete can be undone.
+- Tasks: task-group, board-column, and filter headings are now sentence-case instead of all-caps, matching the rest of the navigation.
+- Tasks: the group and board count badges use a higher-contrast text colour for readability.
+- Notes: the note colour palette was retuned to softer, paper-friendly tones; existing notes keep their current colours.
+
 ## [1.6.0] - 2026-07-09
 
 ### Added

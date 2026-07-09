@@ -1860,7 +1860,7 @@
         "staleData": "Offline – stan z: {{time}}"
     },
     "emptyHint": {
-        "tasks": "Stuknij +, aby utworzyć pierwsze zadanie. Przesuń kartę w lewo, aby usunąć.",
+        "tasks": "Stuknij +, aby utworzyć pierwsze zadanie. Przesuń kartę w lewo, aby oznaczyć jako ukończone, w prawo, aby edytować.",
         "calendar": "Połącz Google Kalendarz w Ustawienia → Integracje, aby automatycznie synchronizować.",
         "shopping": "Dodaj artykuły i przesuń, aby odznaczać lub usuwać.",
         "notes": "Stuknij + dla nowej notatki. Notatki są przeszukiwane pełnotekstowo.",

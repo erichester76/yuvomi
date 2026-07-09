@@ -1872,7 +1872,7 @@
         "goHealth": "Sức khỏe"
     },
     "emptyHint": {
-        "tasks": "Chạm vào + để tạo nhiệm vụ đầu tiên của bạn. Vuốt một thẻ sang trái để xóa.",
+        "tasks": "Chạm vào + để tạo nhiệm vụ đầu tiên của bạn. Vuốt thẻ sang trái để hoàn thành, sang phải để chỉnh sửa.",
         "calendar": "Kết nối Google Calendar trong Cài đặt → Tích hợp để đồng bộ tự động.",
         "shopping": "Thêm mục và vuốt để đánh dấu hoàn thành hoặc xóa.",
         "notes": "Chạm vào + cho ghi chú mới. Ghi chú có thể tìm kiếm toàn văn.",

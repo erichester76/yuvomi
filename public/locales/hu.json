@@ -1872,7 +1872,7 @@
         "goHealth": "Egészség"
     },
     "emptyHint": {
-        "tasks": "Érintse meg a + gombot az első feladat létrehozásához. Húzza el a kártyát balra a törléshez.",
+        "tasks": "Érintse meg a + gombot az első feladat létrehozásához. Húzza a kártyát balra a kész állapothoz, jobbra a szerkesztéshez.",
         "calendar": "Csatlakoztassa a Google Naptárt a Beállítások → Integrációk alatt az automatikus szinkronizáláshoz.",
         "shopping": "Adjon hozzá tételeket, és húzza el a kipipáláshoz vagy törléshez.",
         "notes": "Érintse meg a + gombot egy új jegyzethez. A jegyzetek teljes szövege kereshető.",

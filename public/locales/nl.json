@@ -1872,7 +1872,7 @@
         "goHealth": "Gezondheid"
     },
     "emptyHint": {
-        "tasks": "Tik op + om je eerste taak aan te maken. Veeg een kaart naar links om te verwijderen.",
+        "tasks": "Tik op + om je eerste taak aan te maken. Veeg een kaart naar links om af te vinken, naar rechts om te bewerken.",
         "calendar": "Verbind Google Agenda via Instellingen → Integraties voor automatische synchronisatie.",
         "shopping": "Voeg items toe en veeg om af te vinken of te verwijderen.",
         "notes": "Tik op + voor een nieuwe notitie. Notities zijn doorzoekbaar op volledige tekst.",
