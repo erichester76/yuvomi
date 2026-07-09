@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-07-09
+
+### Fixed
+- Holidays: school breaks and public holidays no longer show up twice in the calendar. OpenHolidays returns sub-regional deviations of a holiday (e.g. Schleswig-Holstein's separate summer/autumn breaks for the islands of Sylt, Föhr, Amrum, Helgoland and the Halligen) as extra `Exception`-tagged entries with different start/end dates, which read-side de-duplication could not collapse. These sub-regional exception variants are now dropped during sync, leaving one clean entry per holiday. Existing duplicates clear on the next sync (Settings → Holidays → Sync now).
+
 ## [1.2.2] - 2026-07-09
 
 ### Fixed
