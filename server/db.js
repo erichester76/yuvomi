@@ -2856,6 +2856,33 @@ const MIGRATIONS = [
       ALTER TABLE api_tokens ADD COLUMN scopes TEXT DEFAULT NULL;
     `,
   },
+  {
+    version: 75,
+    description: 'budget assignees and split metadata',
+    up: `
+      ALTER TABLE budget_entries ADD COLUMN owner_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+      ALTER TABLE budget_entries ADD COLUMN split_method TEXT NOT NULL DEFAULT 'equal';
+      ALTER TABLE budget_entries ADD COLUMN linked_expense_id INTEGER REFERENCES expenses(id) ON DELETE SET NULL;
+
+      CREATE TABLE IF NOT EXISTS budget_entry_assignments (
+        id               INTEGER PRIMARY KEY AUTOINCREMENT,
+        budget_entry_id  INTEGER NOT NULL REFERENCES budget_entries(id) ON DELETE CASCADE,
+        user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        share_amount     REAL,
+        share_percentage REAL,
+        created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+        updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+        UNIQUE(budget_entry_id, user_id)
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_budget_assignments_entry ON budget_entry_assignments(budget_entry_id);
+      CREATE INDEX IF NOT EXISTS idx_budget_assignments_user ON budget_entry_assignments(user_id);
+
+      CREATE TRIGGER IF NOT EXISTS trg_budget_entry_assignments_updated_at
+        AFTER UPDATE ON budget_entry_assignments FOR EACH ROW
+        BEGIN UPDATE budget_entry_assignments SET updated_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now') WHERE id = OLD.id; END;
+    `,
+  },
 ];
 
 /**

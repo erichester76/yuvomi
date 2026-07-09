@@ -900,7 +900,16 @@
         "prevPeriod": "Előző időszak",
         "nextPeriod": "Következő időszak",
         "recurringInstanceLabel": "Egy sorozat része",
-        "loanProgressLabel": "Törlesztés állása"
+        "loanProgressLabel": "Törlesztés állása",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Egészség",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "Még nincsenek háztartási csatornák konfigurálva.",
         "notificationChannelAdminOnlyHint": "Csak az adminisztrátorok kezelhetik a háztartási csatornákat.",
         "notificationChannelDeleteConfirm": "Törölni szeretné ezt a értesítési csatornát?",
-        "apiTokensMcpHint": "Ezek a tokenek Bearer tokenként is működnek a /mcp címen elérhető MCP-végponthoz (pl. a Claude Desktopban, feladatok, bevásárlólista-tételek és események MI-vel történő létrehozásához)."
+        "apiTokensMcpHint": "Ezek a tokenek Bearer tokenként is működnek a /mcp címen elérhető MCP-végponthoz (pl. a Claude Desktopban, feladatok, bevásárlólista-tételek és események MI-vel történő létrehozásához).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Family planning. Secure. Privacy-friendly. Open source.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Születési dátum",
         "guestSyncHint": "Ez a vendég hozzáadásra kerül a Családkezeléshez, Kapcsolatokhoz és Születésnapokhoz, ha meg van adva.",
         "createAndAddGuest": "Létrehozás és hozzáadás",
-        "tabLabel": "Költségmegosztás",
+        "tabLabel": "Megosztott",
         "splitHint": {
             "equal": "Mindenki ugyanannyit fizet.",
             "percentage": "Adja meg az egyes kiválasztott tagok százalékos arányát. Az összegnek 100%-nak kell lennie.",

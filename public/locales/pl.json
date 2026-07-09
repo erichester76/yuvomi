@@ -906,7 +906,16 @@
         "prevPeriod": "Poprzedni okres",
         "nextPeriod": "Następny okres",
         "recurringInstanceLabel": "Część serii",
-        "loanProgressLabel": "Postęp spłaty"
+        "loanProgressLabel": "Postęp spłaty",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Zdrowie",
@@ -1590,7 +1599,13 @@
         "notificationChannelEmpty": "Nie skonfigurowano jeszcze kanałów domowych.",
         "notificationChannelAdminOnlyHint": "Tylko administratorzy mogą zarządzać kanałami domowymi.",
         "notificationChannelDeleteConfirm": "Usunąć ten kanał powiadomień?",
-        "apiTokensMcpHint": "Te tokeny działają również jako tokeny Bearer dla punktu końcowego MCP pod adresem /mcp (np. w Claude Desktop, aby tworzyć zadania, produkty na liście zakupów i wydarzenia za pomocą AI)."
+        "apiTokensMcpHint": "Te tokeny działają również jako tokeny Bearer dla punktu końcowego MCP pod adresem /mcp (np. w Claude Desktop, aby tworzyć zadania, produkty na liście zakupów i wydarzenia za pomocą AI).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Planowanie rodziny. Bezpieczne. Chroniące prywatność. Open Source.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Data urodzenia",
         "guestSyncHint": "Gość zostanie dodany do zarządzania rodziną, kontaktów i urodzin, jeśli podano.",
         "createAndAddGuest": "Utwórz i dodaj",
-        "tabLabel": "Podział",
+        "tabLabel": "Wspólne",
         "splitHint": {
             "equal": "Wszyscy płacą tę samą kwotę.",
             "percentage": "Wprowadź procent dla każdego wybranego członka. Suma musi wynosić 100%.",

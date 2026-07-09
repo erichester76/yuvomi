@@ -906,7 +906,16 @@
         "prevPeriod": "بازه قبلی",
         "nextPeriod": "بازه بعدی",
         "recurringInstanceLabel": "بخشی از یک سری",
-        "loanProgressLabel": "پیشرفت بازپرداخت"
+        "loanProgressLabel": "پیشرفت بازپرداخت",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "سلامت",
@@ -1590,7 +1599,13 @@
         "notificationChannelEmpty": "هنوز کانال خانواری تنظیم نشده است.",
         "notificationChannelAdminOnlyHint": "فقط مدیران می‌توانند کانال‌های خانوار را مدیریت کنند.",
         "notificationChannelDeleteConfirm": "این کانال اعلان حذف شود؟",
-        "apiTokensMcpHint": "این توکن‌ها به عنوان توکن Bearer برای نقطه پایانی MCP در /mcp نیز کار می‌کنند (مثلاً در Claude Desktop، برای ایجاد کارها، اقلام خرید و رویدادها با هوش مصنوعی)."
+        "apiTokensMcpHint": "این توکن‌ها به عنوان توکن Bearer برای نقطه پایانی MCP در /mcp نیز کار می‌کنند (مثلاً در Claude Desktop، برای ایجاد کارها، اقلام خرید و رویدادها با هوش مصنوعی).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "برنامه‌ریزی خانواده. امن. حریم‌خصوصی‌محور. متن‌باز.",
@@ -2161,7 +2176,7 @@
         "birthDate": "تاریخ تولد",
         "guestSyncHint": "مهمان در صورت درج، به مدیریت خانواده، مخاطبین و تولدها افزوده می‌شود.",
         "createAndAddGuest": "ایجاد و افزودن",
-        "tabLabel": "تقسیم",
+        "tabLabel": "اشتراکی",
         "splitHint": {
             "equal": "همه سهم برابری می‌پردازند.",
             "percentage": "برای هر عضو انتخاب‌شده یک درصد وارد کنید. مجموع باید ۱۰۰٪ باشد.",

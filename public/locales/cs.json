@@ -900,7 +900,16 @@
         "prevPeriod": "Předchozí období",
         "nextPeriod": "Další období",
         "recurringInstanceLabel": "Součást série",
-        "loanProgressLabel": "Průběh splácení"
+        "loanProgressLabel": "Průběh splácení",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Zdraví",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "Zatím nejsou nastaveny žádné kanály domácnosti.",
         "notificationChannelAdminOnlyHint": "Kanály domácnosti mohou spravovat pouze správci.",
         "notificationChannelDeleteConfirm": "Smazat tento kanál oznámení?",
-        "apiTokensMcpHint": "Tyto tokeny fungují také jako Bearer tokeny pro koncový bod MCP na /mcp (např. v Claude Desktop pro vytváření úkolů, položek nákupu a událostí pomocí AI)."
+        "apiTokensMcpHint": "Tyto tokeny fungují také jako Bearer tokeny pro koncový bod MCP na /mcp (např. v Claude Desktop pro vytváření úkolů, položek nákupu a událostí pomocí AI).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Rodinné plánování. Bezpečné. Soukromé. Open Source.",
@@ -1952,7 +1967,7 @@
         "birthDate": "Datum narození",
         "guestSyncHint": "Host bude přidán do správy rodiny, kontaktů a narozenin, pokud jsou údaje uvedeny.",
         "createAndAddGuest": "Vytvořit a přidat",
-        "tabLabel": "Rozdělit",
+        "tabLabel": "Sdílené",
         "splitHint": {
             "equal": "Všichni platí stejný podíl.",
             "percentage": "Zadejte procento pro každého vybraného člena. Součet musí být 100 %.",

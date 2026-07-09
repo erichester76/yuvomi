@@ -8,12 +8,8 @@ import { DatabaseSync } from 'node:sqlite';
 import nodeAssert from 'node:assert/strict';
 import { MIGRATIONS_SQL } from '../server/db-schema-test.js';
 import { budgetCategoryLabelKey } from '../public/utils/category-labels.js';
-import {
-  categoryInUseCount,
-  subcategoryInUseCount,
-  categoryCountByType,
-  subcategoryCountForCategory,
-} from '../server/routes/budget.js';
+import { categoryInUseCount, subcategoryInUseCount, categoryCountByType, subcategoryCountForCategory } from '../server/services/budget-helpers.js';
+import { buildBudgetAssignmentShares } from '../server/services/budget-shares.js';
 
 let passed = 0;
 let failed = 0;
@@ -31,6 +27,12 @@ db.exec(`CREATE TABLE IF NOT EXISTS schema_migrations (
   applied_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );`);
 db.exec(MIGRATIONS_SQL[1]);
+db.exec(MIGRATIONS_SQL[75]);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT
+  );
+`);
 
 const u1 = db.prepare(`INSERT INTO users (username, display_name, password_hash, role)
   VALUES ('admin', 'Admin', 'x', 'admin')`).run();
@@ -301,6 +303,58 @@ test('Eintrag löschen', () => {
   assert(!e, 'Eintrag gelöscht');
 });
 
+test('Budget-Eintrag kann einem Besitzer und Teilnehmenden zugeordnet werden', () => {
+  const user = db.prepare(`INSERT INTO users (username, display_name, password_hash, role) VALUES ('member', 'Member', 'x', 'member')`).run().lastInsertRowid;
+  const entryId = db.prepare(`
+    INSERT INTO budget_entries (title, amount, category, subcategory, date, created_by, owner_user_id, split_method)
+    VALUES ('Shared groceries', -60, 'food', 'groceries', '2026-03-12', ?, ?, 'equal')
+  `).run(uid, uid).lastInsertRowid;
+  db.prepare(`
+    INSERT INTO budget_entry_assignments (budget_entry_id, user_id, share_amount)
+    VALUES (?, ?, ?), (?, ?, ?)
+  `).run(entryId, uid, -30, entryId, user, -30);
+  const rows = db.prepare('SELECT user_id, share_amount FROM budget_entry_assignments WHERE budget_entry_id = ? ORDER BY user_id').all(entryId);
+  assert(rows.length === 2, `Erwartet 2 Zuordnungen, erhalten ${rows.length}`);
+  assert(rows[0].share_amount === -30 && rows[1].share_amount === -30, 'Anteile gespeichert');
+});
+
+test('Budget-Shares: gleicher Split verteilt Beträge gleichmäßig', () => {
+  const shares = buildBudgetAssignmentShares({
+    amount: -90,
+    splitMethod: 'equal',
+    assignments: [{ user_id: 1 }, { user_id: 2 }, { user_id: 3 }],
+  });
+  assert(shares.length === 3, `Erwartet 3 Shares, erhalten ${shares.length}`);
+  const total = shares.reduce((sum, share) => sum + share.amount, 0);
+  assert(Math.abs(total + 90) < 0.01, `Split-Summe: ${total}`);
+});
+
+test('Budget-Shares: Prozent-Split respektiert Vorgaben', () => {
+  const shares = buildBudgetAssignmentShares({
+    amount: -100,
+    splitMethod: 'percentage',
+    assignments: [
+      { user_id: 1, share_percentage: 25 },
+      { user_id: 2, share_percentage: 75 },
+    ],
+  });
+  assert(shares[0].amount === -25, `Anteil User 1: ${shares[0].amount}`);
+  assert(shares[1].amount === -75, `Anteil User 2: ${shares[1].amount}`);
+});
+
+test('Budget-Shares: Exakt-Split respektiert Vorgaben', () => {
+  const shares = buildBudgetAssignmentShares({
+    amount: 120,
+    splitMethod: 'exact',
+    assignments: [
+      { user_id: 1, share_amount: 20 },
+      { user_id: 2, share_amount: 100 },
+    ],
+  });
+  assert(shares[0].amount === 20, `Anteil User 1: ${shares[0].amount}`);
+  assert(shares[1].amount === 100, `Anteil User 2: ${shares[1].amount}`);
+});
+
 test('CSV-Vorbereitung: alle März-Einträge mit JOIN', () => {
   const entries = db.prepare(`
     SELECT b.*, u.display_name AS creator_name
@@ -309,7 +363,7 @@ test('CSV-Vorbereitung: alle März-Einträge mit JOIN', () => {
     WHERE b.date BETWEEN '2026-03-01' AND '2026-03-31'
     ORDER BY b.date ASC
   `).all();
-  assert(entries.length === 3);
+  assert(entries.length >= 3, `Mindestens 3 März-Einträge erwartet, erhalten ${entries.length}`);
   assert(entries[0].creator_name === 'Admin');
 });
 

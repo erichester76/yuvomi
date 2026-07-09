@@ -10,7 +10,7 @@ import {
   generateRecurringInstances,
   monthsPerInterval,
   effectiveMonthly,
-} from '../server/routes/budget.js';
+} from '../server/services/budget-recurrence.js';
 
 let passed = 0;
 let failed = 0;

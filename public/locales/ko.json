@@ -906,7 +906,16 @@
         "prevPeriod": "이전 기간",
         "nextPeriod": "다음 기간",
         "recurringInstanceLabel": "시리즈의 일부",
-        "loanProgressLabel": "상환 진행률"
+        "loanProgressLabel": "상환 진행률",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "건강",
@@ -1590,7 +1599,13 @@
         "notificationChannelEmpty": "아직 설정된 가구 채널이 없습니다.",
         "notificationChannelAdminOnlyHint": "관리자만 가구 채널을 관리할 수 있습니다.",
         "notificationChannelDeleteConfirm": "이 알림 채널을 삭제할까요?",
-        "apiTokensMcpHint": "이 토큰은 /mcp의 MCP 엔드포인트용 Bearer 토큰으로도 작동합니다(예: Claude Desktop에서 AI로 할 일, 장보기 항목, 일정을 만들 때)."
+        "apiTokensMcpHint": "이 토큰은 /mcp의 MCP 엔드포인트용 Bearer 토큰으로도 작동합니다(예: Claude Desktop에서 AI로 할 일, 장보기 항목, 일정을 만들 때).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "가족 계획. 안전하게. 개인정보 보호. 오픈 소스.",
@@ -2161,7 +2176,7 @@
         "birthDate": "생년월일",
         "guestSyncHint": "손님은 입력 시 가족 관리, 연락처, 생일에 추가됩니다.",
         "createAndAddGuest": "만들고 추가",
-        "tabLabel": "정산",
+        "tabLabel": "공유",
         "splitHint": {
             "equal": "모두가 동일한 몫을 냅니다.",
             "percentage": "선택한 각 구성원에 대해 퍼센트를 입력하세요. 합계는 100%여야 합니다.",

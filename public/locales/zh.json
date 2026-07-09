@@ -900,7 +900,16 @@
         "prevPeriod": "上一期",
         "nextPeriod": "下一期",
         "recurringInstanceLabel": "系列的一部分",
-        "loanProgressLabel": "还款进度"
+        "loanProgressLabel": "还款进度",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "健康",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "尚未配置家庭频道。",
         "notificationChannelAdminOnlyHint": "只有管理员可以管理家庭频道。",
         "notificationChannelDeleteConfirm": "删除此通知频道？",
-        "apiTokensMcpHint": "这些令牌也可用作 /mcp 上 MCP 端点的 Bearer 令牌（例如在 Claude Desktop 中，通过 AI 创建任务、购物项和日程）。"
+        "apiTokensMcpHint": "这些令牌也可用作 /mcp 上 MCP 端点的 Bearer 令牌（例如在 Claude Desktop 中，通过 AI 创建任务、购物项和日程）。",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "家庭规划。安全。注重隐私。开源。",
@@ -2161,7 +2176,7 @@
         "birthDate": "出生日期",
         "guestSyncHint": "填写后，访客会同步到家庭管理、联系人和生日。",
         "createAndAddGuest": "创建并添加",
-        "tabLabel": "分摊",
+        "tabLabel": "共享",
         "splitHint": {
             "equal": "所有人支付相同份额。",
             "percentage": "为每个选中的成员输入百分比，总计必须为100%。",

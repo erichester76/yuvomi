@@ -54,6 +54,23 @@ test('GET /preferences returns an empty mobile order by default', async () => {
 
     assert.equal(response.status, 200);
     assert.deepEqual(body.data.mobile_nav_order, []);
+    assert.equal(body.data.budget_mode, 'shared');
+  } finally {
+    await close();
+  }
+});
+
+test('PUT /preferences stores household budget mode', async () => {
+  const { baseUrl, close } = await startApp();
+  try {
+    const response = await fetch(`${baseUrl}/`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ budget_mode: 'personal' }),
+    });
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(body.data.budget_mode, 'personal');
   } finally {
     await close();
   }

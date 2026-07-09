@@ -900,7 +900,16 @@
         "prevPeriod": "Önceki dönem",
         "nextPeriod": "Sonraki dönem",
         "recurringInstanceLabel": "Bir serinin parçası",
-        "loanProgressLabel": "Geri ödeme ilerlemesi"
+        "loanProgressLabel": "Geri ödeme ilerlemesi",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Sağlık",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "Henüz ev kanalı yapılandırılmadı.",
         "notificationChannelAdminOnlyHint": "Ev kanallarını yalnızca yöneticiler yönetebilir.",
         "notificationChannelDeleteConfirm": "Bu bildirim kanalı silinsin mi?",
-        "apiTokensMcpHint": "Bu belirteçler /mcp adresindeki MCP uç noktası için Bearer belirteci olarak da çalışır (örn. Claude Desktop'ta yapay zekâ ile görev, alışveriş öğesi ve etkinlik oluşturmak için)."
+        "apiTokensMcpHint": "Bu belirteçler /mcp adresindeki MCP uç noktası için Bearer belirteci olarak da çalışır (örn. Claude Desktop'ta yapay zekâ ile görev, alışveriş öğesi ve etkinlik oluşturmak için).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Aile planlaması. Güvenli. Gizlilik dostu. Açık kaynak.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Doğum tarihi",
         "guestSyncHint": "Bilgi girilirse misafir Aile Yönetimi, Kişiler ve Doğum Günleri listesine eklenir.",
         "createAndAddGuest": "Oluştur ve ekle",
-        "tabLabel": "Böl",
+        "tabLabel": "Paylaşılan",
         "splitHint": {
             "equal": "Herkes eşit pay öder.",
             "percentage": "Seçilen her üye için yüzde girin. Toplam 100 olmalı.",

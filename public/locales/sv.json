@@ -900,7 +900,16 @@
         "prevPeriod": "Föregående period",
         "nextPeriod": "Nästa period",
         "recurringInstanceLabel": "Del av en serie",
-        "loanProgressLabel": "Återbetalningsförlopp"
+        "loanProgressLabel": "Återbetalningsförlopp",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Hälsa",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "Inga hushållskanaler har konfigurerats ännu.",
         "notificationChannelAdminOnlyHint": "Endast administratörer kan hantera hushållskanaler.",
         "notificationChannelDeleteConfirm": "Ta bort den här aviseringskanalen?",
-        "apiTokensMcpHint": "Dessa token fungerar även som Bearer-token för MCP-slutpunkten på /mcp (t.ex. i Claude Desktop, för att skapa uppgifter, inköpsartiklar och händelser med AI)."
+        "apiTokensMcpHint": "Dessa token fungerar även som Bearer-token för MCP-slutpunkten på /mcp (t.ex. i Claude Desktop, för att skapa uppgifter, inköpsartiklar och händelser med AI).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Familjeplanering. Säker. Sekretessvänlig. Öppen källkod.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Födelsedatum",
         "guestSyncHint": "Gästen läggs till i Familj, Kontakter och Födelsedagar när uppgifter anges.",
         "createAndAddGuest": "Skapa och lägg till",
-        "tabLabel": "Dela",
+        "tabLabel": "Delat",
         "splitHint": {
             "equal": "Alla betalar samma andel.",
             "percentage": "Ange procent för varje vald medlem. Summan måste vara 100 %.",

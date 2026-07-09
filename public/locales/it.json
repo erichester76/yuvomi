@@ -900,7 +900,16 @@
         "prevPeriod": "Periodo precedente",
         "nextPeriod": "Periodo successivo",
         "recurringInstanceLabel": "Parte di una serie",
-        "loanProgressLabel": "Avanzamento del rimborso"
+        "loanProgressLabel": "Avanzamento del rimborso",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Salute",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "Nessun canale della famiglia ancora configurato.",
         "notificationChannelAdminOnlyHint": "Solo gli amministratori possono gestire i canali della famiglia.",
         "notificationChannelDeleteConfirm": "Eliminare questo canale di notifica?",
-        "apiTokensMcpHint": "Questi token funzionano anche come token Bearer per l'endpoint MCP su /mcp (ad es. in Claude Desktop, per creare attività, articoli della spesa ed eventi tramite IA)."
+        "apiTokensMcpHint": "Questi token funzionano anche come token Bearer per l'endpoint MCP su /mcp (ad es. in Claude Desktop, per creare attività, articoli della spesa ed eventi tramite IA).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Pianificazione familiare. Sicura. Rispettosa della privacy. Open source.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Data di nascita",
         "guestSyncHint": "L’ospite viene aggiunto a Famiglia, Contatti e Compleanni se indicato.",
         "createAndAddGuest": "Crea e aggiungi",
-        "tabLabel": "Dividi",
+        "tabLabel": "Condiviso",
         "splitHint": {
             "equal": "Tutti pagano la stessa quota.",
             "percentage": "Inserisci la percentuale per ogni membro selezionato. Il totale deve essere 100%.",

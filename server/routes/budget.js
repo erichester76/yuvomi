@@ -10,6 +10,12 @@ import { readFileSync } from 'node:fs';
 import path from 'path';
 import * as db from '../db.js';
 import { str, oneOf, date as validateDate, month as validateMonth, num, rrule, collectErrors, MAX_TITLE, MAX_SHORT, MONTH_RE } from '../middleware/validate.js';
+import { buildBudgetAssignmentShares, normalizeBudgetAssignments, normalizeBudgetSplitMethod } from '../services/budget-shares.js';
+import { aggregateBudgetRows, loadPersonalBudgetRows, resolveBudgetOwnerUserId } from '../services/budget-personal.js';
+import { loadBudgetAssignments as loadBudgetAssignmentsForDb, saveBudgetAssignments as saveBudgetAssignmentsForDb } from '../services/budget-assignment-store.js';
+import { loadBudgetEntryWithMeta } from '../services/budget-entry-loader.js';
+import { categoryInUseCount, subcategoryInUseCount, categoryCountByType, subcategoryCountForCategory } from '../services/budget-helpers.js';
+import { RECURRENCE_INTERVAL_KEYS, monthsPerInterval, effectiveMonthly, generateRecurringInstances } from '../services/budget-recurrence.js';
 
 const log = createLogger('Budget');
 
@@ -77,6 +83,7 @@ const SUBCATEGORY_LABEL_KEYS = {
   subscription_education: 'subcatSubscriptionEducation',
   subscription_other: 'subcatSubscriptionOther',
 };
+const DEFAULT_BUDGET_MODE = 'shared';
 
 function normalizeLang(raw) {
   const lang = String(raw || 'en').trim().toLowerCase();
@@ -112,80 +119,6 @@ function localizedSubcategory(subcategory, lang) {
   };
 }
 
-// --------------------------------------------------------
-// Wiederkehrende Einträge: Intervalle + virtuelles (geglättetes) Budget
-// --------------------------------------------------------
-
-const RECURRENCE_INTERVAL_KEYS = ['monthly', 'half_year', 'yearly'];
-
-/** Anzahl Monate zwischen zwei Vorkommen einer Serie. */
-function monthsPerInterval(interval) {
-  return interval === 'yearly' ? 12 : interval === 'half_year' ? 6 : 1;
-}
-
-/** Effektiver Monatsanteil eines Periodenbetrags (für virtuelles Budget). */
-function effectiveMonthly(amount, interval) {
-  return cents(Number(amount || 0) / monthsPerInterval(interval));
-}
-
-/**
- * Erstellt fehlende Instanzen wiederkehrender Budget-Einträge für den angefragten Monat.
- * Läuft idempotent - bereits vorhandene oder explizit übersprungene Instanzen werden ignoriert.
- *
- * Virtuelle Serien (recurrence_virtual = 1) halten im Original bereits den
- * geglätteten Monatsanteil (amount); es wird in JEDEM Monat eine Instanz erzeugt.
- * Nicht-virtuelle Serien erzeugen den vollen Betrag nur in Fälligkeitsmonaten
- * (alle monthsPerInterval(interval) Monate ab dem Startmonat).
- * @param {import('better-sqlite3').Database} database
- * @param {string} month  YYYY-MM
- */
-function generateRecurringInstances(database, month) {
-  const [y, m] = month.split('-').map(Number);
-  const monthStart = `${month}-01`;
-  const monthEnd   = `${month}-31`;
-
-  // Alle Serien-Originale, die vor diesem Monat begonnen haben
-  const originals = database.prepare(`
-    SELECT * FROM budget_entries
-    WHERE is_recurring = 1 AND recurrence_parent_id IS NULL
-      AND strftime('%Y-%m', date) < ?
-  `).all(month);
-
-  for (const orig of originals) {
-    // Übersprungener Monat?
-    const skipped = database.prepare(
-      'SELECT 1 FROM budget_recurrence_skipped WHERE parent_id = ? AND month = ?'
-    ).get(orig.id, month);
-    if (skipped) continue;
-
-    // Instanz schon vorhanden?
-    const existing = database.prepare(`
-      SELECT id FROM budget_entries
-      WHERE recurrence_parent_id = ? AND date BETWEEN ? AND ?
-    `).get(orig.id, monthStart, monthEnd);
-    if (existing) continue;
-
-    // Bei nicht-virtuellen Serien nur in Fälligkeitsmonaten erzeugen.
-    const interval = orig.recurrence_interval || 'monthly';
-    if (!orig.recurrence_virtual) {
-      const [oy, om] = orig.date.split('-').map(Number);
-      const monthsDiff = (y - oy) * 12 + (m - om);
-      if (monthsDiff < 1 || monthsDiff % monthsPerInterval(interval) !== 0) continue;
-    }
-
-    // Datum berechnen: gleicher Tag, am letzten Tag des Monats gekappt
-    const origDay    = parseInt(orig.date.split('-')[2], 10);
-    const lastDay    = new Date(y, m, 0).getDate();
-    const instanceDay = Math.min(origDay, lastDay);
-    const instanceDate = `${month}-${String(instanceDay).padStart(2, '0')}`;
-
-    database.prepare(`
-      INSERT INTO budget_entries
-        (title, amount, category, subcategory, date, is_recurring, recurrence_parent_id, created_by)
-      VALUES (?, ?, ?, ?, ?, 0, ?, ?)
-    `).run(orig.title, orig.amount, orig.category, orig.subcategory || '', instanceDate, orig.id, orig.created_by);
-  }
-}
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const STATS_RANGES = new Set(['week', 'month', 'year']);
@@ -272,22 +205,6 @@ function uniqueKey(table, base) {
   return key;
 }
 
-function categoryInUseCount(database, key) {
-  return database.prepare('SELECT COUNT(*) AS n FROM budget_entries WHERE category = ?').get(key).n;
-}
-
-function subcategoryInUseCount(database, key) {
-  return database.prepare('SELECT COUNT(*) AS n FROM budget_entries WHERE subcategory = ?').get(key).n;
-}
-
-function categoryCountByType(database, type) {
-  return database.prepare('SELECT COUNT(*) AS n FROM budget_categories WHERE type = ?').get(type).n;
-}
-
-function subcategoryCountForCategory(database, categoryKey) {
-  return database.prepare('SELECT COUNT(*) AS n FROM budget_subcategories WHERE category_key = ?').get(categoryKey).n;
-}
-
 function loadBudgetMeta() {
   const categories = db.get().prepare(`
     SELECT key, name, type, sort_order
@@ -309,6 +226,34 @@ function loadBudgetMeta() {
   }
 
   return { categories, expenseCategories, incomeCategories, expenseSubcategories };
+}
+
+function isAdmin(req) {
+  return req.authRole === 'admin' || req.session?.role === 'admin';
+}
+
+function budgetMode() {
+  return db.get().prepare('SELECT value FROM sync_config WHERE key = ?').get('budget_mode')?.value === 'personal'
+    ? 'personal'
+    : DEFAULT_BUDGET_MODE;
+}
+
+function normalizeBudgetView(req) {
+  if (budgetMode() !== 'personal') return 'household';
+  if (!isAdmin(req)) return 'mine';
+  return req.query.view === 'household' ? 'household' : 'mine';
+}
+
+function loadBudgetAssignments(entryId) {
+  return loadBudgetAssignmentsForDb(db.get(), entryId);
+}
+
+function saveBudgetAssignments(entryId, amount, splitMethod, assignments) {
+  return saveBudgetAssignmentsForDb(db.get(), entryId, amount, splitMethod, assignments);
+}
+
+function personalBudgetRows(from, to, viewerId) {
+  return loadPersonalBudgetRows(db.get(), from, to, viewerId);
 }
 
 function validCategoryKeys() {
@@ -408,19 +353,14 @@ function refreshLoanStatus(loanId) {
 }
 
 function entryWithLoanMeta(id) {
-  return db.get().prepare(`
-    SELECT b.*, u.display_name AS creator_name,
-           p.id AS loan_payment_id,
-           p.loan_id AS loan_id,
-           p.installment_number AS loan_installment_number,
-           l.title AS loan_title,
-           l.borrower AS loan_borrower
-    FROM budget_entries b
-    LEFT JOIN users u ON u.id = b.created_by
-    LEFT JOIN budget_loan_payments p ON p.budget_entry_id = b.id
-    LEFT JOIN budget_loans l ON l.id = p.loan_id
-    WHERE b.id = ?
-  `).get(id);
+  return loadBudgetEntryWithMeta(db.get(), id);
+}
+
+function canManageBudgetEntry(entry, req) {
+  if (!entry) return false;
+  if (isAdmin(req)) return true;
+  const viewerId = req.authUserId || req.session.userId;
+  return Number(entry.owner_user_id || entry.created_by) === Number(viewerId);
 }
 
 // --------------------------------------------------------
@@ -443,6 +383,26 @@ router.get('/summary', (req, res) => {
 
     const from = `${month}-01`;
     const to   = `${month}-31`;
+
+    if (normalizeBudgetView(req) === 'mine') {
+      const rows = personalBudgetRows(from, to, req.authUserId || req.session.userId);
+      const byCategoryMap = new Map();
+      let income = 0;
+      let expenses = 0;
+      let balance = 0;
+      for (const row of rows) {
+        const amount = Number(row.amount || 0);
+        if (amount > 0) income += amount;
+        if (amount < 0) expenses += amount;
+        balance += amount;
+        const current = byCategoryMap.get(row.category) || { category: row.category, income: 0, expenses: 0, total: 0 };
+        if (amount > 0) current.income += amount;
+        if (amount < 0) current.expenses += amount;
+        current.total += amount;
+        byCategoryMap.set(row.category, current);
+      }
+      return res.json({ data: { month, income, expenses, balance, byCategory: [...byCategoryMap.values()] } });
+    }
 
     const totals = db.get().prepare(`
       SELECT
@@ -502,13 +462,15 @@ router.get('/export', (req, res) => {
     const filename = (DATE_RE.test(req.query.from || '') && DATE_RE.test(req.query.to || ''))
       ? `budget-${from}_${to}.csv`
       : `budget-${req.query.month || thisMonthLocalKey()}.csv`;
-    const entries = db.get().prepare(`
-      SELECT b.*, u.display_name AS creator_name
-      FROM budget_entries b
-      LEFT JOIN users u ON u.id = b.created_by
-      WHERE b.date BETWEEN ? AND ?
-      ORDER BY b.date ASC
-    `).all(from, to);
+    const entries = normalizeBudgetView(req) === 'mine'
+      ? personalBudgetRows(from, to, req.authUserId || req.session.userId)
+      : db.get().prepare(`
+          SELECT b.*, u.display_name AS creator_name
+          FROM budget_entries b
+          LEFT JOIN users u ON u.id = b.created_by
+          WHERE b.date BETWEEN ? AND ?
+          ORDER BY b.date ASC
+        `).all(from, to);
 
     const header = 'Date,Title,Amount,Category,Subcategory,Recurring,Created by\n';
     const csvSafe = (val) => {
@@ -609,10 +571,11 @@ router.get('/loans', (req, res) => {
       SELECT l.*, u.display_name AS creator_name
       FROM budget_loans l
       LEFT JOIN users u ON u.id = l.created_by
+      WHERE (? = 1 OR l.created_by = ?)
       ORDER BY CASE l.status WHEN 'active' THEN 0 ELSE 1 END,
                l.start_month ASC,
                l.created_at DESC
-    `).all().map(loanSummaryRow);
+    `).all(isAdmin(req) ? 1 : 0, req.authUserId || req.session.userId).map(loanSummaryRow);
     const active = loans.filter((loan) => loan.status === 'active');
     const totals = loans.reduce((acc, loan) => {
       acc.total_amount += loan.total_amount;
@@ -750,6 +713,13 @@ router.post('/loans/:id/payments', (req, res) => {
     if (vAmount.value !== null && vAmount.value - loan.remaining_amount > 0.005) {
       errors.push('Amount cannot be greater than the remaining loan amount.');
     }
+    const assignments = budgetMode() === 'personal' ? normalizeBudgetAssignments(req.body.assignments) : [];
+    const splitMethod = normalizeBudgetSplitMethod(req.body.split_method);
+    try {
+      if (assignments.length > 1) buildBudgetAssignmentShares({ amount: vAmount.value, splitMethod, assignments });
+    } catch (err) {
+      errors.push(err.message || 'Invalid split assignment.');
+    }
     if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
 
     const existing = db.get().prepare(`
@@ -758,22 +728,29 @@ router.post('/loans/:id/payments', (req, res) => {
     if (existing) return res.status(409).json({ error: 'Installment already paid.', code: 409 });
 
     const paymentAmount = cents(vAmount.value);
+    const actorId = req.authUserId || req.session.userId;
+    const ownerUserId = budgetMode() === 'personal'
+      ? resolveBudgetOwnerUserId(actorId, assignments)
+      : actorId;
     const tx = db.get().transaction(() => {
       const budgetResult = db.get().prepare(`
-        INSERT INTO budget_entries (title, amount, category, subcategory, date, is_recurring, created_by)
-        VALUES (?, ?, ?, '', ?, 0, ?)
+        INSERT INTO budget_entries (title, amount, category, subcategory, date, is_recurring, created_by, owner_user_id, split_method)
+        VALUES (?, ?, ?, '', ?, 0, ?, ?, ?)
       `).run(
         `Loan repayment: ${loan.borrower}`,
         paymentAmount,
         'Geschenke & Transfers',
         vDate.value,
-        req.authUserId || req.session.userId
+        actorId,
+        ownerUserId,
+        splitMethod
       );
+      saveBudgetAssignments(budgetResult.lastInsertRowid, paymentAmount, splitMethod, assignments);
       const paymentResult = db.get().prepare(`
         INSERT INTO budget_loan_payments
           (loan_id, installment_number, amount, paid_date, budget_entry_id, created_by)
         VALUES (?, ?, ?, ?, ?, ?)
-      `).run(id, installmentNumber, paymentAmount, vDate.value, budgetResult.lastInsertRowid, req.authUserId || req.session.userId);
+      `).run(id, installmentNumber, paymentAmount, vDate.value, budgetResult.lastInsertRowid, actorId);
       return paymentResult.lastInsertRowid;
     });
 
@@ -1037,10 +1014,28 @@ router.get('/', (req, res) => {
     if (!loanId && !MONTH_RE.test(month))
       return res.status(400).json({ error: 'month muss YYYY-MM sein', code: 400 });
 
-    if (!loanId) generateRecurringInstances(db.get(), month);
-
     const from   = `${month}-01`;
     const to     = `${month}-31`;
+    if (!loanId) generateRecurringInstances(db.get(), month);
+
+    if (budgetMode() === 'personal') {
+      const generated = db.get().prepare(`
+        SELECT id, recurrence_parent_id
+        FROM budget_entries
+        WHERE date BETWEEN ? AND ? AND recurrence_parent_id IS NOT NULL
+      `).all(from, to);
+      for (const row of generated) {
+        const existingAssignments = loadBudgetAssignments(row.id);
+        if (existingAssignments.length) continue;
+        const parentAssignments = loadBudgetAssignments(row.recurrence_parent_id);
+        if (!parentAssignments.length) continue;
+        const parent = db.get().prepare('SELECT amount, split_method, created_by FROM budget_entries WHERE id = ?').get(row.recurrence_parent_id);
+        saveBudgetAssignments(row.id, parent.amount, parent.split_method || 'equal', parentAssignments);
+      }
+    }
+    if (normalizeBudgetView(req) === 'mine') {
+      return res.json({ data: personalBudgetRows(from, to, req.authUserId || req.session.userId) });
+    }
     let sql      = `
       SELECT b.*, u.display_name AS creator_name,
              p.id AS loan_payment_id,
@@ -1070,7 +1065,10 @@ router.get('/', (req, res) => {
 
     sql += ' ORDER BY b.date DESC, b.created_at DESC';
 
-    const entries = db.get().prepare(sql).all(...params);
+    const entries = db.get().prepare(sql).all(...params).map((entry) => ({
+      ...entry,
+      assignments: loadBudgetAssignments(entry.id),
+    }));
     res.json({ data: entries });
   } catch (err) {
     log.error('', err);
@@ -1086,6 +1084,7 @@ router.get('/', (req, res) => {
  */
 router.post('/', (req, res) => {
   try {
+    const actorId = req.authUserId || req.session.userId;
     const vTitle  = str(req.body.title,    'Titel',  { max: MAX_TITLE });
     const vAmount = num(req.body.amount,  'Betrag', { required: true });
     const fallbackCategory = defaultCategory(Number(req.body.amount) < 0 ? 'expense' : 'income');
@@ -1107,18 +1106,32 @@ router.post('/', (req, res) => {
     // Virtuell: amount hält den geglätteten Monatsanteil, full den eingegebenen Periodenbetrag.
     const storeAmount = isVirtual ? effectiveMonthly(vAmount.value, interval) : vAmount.value;
     const fullAmount  = isVirtual ? cents(vAmount.value) : null;
+    const assignments = budgetMode() === 'personal' ? normalizeBudgetAssignments(req.body.assignments) : [];
+    const splitMethod = normalizeBudgetSplitMethod(req.body.split_method);
+    const ownerUserId = budgetMode() === 'personal'
+      ? resolveBudgetOwnerUserId(actorId, assignments)
+      : actorId;
+    try {
+      if (assignments.length > 1) buildBudgetAssignmentShares({ amount: storeAmount, splitMethod, assignments });
+    } catch (err) {
+      return res.status(400).json({ error: err.message || 'Invalid split assignment.', code: 400 });
+    }
 
     const result = db.get().prepare(`
       INSERT INTO budget_entries
         (title, amount, category, subcategory, date, is_recurring, recurrence_rule,
-         recurrence_interval, recurrence_virtual, recurrence_full_amount, created_by)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         recurrence_interval, recurrence_virtual, recurrence_full_amount, created_by, owner_user_id, split_method)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       vTitle.value, storeAmount, vCat.value || fallbackCategory, subcategory, vDate.value,
       isRecurring, vRrule.value,
       interval, isVirtual, fullAmount,
-      req.authUserId || req.session.userId
+      actorId,
+      ownerUserId,
+      splitMethod
     );
+
+    saveBudgetAssignments(result.lastInsertRowid, storeAmount, splitMethod, assignments);
 
     const entry = entryWithLoanMeta(result.lastInsertRowid);
 
@@ -1141,6 +1154,7 @@ router.put('/:id/series', (req, res) => {
     const id    = parseInt(req.params.id, 10);
     const entry = db.get().prepare('SELECT * FROM budget_entries WHERE id = ?').get(id);
     if (!entry) return res.status(404).json({ error: 'Entry not found', code: 404 });
+    if (!canManageBudgetEntry(entry, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
 
     const parentId = entry.recurrence_parent_id ?? (entry.is_recurring ? entry.id : null);
     if (!parentId) return res.status(400).json({ error: 'Not a recurring entry.', code: 400 });
@@ -1176,6 +1190,18 @@ router.put('/:id/series', (req, res) => {
       : null;
     const storeAmount    = finalVirtual ? effectiveMonthly(finalFull, finalInterval) : finalAmount;
     const finalRrule     = recurrence_rule !== undefined ? (recurrence_rule || null) : parent.recurrence_rule;
+    const assignments = budgetMode() === 'personal' && req.body.assignments !== undefined
+      ? normalizeBudgetAssignments(req.body.assignments)
+      : null;
+    const splitMethod = req.body.split_method !== undefined ? normalizeBudgetSplitMethod(req.body.split_method) : parent.split_method;
+    const ownerUserId = budgetMode() === 'personal' && assignments !== null
+      ? resolveBudgetOwnerUserId(parent.created_by, assignments)
+      : (parent.owner_user_id || parent.created_by);
+    try {
+      if (assignments && assignments.length > 1) buildBudgetAssignmentShares({ amount: storeAmount, splitMethod, assignments });
+    } catch (err) {
+      return res.status(400).json({ error: err.message || 'Invalid split assignment.', code: 400 });
+    }
 
     const currentMonthStart = new Date().toISOString().slice(0, 7) + '-01';
 
@@ -1190,15 +1216,17 @@ router.put('/:id/series', (req, res) => {
           recurrence_rule        = ?,
           recurrence_interval    = ?,
           recurrence_virtual     = ?,
-          recurrence_full_amount = ?
+          recurrence_full_amount = ?,
+          split_method           = ?,
+          owner_user_id          = ?
         WHERE id = ?
       `).run(finalTitle, storeAmount, finalCategory, finalSubcat,
-             finalRecurring, finalRrule, finalInterval, finalVirtual, finalFull,
+             finalRecurring, finalRrule, finalInterval, finalVirtual, finalFull, splitMethod, ownerUserId,
              parentId);
 
-      db.get().prepare(`
-        DELETE FROM budget_entries WHERE recurrence_parent_id = ? AND date >= ?
-      `).run(parentId, currentMonthStart);
+      if (assignments !== null) saveBudgetAssignments(parentId, storeAmount, splitMethod, assignments);
+
+      db.get().prepare(`DELETE FROM budget_entries WHERE recurrence_parent_id = ? AND date >= ?`).run(parentId, currentMonthStart);
     })();
 
     const updated = entryWithLoanMeta(parentId);
@@ -1219,6 +1247,7 @@ router.delete('/:id/series', (req, res) => {
     const id    = parseInt(req.params.id, 10);
     const entry = db.get().prepare('SELECT * FROM budget_entries WHERE id = ?').get(id);
     if (!entry) return res.status(404).json({ error: 'Entry not found', code: 404 });
+    if (!canManageBudgetEntry(entry, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
 
     const parentId = entry.recurrence_parent_id ?? (entry.is_recurring ? entry.id : null);
     if (!parentId) return res.status(400).json({ error: 'Not a recurring entry.', code: 400 });
@@ -1246,6 +1275,8 @@ router.put('/:id', (req, res) => {
     const id    = parseInt(req.params.id, 10);
     const entry = db.get().prepare('SELECT * FROM budget_entries WHERE id = ?').get(id);
     if (!entry) return res.status(404).json({ error: 'Entry not found', code: 404 });
+    const actorId = req.authUserId || req.session.userId;
+    if (!canManageBudgetEntry(entry, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
 
     const checks = [];
     if (req.body.title    !== undefined) checks.push(str(req.body.title,    'Titel',  { max: MAX_TITLE, required: false }));
@@ -1297,6 +1328,18 @@ router.put('/:id', (req, res) => {
       : (entry.recurrence_full_amount != null ? entry.recurrence_full_amount : entry.amount);
     const nextAmount = finalVirtual ? effectiveMonthly(configuredFull, finalInterval) : cents(configuredFull);
     const nextFull   = finalVirtual ? cents(configuredFull) : null;
+    const assignments = budgetMode() === 'personal' && req.body.assignments !== undefined
+      ? normalizeBudgetAssignments(req.body.assignments)
+      : null;
+    const splitMethod = req.body.split_method !== undefined ? normalizeBudgetSplitMethod(req.body.split_method) : entry.split_method;
+    const ownerUserId = budgetMode() === 'personal' && assignments !== null
+      ? resolveBudgetOwnerUserId(entry.created_by, assignments)
+      : (entry.owner_user_id || entry.created_by);
+    try {
+      if (assignments && assignments.length > 1) buildBudgetAssignmentShares({ amount: nextAmount, splitMethod, assignments });
+    } catch (err) {
+      return res.status(400).json({ error: err.message || 'Invalid split assignment.', code: 400 });
+    }
 
     const tx = db.get().transaction(() => {
       db.get().prepare(`
@@ -1310,7 +1353,9 @@ router.put('/:id', (req, res) => {
             recurrence_rule        = ?,
             recurrence_interval    = ?,
             recurrence_virtual     = ?,
-            recurrence_full_amount = ?
+            recurrence_full_amount = ?,
+            split_method           = ?,
+            owner_user_id          = ?
         WHERE id = ?
       `).run(
         title?.trim() ?? null,
@@ -1323,8 +1368,12 @@ router.put('/:id', (req, res) => {
         finalInterval,
         finalVirtual,
         nextFull,
+        splitMethod,
+        ownerUserId,
         id
       );
+
+      if (assignments !== null) saveBudgetAssignments(id, nextAmount, splitMethod, assignments);
 
       if (linkedPayment) {
         db.get().prepare(`
@@ -1361,6 +1410,7 @@ router.delete('/:id', (req, res) => {
     const id    = parseInt(req.params.id, 10);
     const entry = db.get().prepare('SELECT * FROM budget_entries WHERE id = ?').get(id);
     if (!entry) return res.status(404).json({ error: 'Entry not found', code: 404 });
+    if (!canManageBudgetEntry(entry, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
 
     const linkedPayment = db.get().prepare(`
       SELECT * FROM budget_loan_payments WHERE budget_entry_id = ?
@@ -1446,6 +1496,24 @@ export function computeStats(database, { range, anchor }) {
   };
 }
 
+function computePersonalStats({ range, anchor, viewerId }) {
+  const r = computeStatsRange(range, anchor);
+  const prevRange = computeStatsRange(range, r.prevFrom);
+  const currentRows = personalBudgetRows(r.from, r.to, viewerId);
+  const previousRows = personalBudgetRows(prevRange.from, prevRange.to, viewerId);
+  const current = aggregateBudgetRows(currentRows, r.bucketKeys, r.granularity);
+  const previous = aggregateBudgetRows(previousRows, prevRange.bucketKeys, prevRange.granularity);
+  return {
+    range: r.range,
+    from: r.from,
+    to: r.to,
+    totals: current.totals,
+    series: current.series,
+    byCategory: current.byCategory,
+    comparison: previous.totals,
+  };
+}
+
 /**
  * GET /api/v1/budget/stats
  * Statistik-Aggregation über Woche/Monat/Jahr.
@@ -1460,7 +1528,8 @@ export function statsHandler(req, res) {
     if (!DATE_RE.test(anchor))
       return res.status(400).json({ error: 'anchor muss YYYY-MM-DD sein', code: 400 });
 
-    res.json({ data: computeStats(db.get(), { range, anchor }) });
+    const viewerId = req.authUserId || req.session.userId;
+    res.json({ data: normalizeBudgetView(req) === 'mine' ? computePersonalStats({ range, anchor, viewerId }) : computeStats(db.get(), { range, anchor }) });
   } catch (err) {
     log.error('', err);
     res.status(500).json({ error: 'Internal error', code: 500 });

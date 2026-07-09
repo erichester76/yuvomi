@@ -95,6 +95,36 @@
   overscroll-behavior-x: contain;
 }
 
+.budget-view-toggle {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-full);
+}
+
+.budget-view-toggle__btn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--target-base);
+  cursor: pointer;
+}
+
+.budget-view-toggle__btn--active {
+  background: color-mix(in srgb, var(--module-budget) 14%, transparent);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.budget-list-header__hint {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
 .budget-tabs::-webkit-scrollbar { display: none; }
 
 /* Scroll-Affordance: JS setzt has-fade-start/-end nur, wenn auf der jeweiligen
@@ -786,6 +816,32 @@
   transition: background-color var(--transition-fast);
 }
 
+.budget-assignment-editor {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.budget-assignment-editor__heading {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.budget-assignment-editor__rows {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.budget-assignment-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.budget-assignment-row__name {
+  color: var(--color-text-primary);
+}
+
 .budget-entry:hover {
   background-color: var(--glass-bg-card-hover);
 }
@@ -815,6 +871,22 @@
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   margin-top: 1px;
+}
+
+.budget-entry__meta-action {
+  border: none;
+  background: none;
+  color: var(--color-accent);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.budget-entry__meta-action:hover {
+  color: var(--color-text-primary);
 }
 
 .budget-entry__amount {

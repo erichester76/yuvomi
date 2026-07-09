@@ -19,6 +19,8 @@ const DEFAULT_MEAL_TYPES = VALID_MEAL_TYPES.join(',');
 
 const VALID_CURRENCIES = ['AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HUF', 'IDR', 'INR', 'IRR', 'JPY', 'KRW', 'KZT', 'NOK', 'PLN', 'RUB', 'SAR', 'SEK', 'TRY', 'UAH', 'USD', 'ZAR'];
 const DEFAULT_CURRENCY = 'EUR';
+const VALID_BUDGET_MODES = ['shared', 'personal'];
+const DEFAULT_BUDGET_MODE = 'shared';
 const DEFAULT_APP_NAME = 'Yuvomi';
 
 const VALID_DATE_FORMATS = ['mdy', 'dmy', 'ymd', 'mdy_dot', 'dmy_dot', 'dmy_slash', 'ymd_dot', 'ymd_slash'];
@@ -223,6 +225,7 @@ router.get('/', (req, res) => {
       data: {
         visible_meal_types: visibleMealTypes,
         currency,
+        budget_mode: VALID_BUDGET_MODES.includes(cfgGet('budget_mode')) ? cfgGet('budget_mode') : DEFAULT_BUDGET_MODE,
         date_format: dateFormat,
         time_format: timeFormat,
         app_name: appName,
@@ -267,7 +270,7 @@ router.get('/', (req, res) => {
 
 router.put('/', (req, res) => {
   try {
-    const { visible_meal_types, currency, date_format, time_format, app_name, dashboard_widgets, disabled_modules, module_order, mobile_nav_order, housekeeping_payment_tasks, calendar_default_duration, health_cycle_enabled, rewards_require_approval, weather_provider, weather_lat, weather_lon, weather_city, weather_units, weather_auto_locate, weather_user, holiday_country, holiday_subdivision, holiday_show_public, holiday_show_school, holiday_public_color, holiday_school_color } = req.body;
+    const { visible_meal_types, currency, budget_mode, date_format, time_format, app_name, dashboard_widgets, disabled_modules, module_order, mobile_nav_order, housekeeping_payment_tasks, calendar_default_duration, health_cycle_enabled, rewards_require_approval, weather_provider, weather_lat, weather_lon, weather_city, weather_units, weather_auto_locate, weather_user, holiday_country, holiday_subdivision, holiday_show_public, holiday_show_school, holiday_public_color, holiday_school_color } = req.body;
 
     if (visible_meal_types !== undefined) {
       if (!Array.isArray(visible_meal_types)) {
@@ -285,6 +288,13 @@ router.put('/', (req, res) => {
         return res.status(400).json({ error: `Ungültige Währung. Erlaubt: ${VALID_CURRENCIES.join(', ')}`, code: 400 });
       }
       cfgSet('currency', currency);
+    }
+
+    if (budget_mode !== undefined) {
+      if (!VALID_BUDGET_MODES.includes(budget_mode)) {
+        return res.status(400).json({ error: `Invalid budget mode. Allowed: ${VALID_BUDGET_MODES.join(', ')}`, code: 400 });
+      }
+      cfgSet('budget_mode', budget_mode);
     }
 
     if (date_format !== undefined) {

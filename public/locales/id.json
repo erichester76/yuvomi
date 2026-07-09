@@ -906,7 +906,16 @@
         "prevPeriod": "Periode sebelumnya",
         "nextPeriod": "Periode berikutnya",
         "recurringInstanceLabel": "Bagian dari seri",
-        "loanProgressLabel": "Progres pelunasan"
+        "loanProgressLabel": "Progres pelunasan",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Kesehatan",
@@ -1590,7 +1599,13 @@
         "notificationChannelEmpty": "Belum ada saluran rumah tangga yang disiapkan.",
         "notificationChannelAdminOnlyHint": "Hanya admin yang dapat mengelola saluran rumah tangga.",
         "notificationChannelDeleteConfirm": "Hapus saluran notifikasi ini?",
-        "apiTokensMcpHint": "Token ini juga berfungsi sebagai token Bearer untuk endpoint MCP di /mcp (mis. di Claude Desktop, untuk membuat tugas, item belanja, dan acara dengan AI)."
+        "apiTokensMcpHint": "Token ini juga berfungsi sebagai token Bearer untuk endpoint MCP di /mcp (mis. di Claude Desktop, untuk membuat tugas, item belanja, dan acara dengan AI).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Perencanaan keluarga. Aman. Ramah privasi. Sumber terbuka.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Tanggal lahir",
         "guestSyncHint": "Tamu ditambahkan ke manajemen keluarga, kontak, dan ulang tahun jika diisi.",
         "createAndAddGuest": "Buat dan tambahkan",
-        "tabLabel": "Bagi",
+        "tabLabel": "Bersama",
         "splitHint": {
             "equal": "Semua membayar bagian yang sama.",
             "percentage": "Masukkan persentase untuk setiap anggota yang dipilih. Totalnya harus 100 %.",

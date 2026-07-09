@@ -900,7 +900,16 @@
         "prevPeriod": "Vorige periode",
         "nextPeriod": "Volgende periode",
         "recurringInstanceLabel": "Onderdeel van een reeks",
-        "loanProgressLabel": "Aflossingsvoortgang"
+        "loanProgressLabel": "Aflossingsvoortgang",
+        "viewModeLabel": "Budget view",
+        "viewMine": "My budget",
+        "viewHousehold": "Household budget",
+        "sharedFromBudget": "Shared from {{owner}}",
+        "sharedFromSplit": "Split expense: {{group}}",
+        "assigneesLabel": "Assignees",
+        "splitSectionLabel": "Shared split",
+        "singleAssigneeHint": "Assign one person to make this item theirs.",
+        "multiAssigneeHint": "Assign multiple people and choose how to split the amount."
     },
     "settings": {
         "pageHealthModule": "Gezondheid",
@@ -1584,7 +1593,13 @@
         "notificationChannelEmpty": "Er zijn nog geen huishoudkanalen ingesteld.",
         "notificationChannelAdminOnlyHint": "Alleen beheerders kunnen huishoudkanalen beheren.",
         "notificationChannelDeleteConfirm": "Dit meldingskanaal verwijderen?",
-        "apiTokensMcpHint": "Deze tokens werken ook als Bearer-tokens voor het MCP-eindpunt op /mcp (bijv. in Claude Desktop, om taken, boodschappen en afspraken via AI aan te maken)."
+        "apiTokensMcpHint": "Deze tokens werken ook als Bearer-tokens voor het MCP-eindpunt op /mcp (bijv. in Claude Desktop, om taken, boodschappen en afspraken via AI aan te maken).",
+        "budgetModeTitle": "Budget mode",
+        "budgetModeDescription": "Choose between one shared household budget and personal budgets with shared splits.",
+        "budgetModeLabel": "Mode",
+        "budgetModeShared": "Shared household budget",
+        "budgetModePersonal": "Personal budgets with shared splits",
+        "budgetModeSaved": "Budget mode saved."
     },
     "login": {
         "tagline": "Gezinsplanning. Veilig. Privacyvriendelijk. Open source.",
@@ -2161,7 +2176,7 @@
         "birthDate": "Geboortedatum",
         "guestSyncHint": "Deze gast wordt toegevoegd aan Gezinsbeheer, Contacten en Verjaardagen indien opgegeven.",
         "createAndAddGuest": "Aanmaken en toevoegen",
-        "tabLabel": "Splitsen",
+        "tabLabel": "Gedeeld",
         "splitHint": {
             "equal": "Iedereen betaalt hetzelfde aandeel.",
             "percentage": "Voer voor elk geselecteerd lid een percentage in. Totaal moet 100% zijn.",

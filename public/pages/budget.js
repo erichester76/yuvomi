@@ -16,6 +16,7 @@ import { openSubscriptionModal, render as renderSubscriptions } from '/pages/sub
 import { renderStats } from '/pages/budget-stats.js';
 import { toLocalDateKey } from '/utils/date.js';
 import { budgetCategoryLabel } from '/utils/category-labels.js';
+import { renderUserMultiSelect, bindUserMultiSelect, getSelectedUserIds } from '/components/user-multi-select.js';
 import '/components/category-manager.js';
 
 // --------------------------------------------------------
@@ -123,8 +124,11 @@ let state = {
   activeTab:   'budget',
   loanFilterId: null,
   loanStatusFilter: 'active',
+  budgetMode:  'shared',
+  budgetView:  'mine',
   currency:    'EUR',
   meta:        { expenseCategories: [], incomeCategories: [], expenseSubcategories: {} },
+  familyMembers: [],
 };
 let _container = null;
 let _user = null;
@@ -160,10 +164,11 @@ function setHtml(element, html) {
 async function loadMonth(month) {
   const prevMonth = addMonths(month, -1);
   try {
+    const viewParam = state.budgetMode === 'personal' ? `&view=${state.budgetView}` : '';
     const [entriesRes, summaryRes, prevSummaryRes, loansRes] = await Promise.all([
-      api.get(`/budget?month=${month}`),
-      api.get(`/budget/summary?month=${month}`),
-      api.get(`/budget/summary?month=${prevMonth}`),
+      api.get(`/budget?month=${month}${viewParam}`),
+      api.get(`/budget/summary?month=${month}${viewParam}`),
+      api.get(`/budget/summary?month=${prevMonth}${viewParam}`),
       api.get('/budget/loans'),
     ]);
     state.month       = month;
@@ -179,6 +184,15 @@ async function loadMonth(month) {
     state.prevSummary = null;
     state.loans       = { loans: [], summary: { active_count: 0, remaining_amount: 0, remaining_installments: 0 } };
     window.yuvomi?.showToast(t('budget.loadError'), 'danger');
+  }
+}
+
+async function loadFamilyMembers() {
+  try {
+    const res = await api.get('/family/members');
+    state.familyMembers = res.data ?? [];
+  } catch {
+    state.familyMembers = [];
   }
 }
 
@@ -213,8 +227,11 @@ export async function render(container, { user }) {
       const [prefsRes] = await Promise.all([
         api.get('/preferences'),
         loadBudgetMeta(),
+        loadFamilyMembers(),
       ]);
       state.currency = prefsRes.data?.currency ?? 'EUR';
+      state.budgetMode = prefsRes.data?.budget_mode ?? 'shared';
+      state.budgetView = user?.role === 'admin' ? 'mine' : 'mine';
     } catch (_) { /* Fallback auf EUR */ }
   }
 
@@ -247,10 +264,15 @@ export async function render(container, { user }) {
             <button class="budget-tab" id="budget-tab-reports" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="reports">
               ${t('budget.reportsTab')}
             </button>`}
-            <button class="budget-tab" id="budget-tab-split-expenses" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="split-expenses">
+          <button class="budget-tab" id="budget-tab-split-expenses" type="button" role="tab" aria-selected="false" aria-controls="budget-body" tabindex="-1" data-tab="split-expenses">
               ${t('splitExpenses.tabLabel')}
             </button>
           </div>
+          ${state.budgetMode === 'personal' && _user?.role === 'admin' ? `
+          <div class="budget-view-toggle" role="group" aria-label="${t('budget.viewModeLabel')}">
+            <button class="budget-view-toggle__btn ${state.budgetView === 'mine' ? 'budget-view-toggle__btn--active' : ''}" id="budget-view-mine" type="button">${t('budget.viewMine')}</button>
+            <button class="budget-view-toggle__btn ${state.budgetView === 'household' ? 'budget-view-toggle__btn--active' : ''}" id="budget-view-household" type="button">${t('budget.viewHousehold')}</button>
+          </div>` : ''}
           <button class="btn btn--primary btn--icon toolbar-new-btn" id="budget-add" aria-label="${t('budget.addEntryLabel')}">
             <i data-lucide="plus" aria-hidden="true"></i>
           </button>
@@ -320,6 +342,18 @@ function wireNav() {
       renderBody();
     });
   });
+  _container.querySelector('#budget-view-mine')?.addEventListener('click', async () => {
+    if (state.budgetView === 'mine') return;
+    state.budgetView = 'mine';
+    await loadMonth(state.month);
+    renderBody();
+  });
+  _container.querySelector('#budget-view-household')?.addEventListener('click', async () => {
+    if (state.budgetView === 'household') return;
+    state.budgetView = 'household';
+    await loadMonth(state.month);
+    renderBody();
+  });
   // Pfeiltasten-Navigation im Tablist (WAI-ARIA): ←/→ und Home/End wechseln
   // den aktiven Tab und ziehen den Fokus mit.
   _container.querySelector('.budget-tabs')?.addEventListener('keydown', (e) => {
@@ -352,6 +386,17 @@ function updateLabel() {
   if (lbl) lbl.textContent = formatMonthLabel(state.month);
 }
 
+function updateBudgetViewToggle() {
+  const mineBtn = _container.querySelector('#budget-view-mine');
+  const householdBtn = _container.querySelector('#budget-view-household');
+  if (!mineBtn || !householdBtn) return;
+  const mineActive = state.budgetView === 'mine';
+  mineBtn.classList.toggle('budget-view-toggle__btn--active', mineActive);
+  householdBtn.classList.toggle('budget-view-toggle__btn--active', !mineActive);
+  mineBtn.setAttribute('aria-pressed', String(mineActive));
+  householdBtn.setAttribute('aria-pressed', String(!mineActive));
+}
+
 // Scroll-Affordance der Tab-Leiste: Rand ausblenden, solange auf der Seite
 // weitere Tabs verborgen sind (Mobil; auf Desktop passen alle → keine Maske).
 function updateTabsFade() {
@@ -373,6 +418,7 @@ function renderBody() {
   const body = _container.querySelector('#budget-body');
   if (!body) return;
   updateLabel();
+  updateBudgetViewToggle();
 
   const s    = state.summary;
   const p    = state.prevSummary;
@@ -447,6 +493,8 @@ function renderBody() {
       <div class="budget-list-header">
         <div>
           <span class="budget-list-header__title">${t('budget.transactions')}</span>
+          ${state.budgetMode === 'personal' ? `<div class="budget-list-header__filter">${state.budgetView === 'household' ? t('budget.viewHousehold') : t('budget.viewMine')}</div>` : ''}
+          ${state.budgetMode === 'personal' ? `<div class="budget-list-header__hint">${t('budget.singleAssigneeHint')}</div>` : ''}
         </div>
         <div class="budget-list-header__actions">
         <button class="btn btn--icon btn--ghost" id="budget-manage-categories"
@@ -477,10 +525,20 @@ function renderBody() {
     const delBtn = e.target.closest('[data-action="delete"]');
     if (delBtn) { await deleteEntry(parseInt(delBtn.dataset.id, 10)); return; }
 
+    const parentBtn = e.target.closest('[data-action="open-parent"]');
+    if (parentBtn) {
+      state.budgetView = 'household';
+      await loadMonth(state.month);
+      renderBody();
+      const entry = state.entries.find((row) => row.id === parseInt(parentBtn.dataset.id, 10));
+      if (entry) openBudgetModal({ mode: 'edit', entry });
+      return;
+    }
+
     const item = e.target.closest('.budget-entry[data-id]');
     if (item && !e.target.closest('[data-action]')) {
       const entry = state.entries.find((e) => e.id === parseInt(item.dataset.id, 10));
-      if (entry) openBudgetModal({ mode: 'edit', entry });
+      if (entry && !entry.is_readonly) openBudgetModal({ mode: 'edit', entry });
     }
   });
 }
@@ -588,18 +646,29 @@ function renderEntries() {
     const categoryMeta = isIncome || !e.subcategory
       ? categoryLabel(e.category)
       : `${categoryLabel(e.category)} · ${subcategoryLabel(e.subcategory)}`;
+    const sourceMeta = e.assignee_count > 1
+      ? (e.is_readonly && e.owner_name
+          ? `${t('budget.sharedFromBudget', { owner: t('budget.viewHousehold') })}`
+          : `${t('budget.assigneesLabel')}: ${e.assignee_count} · ${t('budget.viewHousehold')}`)
+      : '';
+    const canOpenParent = state.budgetMode === 'personal' && e.is_readonly && e.assignee_count > 1 && _user?.role === 'admin';
+    const parentAction = canOpenParent
+      ? ` <button class="budget-entry__meta-action" type="button" data-action="open-parent" data-id="${e.id}">${t('common.edit')} ${t('budget.viewHousehold')}</button>`
+      : '';
 
     return `
       <div class="budget-entry" data-id="${e.id}">
         <div class="budget-entry__indicator ${indClass}"></div>
         <div class="budget-entry__body">
           <div class="budget-entry__title">${esc(e.title)}</div>
-          <div class="budget-entry__meta">${date} · ${esc(categoryMeta)}${recurTag}</div>
+          <div class="budget-entry__meta">${date} · ${esc(categoryMeta)}${recurTag}${sourceMeta ? ` · ${esc(sourceMeta)}` : ''}${parentAction}</div>
         </div>
         <div class="budget-entry__amount ${amtClass}">${sign}${formatAmount(e.amount)}</div>
-        <button class="budget-entry__action budget-entry__delete" data-action="delete" data-id="${e.id}" aria-label="${t('budget.deleteLabel')}">
-          <i data-lucide="trash-2" class="icon-md" aria-hidden="true"></i>
-        </button>
+        ${(!e.is_readonly) ? `<div class="budget-entry__actions">
+          ${e.is_readonly ? '' : `<button class="budget-entry__action budget-entry__delete" data-action="delete" data-id="${e.id}" aria-label="${t('budget.deleteLabel')}">
+            <i data-lucide="trash-2" class="icon-md" aria-hidden="true"></i>
+          </button>`}
+        </div>` : ''}
       </div>
     `;
   }).join('');
@@ -802,7 +871,8 @@ function wireLoansPage() {
     btn.addEventListener('click', () => {
       const loan = state.loans.loans.find((item) => item.id === parseInt(btn.dataset.loanId, 10));
       const payment = loan?.payments?.find((item) => item.id === parseInt(btn.dataset.paymentId, 10));
-      const entry = loan && payment ? loanPaymentToEntry(loan, payment) : null;
+      const entry = state.entries.find((item) => item.id === parseInt(btn.dataset.entryId, 10))
+        || (loan && payment ? loanPaymentToEntry(loan, payment) : null);
       if (entry) openBudgetModal({ mode: 'edit', entry });
     });
   });
@@ -970,6 +1040,94 @@ function openCategoryManager() {
   });
 }
 
+function renderBudgetAssignmentEditor(assignments = [], splitMethod = 'equal') {
+  const selectedIds = assignments.map((assignment) => assignment.user_id);
+  const rows = assignments.map((assignment) => {
+    const member = state.familyMembers.find((item) => item.id === assignment.user_id);
+    if (!member) return '';
+    return `
+      <div class="budget-assignment-row" data-user-id="${assignment.user_id}">
+        <span class="budget-assignment-row__name">${esc(member.display_name)}</span>
+        <input class="form-input budget-assignment-row__value" type="number" step="0.01"
+               value="${splitMethod === 'percentage' ? esc(String(assignment.share_percentage ?? '')) : esc(String(assignment.share_amount ?? ''))}">
+      </div>`;
+  }).join('');
+  return `
+    <div class="budget-assignment-editor" id="budget-assignment-editor">
+      <div class="budget-assignment-editor__heading">${t('budget.assigneesLabel')}</div>
+      ${renderUserMultiSelect(state.familyMembers, selectedIds, 'budget-assignees', 'budget.assigneesLabel')}
+      <div class="form-hint">${selectedIds.length > 1 ? t('budget.multiAssigneeHint') : t('budget.singleAssigneeHint')}</div>
+      <div class="form-group">
+        <label class="form-label" for="budget-split-method">${t('budget.splitSectionLabel')}</label>
+        <select class="form-input" id="budget-split-method">
+          <option value="equal" ${splitMethod === 'equal' ? 'selected' : ''}>${t('splitExpenses.splitEqual')}</option>
+          <option value="exact" ${splitMethod === 'exact' ? 'selected' : ''}>${t('splitExpenses.splitExact')}</option>
+          <option value="percentage" ${splitMethod === 'percentage' ? 'selected' : ''}>${t('splitExpenses.splitPercentage')}</option>
+        </select>
+      </div>
+      <div class="budget-assignment-editor__rows" id="budget-assignment-rows">${rows}</div>
+    </div>`;
+}
+
+function bindBudgetAssignmentEditor(panel, initialAssignments = [], initialSplitMethod = 'equal') {
+  bindUserMultiSelect(panel, 'budget-assignees');
+  const methodEl = panel.querySelector('#budget-split-method');
+  const rowsEl = panel.querySelector('#budget-assignment-rows');
+  const hintEl = panel.querySelector('.budget-assignment-editor .form-hint');
+  const renderRows = () => {
+    const selectedIds = getSelectedUserIds(panel, 'budget-assignees');
+    const existing = new Map(initialAssignments.map((assignment) => [assignment.user_id, assignment]));
+    const splitMethod = methodEl?.value || initialSplitMethod;
+    if (hintEl) hintEl.textContent = selectedIds.length > 1 ? t('budget.multiAssigneeHint') : t('budget.singleAssigneeHint');
+    rowsEl.replaceChildren();
+    if (splitMethod === 'equal' || selectedIds.length <= 1) return;
+    rowsEl.insertAdjacentHTML('beforeend', selectedIds.map((userId) => {
+      const member = state.familyMembers.find((item) => item.id === userId);
+      const current = existing.get(userId);
+      return `
+        <div class="budget-assignment-row" data-user-id="${userId}">
+          <span class="budget-assignment-row__name">${esc(member?.display_name || '')}</span>
+          <input class="form-input budget-assignment-row__value" type="number" step="0.01"
+                 value="${splitMethod === 'percentage' ? esc(String(current?.share_percentage ?? '')) : esc(String(current?.share_amount ?? ''))}">
+        </div>`;
+    }).join(''));
+  };
+  panel.querySelector('.user-ms[data-ms-name="budget-assignees"]')?.addEventListener('change', renderRows);
+  methodEl?.addEventListener('change', renderRows);
+  renderRows();
+}
+
+function collectBudgetAssignments(panel) {
+  const selectedIds = getSelectedUserIds(panel, 'budget-assignees');
+  const splitMethod = panel.querySelector('#budget-split-method')?.value || 'equal';
+  if (!selectedIds.length) return { split_method: splitMethod, assignments: [] };
+  if (splitMethod === 'equal' || selectedIds.length === 1) {
+    return { split_method: splitMethod, assignments: selectedIds.map((user_id) => ({ user_id })) };
+  }
+  const assignments = selectedIds.map((user_id) => {
+    const row = panel.querySelector(`.budget-assignment-row[data-user-id="${user_id}"] .budget-assignment-row__value`);
+    const value = row?.value?.trim() || '';
+    return splitMethod === 'percentage'
+      ? { user_id, share_percentage: value }
+      : { user_id, share_amount: value };
+  });
+  return { split_method: splitMethod, assignments };
+}
+
+function validateBudgetAssignments(panel, amount) {
+  const { split_method, assignments } = collectBudgetAssignments(panel);
+  if (assignments.length <= 1 || split_method === 'equal') return null;
+  if (split_method === 'percentage') {
+    const total = assignments.reduce((sum, assignment) => sum + Number(assignment.share_percentage || 0), 0);
+    if (Math.abs(total - 100) > 0.01) return t('splitExpenses.splitHint.percentage');
+  }
+  if (split_method === 'exact') {
+    const total = assignments.reduce((sum, assignment) => sum + Number(assignment.share_amount || 0), 0);
+    if (Math.abs(total - Math.abs(Number(amount || 0))) > 0.01) return t('splitExpenses.splitHint.exact');
+  }
+  return null;
+}
+
 function openBudgetModal({ mode, entry = null, initialType = '' }) {
   const isEdit = mode === 'edit';
   const today  = toLocalDateKey(new Date());
@@ -994,6 +1152,10 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
   const subcatOpts = getSubcategories(initialCategory).map((s) =>
     `<option value="${esc(s.key)}" ${initialSubcategory === s.key ? 'selected' : ''}>${esc(subcategoryLabel(s))}</option>`
   ).join('');
+  const assignmentSection = state.budgetMode === 'personal'
+    ? renderBudgetAssignmentEditor(isEdit ? (entry.assignments || []) : [], isEdit ? (entry.split_method || 'equal') : 'equal')
+    : '';
+  const viewHint = state.budgetMode === 'personal' ? `<div class="form-hint">${t('budget.viewMine')}</div>` : '';
 
   const content = `
     <div class="amount-type-toggle ${isEdit ? 'amount-type-toggle--entry-only' : ''}">
@@ -1031,6 +1193,8 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
       <input type="date" class="form-input" id="bm-date"
              value="${isEdit ? entry.date : today}">
     </div>
+
+    ${state.budgetMode === 'personal' ? `<div class="js-entry-field">${viewHint}${assignmentSection}</div>` : ''}
 
     <div class="js-entry-field">
       ${advancedSection(`
@@ -1222,6 +1386,7 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
       panel.querySelector('#bm-add-category').addEventListener('click', addCategory);
       panel.querySelector('#bm-add-subcategory').addEventListener('click', addSubcategory);
       panel.querySelector('#bm-cancel').addEventListener('click', closeModal);
+      if (state.budgetMode === 'personal') bindBudgetAssignmentEditor(panel, entry?.assignments || [], entry?.split_method || 'equal');
 
       panel.querySelector('#bm-delete')?.addEventListener('click', async () => {
         closeModal({ force: true });
@@ -1243,18 +1408,21 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
         const recurring  = panel.querySelector('#bm-recurring').checked ? 1 : 0;
         const interval   = panel.querySelector('#bm-interval').value;
         const virtual    = recurring && panel.querySelector('#bm-virtual').checked ? 1 : 0;
+        const assignmentPayload = state.budgetMode === 'personal' ? collectBudgetAssignments(panel) : { split_method: 'equal', assignments: [] };
 
         if (!title)           { window.yuvomi?.showToast(t('common.titleRequired'), 'error'); return; }
         if (isNaN(absVal) || absVal <= 0) { window.yuvomi?.showToast(t('budget.validAmountRequired'), 'error'); return; }
         if (!date) { window.yuvomi?.showToast(t('calendar.invalidDate'), 'error'); return; }
 
         const amount = currentType === 'expense' ? -absVal : absVal;
+        const assignmentError = state.budgetMode === 'personal' ? validateBudgetAssignments(panel, amount) : null;
+        if (assignmentError) { window.yuvomi?.showToast(assignmentError, 'error'); return; }
 
         saveBtn.disabled    = true;
         saveBtn.textContent = '…';
 
         try {
-          const body = { title, amount, category, subcategory, date, is_recurring: recurring, recurrence_interval: interval, recurrence_virtual: virtual };
+          const body = { title, amount, category, subcategory, date, is_recurring: recurring, recurrence_interval: interval, recurrence_virtual: virtual, ...assignmentPayload };
           if (mode === 'create') {
             const res = await api.post('/budget', body);
             state.entries.unshift(res.data);
@@ -1438,9 +1606,70 @@ function openLoanModal(loan = null) {
   });
 }
 
+function openLoanPaymentModal(loan) {
+  if (!loan?.next_installment_number) return;
+  const today = toLocalDateKey(new Date());
+  const assignmentSection = state.budgetMode === 'personal'
+    ? renderBudgetAssignmentEditor([], 'equal')
+    : '';
+  const content = `
+    <div class="form-group">
+      <label class="form-label" for="lpm-amount">${t('budget.amountLabel')}</label>
+      <input type="number" class="form-input" id="lpm-amount" step="0.01" min="0.01" inputmode="decimal"
+             value="${(loan.next_installment_number === loan.installment_count ? loan.remaining_amount : Math.min(loan.installment_amount, loan.remaining_amount)).toFixed(2)}">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="lpm-date">${t('splitExpenses.date')}</label>
+      <input type="date" class="form-input" id="lpm-date" value="${today}">
+    </div>
+    ${state.budgetMode === 'personal' ? assignmentSection : ''}
+    <div class="modal-panel__footer" style="border:none;padding:0;margin-top:var(--space-4)">
+      <div></div>
+      <div style="display:flex;gap:var(--space-3)">
+        <button class="btn btn--secondary" id="lpm-cancel">${t('common.cancel')}</button>
+        <button class="btn btn--primary" id="lpm-save">${t('budget.markLoanPaid')}</button>
+      </div>
+    </div>`;
+
+  openSharedModal({
+    title: t('budget.markLoanPaid'),
+    content,
+    size: 'sm',
+    onSave(panel) {
+      panel.querySelector('#lpm-cancel')?.addEventListener('click', closeModal);
+      if (state.budgetMode === 'personal') bindBudgetAssignmentEditor(panel, [], 'equal');
+      panel.querySelector('#lpm-save')?.addEventListener('click', async () => {
+        const saveBtn = panel.querySelector('#lpm-save');
+        const amount = parseFloat(panel.querySelector('#lpm-amount').value);
+        const paid_date = panel.querySelector('#lpm-date').value;
+        if (isNaN(amount) || amount <= 0) { window.yuvomi?.showToast(t('budget.validAmountRequired'), 'error'); return; }
+        if (!paid_date) { window.yuvomi?.showToast(t('calendar.invalidDate'), 'error'); return; }
+        const assignmentPayload = state.budgetMode === 'personal' ? collectBudgetAssignments(panel) : { split_method: 'equal', assignments: [] };
+        const assignmentError = state.budgetMode === 'personal' ? validateBudgetAssignments(panel, amount) : null;
+        if (assignmentError) { window.yuvomi?.showToast(assignmentError, 'error'); return; }
+        saveBtn.disabled = true;
+        try {
+          await api.post(`/budget/loans/${loan.id}/payments`, { installment_number: loan.next_installment_number, amount, paid_date, ...assignmentPayload });
+          await loadMonth(state.month);
+          closeModal({ force: true });
+          renderBody();
+          window.yuvomi?.showToast(t('budget.loanPaymentAddedToast'), 'success');
+        } catch (err) {
+          saveBtn.disabled = false;
+          window.yuvomi?.showToast(err.data?.error ?? t('common.unknownError'), 'error');
+        }
+      });
+    },
+  });
+}
+
 async function markLoanPayment(id) {
   const loan = state.loans.loans.find((item) => item.id === id);
   if (!loan?.next_installment_number) return;
+  if (state.budgetMode === 'personal') {
+    openLoanPaymentModal(loan);
+    return;
+  }
   const today = toLocalDateKey(new Date());
   try {
     const res = await api.post(`/budget/loans/${id}/payments`, {

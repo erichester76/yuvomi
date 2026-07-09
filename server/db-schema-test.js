@@ -746,6 +746,22 @@ const MIGRATIONS_SQL = {
     INSERT INTO search_index (entity, entity_id, title, body)
       SELECT 'activity', id, COALESCE(type, ''), COALESCE(note, '') FROM health_activities;
   `,
+  75: `
+    ALTER TABLE budget_entries ADD COLUMN owner_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+    ALTER TABLE budget_entries ADD COLUMN split_method TEXT NOT NULL DEFAULT 'equal';
+    ALTER TABLE budget_entries ADD COLUMN linked_expense_id INTEGER REFERENCES expenses(id) ON DELETE SET NULL;
+
+    CREATE TABLE IF NOT EXISTS budget_entry_assignments (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      budget_entry_id  INTEGER NOT NULL REFERENCES budget_entries(id) ON DELETE CASCADE,
+      user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      share_amount     REAL,
+      share_percentage REAL,
+      created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+      updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+      UNIQUE(budget_entry_id, user_id)
+    );
+  `,
 };
 
 export { MIGRATIONS_SQL };
