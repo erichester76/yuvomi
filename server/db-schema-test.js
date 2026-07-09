@@ -749,6 +749,19 @@ const MIGRATIONS_SQL = {
   73: `
     ALTER TABLE recipes ADD COLUMN meal_types TEXT NOT NULL DEFAULT 'breakfast,lunch,dinner,snack';
   `,
+  74: `
+    CREATE TABLE IF NOT EXISTS access_permissions (
+      subject_type  TEXT NOT NULL CHECK(subject_type IN ('role', 'user')),
+      subject_id    TEXT NOT NULL,
+      resource_type TEXT NOT NULL CHECK(resource_type IN ('module', 'widget')),
+      resource_key  TEXT NOT NULL,
+      access        TEXT NOT NULL CHECK(access IN ('none', 'read', 'write', 'allow')),
+      updated_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+      PRIMARY KEY (subject_type, subject_id, resource_type, resource_key)
+    );
+    CREATE INDEX IF NOT EXISTS idx_access_permissions_subject
+      ON access_permissions(subject_type, subject_id);
+  `,
 };
 
 export { MIGRATIONS_SQL };

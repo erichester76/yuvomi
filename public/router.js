@@ -5,6 +5,7 @@
  */
 
 import { api, auth } from '/api.js';
+import { canAccessNavModule, navModuleAccess } from '/permissions.js';
 import { clearApiCache } from '/sw-register.js';
 import { initI18n, getLocale, t } from '/i18n.js';
 import { esc } from '/utils/html.js';
@@ -214,6 +215,10 @@ function warmPrimaryRoutes() {
 // Globaler App-State
 // --------------------------------------------------------
 let currentUser = null;
+// Für welchen Nutzer wurde die Nav zuletzt gebaut? Bei Nutzerwechsel (Logout →
+// Login als anderes Konto im selben Tab) bleibt die alte Shell im DOM; die Nav
+// muss dann mit den Rechten des neuen Nutzers neu gefiltert werden (#467).
+let _navBuiltForUserId = null;
 let currentPath = null;
 let isNavigating = false;
 // Zuletzt erfolgreich gerendertes Seiten-Modul. Erlaubt Soft-Navigation
@@ -462,8 +467,11 @@ async function navigate(path, userOrPushState = true, pushState = true) {
       return;
     }
 
-    // Modul-Guard: deaktivierte Module leiten auf Dashboard um.
-    if (route.module && _disabledModules.has(route.module) && route.path !== '/') {
+    // Modul-Guard: deaktivierte ODER per Rechte gesperrte Module leiten auf das
+    // Dashboard um (Rechte-Guard #467; die verbindliche 403-Sperre liegt am Server).
+    if (route.module
+        && route.path !== '/'
+        && (_disabledModules.has(route.module) || !canAccessNavModule(route.module))) {
       currentPath = null;
       isNavigating = false;
       navigate('/');
@@ -502,6 +510,15 @@ async function navigate(path, userOrPushState = true, pushState = true) {
       currentPath = null;
       isNavigating = false;
       navigate('/budget');
+      return;
+    }
+
+    // Rechte-Guard nach frisch geladenen Rechten (Deep-Link auf ein für diese
+    // Rolle/dieses Mitglied gesperrtes Modul → Dashboard). #467
+    if (route.module && route.path !== '/' && !canAccessNavModule(route.module)) {
+      currentPath = null;
+      isNavigating = false;
+      navigate('/');
       return;
     }
 
@@ -744,6 +761,12 @@ async function renderPage(route, previousPath = null) {
     // in Seiten-Modulen funktioniert.
     if (!document.querySelector('.nav-bottom') && currentUser) {
       renderAppShell(app);
+      _navBuiltForUserId = currentUser.id;
+    } else if (currentUser && _navBuiltForUserId !== currentUser.id) {
+      // Shell besteht bereits, aber der Nutzer hat gewechselt → Nav mit den
+      // Modul-Rechten des aktuellen Nutzers neu aufbauen (#467).
+      rebuildNavigation();
+      _navBuiltForUserId = currentUser.id;
     }
 
     const content = document.getElementById('main-content') || app;
@@ -811,6 +834,12 @@ async function renderPage(route, previousPath = null) {
       }
       document.documentElement.classList.toggle('fab-anim-done', fabCount >= FAB_SEEN_MAX);
     }
+
+    // Read-only-Modus (#467): Bei „Nur lesen"-Modulen die Anlege-Affordance (FAB)
+    // ausblenden und einen erklärenden Hinweis einblenden — sonst führt jeder
+    // Anlege-/Speicherversuch nur in einen 403. Die verbindliche Sperre bleibt
+    // serverseitig; dies ist die ehrliche UI-Entsprechung.
+    applyModuleReadonly(route.module, pageWrapper);
 
     // Route-Announcer: Screenreader über Seitenwechsel informieren (gezielt, nicht gesamter Inhalt)
     const announcer = document.getElementById('route-announcer');
@@ -1681,6 +1710,25 @@ function renderSearchResults(container, data, onClose) {
   makeSection('health.tabs.activity', activities, () => '/health/activity', activityLabel);
 }
 
+// Read-only-Modus für ein Modul anwenden (#467): FAB via <html data-module-readonly>
+// ausblenden (CSS) und einen erklärenden Banner oben in die Seite einfügen.
+// navModuleAccess liefert 'write' für nicht-gateable Module (Dashboard, Settings,
+// Third-Party), sodass diese nie fälschlich als read-only markiert werden.
+function applyModuleReadonly(moduleName, pageWrapper) {
+  const readOnly = navModuleAccess(moduleName) === 'read';
+  document.documentElement.toggleAttribute('data-module-readonly', readOnly);
+  if (!readOnly || !pageWrapper || pageWrapper.querySelector('.module-readonly-banner')) return;
+  const banner = document.createElement('div');
+  banner.className = 'module-readonly-banner';
+  banner.setAttribute('role', 'status');
+  banner.insertAdjacentHTML(
+    'afterbegin',
+    `<i data-lucide="eye" aria-hidden="true"></i><span>${esc(t('settings.permReadOnlyBanner'))}</span>`,
+  );
+  pageWrapper.insertBefore(banner, pageWrapper.firstChild);
+  window.lucide?.createIcons({ el: banner });
+}
+
 function navItems() {
   if (currentUser?.access_scope === 'split_guest') {
     return [
@@ -1723,7 +1771,10 @@ function navItems() {
     .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
   const settings = baseItems.find((item) => item.module === 'settings');
   const sortable = [
-    ...baseItems.filter((item) => item.module !== 'settings' && !_disabledModules.has(item.module)),
+    ...baseItems.filter((item) =>
+      item.module !== 'settings'
+      && !_disabledModules.has(item.module)
+      && canAccessNavModule(item.module)),
     ...thirdPartyItems,
   ];
   const ordered = sortNavigationItems(sortable, _moduleOrder);

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-09
+
+### Added
+- Roles and permissions: granular, server-enforced access control per family role and per member, configured under Settings → Administration → Roles and permissions. Each module can be set to No access, Read only, or Full, and each dashboard widget to Available or Blocked; widgets inherit their module's lock and can also be blocked on their own (for example, hiding the cycle widget for some members without disabling Health). Only deviations from the default (full access) are stored, so unset roles and members keep full access and existing installs are unchanged; administrators always keep full access and cannot be locked out. Blocked modules disappear from navigation and the dashboard, and a read-only module hides its create button and shows an explanatory banner. The settings page offers a role/member switch, an at-a-glance overview of a role's deviations, and per-module and per-widget access as icon controls with widgets nested under their module. (#467)
+
 ## [1.3.1] - 2026-07-09
 
 ### Added

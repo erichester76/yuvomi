@@ -5,6 +5,7 @@
  */
 
 import { api } from '/api.js';
+import { canSeeWidget } from '/permissions.js';
 import { t, formatDate, formatTime, getLocale } from '/i18n.js';
 import { getReadableTextColor, AVATAR_FALLBACK_COLOR } from '/utils/color.js';
 import { esc, fmtLocation, renderMarkdownLight } from '/utils/html.js';
@@ -276,7 +277,12 @@ const MODULE_FOR_WIDGET = { tasks: 'tasks', calendar: 'calendar', shopping: 'sho
 
 function isWidgetModuleEnabled(id) {
   const mod = MODULE_FOR_WIDGET[id];
-  return !mod || !window.yuvomi?.isModuleDisabled(mod);
+  if (mod && window.yuvomi?.isModuleDisabled(mod)) return false;
+  // Rollen-/Mitglied-Rechte (#467): serverseitig gesperrtes Widget (bzw. Widget
+  // eines Moduls ohne Zugriff — die Modulsperre wird bereits serverseitig auf die
+  // Widget-Map durchgereicht) hier nicht anbieten.
+  if (!canSeeWidget(id)) return false;
+  return true;
 }
 
 function normalizeDashboardConfig(input) {
