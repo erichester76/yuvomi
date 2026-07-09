@@ -1033,6 +1033,12 @@
   align-content: start;
 }
 
+@media (min-width: 768px) {
+  .modal-overlay--budget {
+    align-items: flex-start;
+  }
+}
+
 .amount-type-toggle {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

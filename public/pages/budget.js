@@ -527,7 +527,17 @@ function renderBody() {
     const item = e.target.closest('.budget-entry[data-id]');
     if (item && !e.target.closest('[data-action]')) {
       const entry = state.entries.find((e) => e.id === parseInt(item.dataset.id, 10));
-      if (entry && !entry.is_readonly) openBudgetModal({ mode: 'edit', entry });
+      if (entry && !entry.is_readonly) {
+        if (state.budgetMode === 'personal' && state.budgetView === 'mine' && entry.assignee_count > 1 && _user?.role === 'admin') {
+          state.budgetView = 'household';
+          await loadMonth(state.month);
+          renderBody();
+          const parentEntry = state.entries.find((row) => row.id === entry.id);
+          if (parentEntry) openBudgetModal({ mode: 'edit', entry: parentEntry });
+          return;
+        }
+        openBudgetModal({ mode: 'edit', entry });
+      }
     }
   });
 }
@@ -1317,6 +1327,7 @@ function openBudgetModal({ mode, entry = null, initialType = '' }) {
     content,
     size: 'lg',
     onSave(panel) {
+      panel.closest('.modal-overlay')?.classList.add('modal-overlay--budget');
       let currentType = !isEdit && initialType === 'loan' ? 'loan' : (isExpense ? 'expense' : 'income');
 
       const setType = (type) => {
