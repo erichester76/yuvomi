@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-07-09
+
+### Added
+- Calendar: an opt-in `ICS_SUBSCRIPTION_ALLOW_PRIVATE_NETWORK` environment flag lets ICS calendar subscriptions use `http://` URLs and local/private-network feeds (e.g. a Sonarr, Radarr, or Home Assistant calendar in the same LAN). It lifts the built-in SSRF protection for ICS subscriptions only, and defaults to off — enable it only in controlled environments.
+
 ## [1.3.0] - 2026-07-09
 
 ### Added
