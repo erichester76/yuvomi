@@ -8,7 +8,7 @@ import { api } from '/api.js';
 import { renderRRuleFields, bindRRuleEvents, getRRuleValues } from '/rrule-ui.js';
 import { openModal as openSharedModal, closeModal, wireBlurValidation, validateAll, btnSuccess, btnError, promptModal, advancedSection } from '/components/modal.js';
 import { stagger, vibrate } from '/utils/ux.js';
-import { t, formatDate, formatTime, dateInputPlaceholder, formatDateInput, parseDateInput, isDateInputValid, formatTimeInput, parseTimeInput, timeInputPlaceholder } from '/i18n.js';
+import { t, formatDate, formatTime, formatDateInput, parseDateInput, isDateInputValid, formatTimeInput, parseTimeInput } from '/i18n.js';
 import { esc } from '/utils/html.js';
 import { refresh as refreshReminders } from '/reminders.js';
 import { renderUserMultiSelect, getSelectedUserIds, bindUserMultiSelect, renderAvatarStack } from '/components/user-multi-select.js';
@@ -362,8 +362,8 @@ function renderModalContent({ task = null, users = [], reminder = null } = {}) {
       <div class="modal-grid modal-grid--2" style="margin-top:var(--space-4)">
         <div class="form-group">
           <label class="label" for="task-start-date">${t('tasks.startDateLabel')}</label>
-          <input class="input js-date-input" type="text" id="task-start-date" name="start_date"
-                 value="${formatDateInput(task?.start_date)}" placeholder="${dateInputPlaceholder()}" inputmode="text">
+          <yuvomi-datepicker type="date" id="task-start-date" name="start_date"
+                 value="${esc(formatDateInput(task?.start_date))}"></yuvomi-datepicker>
         </div>
         <div class="form-group">
           <label class="label" for="task-points">${t('tasks.pointsLabel')}</label>
@@ -397,13 +397,13 @@ function renderModalContent({ task = null, users = [], reminder = null } = {}) {
       <div class="modal-grid modal-grid--2">
         <div class="form-group">
           <label class="label" for="task-due-date">${t('tasks.dueDateLabel')}</label>
-          <input class="input js-date-input" type="text" id="task-due-date" name="due_date"
-                 value="${formatDateInput(task?.due_date)}" placeholder="${dateInputPlaceholder()}" inputmode="text">
+          <yuvomi-datepicker type="date" id="task-due-date" name="due_date"
+                 value="${esc(formatDateInput(task?.due_date))}"></yuvomi-datepicker>
         </div>
         <div class="form-group">
           <label class="label" for="task-due-time">${t('tasks.dueTimeLabel')}</label>
-          <input class="input js-time-input" type="text" id="task-due-time" name="due_time"
-                 value="${formatTimeInput(task?.due_time ?? '')}" placeholder="${timeInputPlaceholder()}">
+          <yuvomi-datepicker type="time" id="task-due-time" name="due_time"
+                 value="${esc(formatTimeInput(task?.due_time ?? ''))}"></yuvomi-datepicker>
         </div>
       </div>
 
@@ -578,29 +578,6 @@ function openTaskModal({ task = null, users = [], reminder = null } = {}, contai
         if (!customFields) return;
         customFields.style.display = offset.value === 'offset_custom' ? '' : 'none';
       });
-      panel.querySelectorAll('.js-date-input').forEach((input) => {
-        input.addEventListener('keydown', (e) => {
-          if (e.ctrlKey || e.metaKey || e.altKey) return;
-          if (e.key.length !== 1) return;
-          if (!/[\d./\-]/.test(e.key)) e.preventDefault();
-        });
-        input.addEventListener('blur', () => {
-          const parsed = parseDateInput(input.value);
-          if (parsed) input.value = formatDateInput(parsed);
-        });
-      });
-      panel.querySelectorAll('.js-time-input').forEach((input) => {
-        input.addEventListener('keydown', (e) => {
-          if (e.ctrlKey || e.metaKey || e.altKey) return;
-          if (e.key.length !== 1) return;
-          if (!/[\d:.,hH apmAPM]/.test(e.key)) e.preventDefault();
-        });
-        input.addEventListener('blur', () => {
-          const parsed = parseTimeInput(input.value);
-          if (parsed) input.value = formatTimeInput(parsed);
-        });
-      });
-
       // Form-Events
       panel.querySelector('#task-form')
         ?.addEventListener('submit', (e) => handleFormSubmit(e, container));

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-07-10
+
+### Changed
+- Extended the shared date and time picker to the last fields that still used plain text entry: the task start date, due date and due time, the meal-planner date, and the recurrence "until" date now open the same calendar or time picker (or the native OS picker on touch) as every other date field, completing the app-wide rollout.
+
 ## [1.8.0] - 2026-07-10
 
 ### Added
