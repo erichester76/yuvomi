@@ -176,7 +176,9 @@
     "title": "Yuvomi siap!",
     "subtitle": "Perencana keluarga Anda berjalan dan akun admin Anda telah disiapkan.",
     "open": "Buka Yuvomi →",
-    "backupReminder": "Ingat untuk mencadangkan berkas .env Anda sekarang — berkas itu berisi kunci Anda."
+    "backupReminder": "Ingat untuk mencadangkan berkas .env Anda sekarang — berkas itu berisi kunci Anda.",
+    "download": "Unduh berkas .env",
+    "savedTo": "Disimpan di {{path}}"
   },
   "welcome": {
     "title": "Selamat datang di Yuvomi",

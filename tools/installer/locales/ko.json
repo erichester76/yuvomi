@@ -176,7 +176,9 @@
     "title": "Yuvomi 준비 완료!",
     "subtitle": "가족 플래너가 실행 중이며 관리자 계정이 설정되었습니다.",
     "open": "Yuvomi 열기 →",
-    "backupReminder": "지금 .env 파일을 백업하는 것을 잊지 마세요 — 키가 들어 있습니다."
+    "backupReminder": "지금 .env 파일을 백업하는 것을 잊지 마세요 — 키가 들어 있습니다.",
+    "download": ".env 파일 다운로드",
+    "savedTo": "{{path}}에 저장됨"
   },
   "welcome": {
     "title": "Yuvomi에 오신 것을 환영합니다",

@@ -127,7 +127,9 @@
     "title": "Yuvomi jest gotowy!",
     "subtitle": "Twój planer rodzinny działa, a konto administratora jest skonfigurowane.",
     "open": "Otwórz Yuvomi →",
-    "backupReminder": "Pamiętaj, aby teraz utworzyć kopię pliku .env — zawiera on Twoje klucze."
+    "backupReminder": "Pamiętaj, aby teraz utworzyć kopię pliku .env — zawiera on Twoje klucze.",
+    "download": "Pobierz plik .env",
+    "savedTo": "Zapisano w {{path}}"
   },
   "advanced": {
     "tag": "Zaawansowane · opcjonalne",

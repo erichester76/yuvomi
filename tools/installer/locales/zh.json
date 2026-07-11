@@ -127,7 +127,9 @@
     "title": "Yuvomi 已就绪！",
     "subtitle": "您的家庭规划器正在运行，管理员账户已设置完成。",
     "open": "打开 Yuvomi →",
-    "backupReminder": "记得现在备份你的 .env 文件——它保存着你的密钥。"
+    "backupReminder": "记得现在备份你的 .env 文件——它保存着你的密钥。",
+    "download": "下载 .env 文件",
+    "savedTo": "已保存到 {{path}}"
   },
   "advanced": {
     "tag": "高级 · 可选",

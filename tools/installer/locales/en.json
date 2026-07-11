@@ -127,7 +127,9 @@
     "title": "Yuvomi is ready!",
     "subtitle": "Your family planner is running and your admin account is set up.",
     "open": "Open Yuvomi →",
-    "backupReminder": "Remember to back up your .env file now — it holds your keys."
+    "backupReminder": "Remember to back up your .env file now — it holds your keys.",
+    "download": "Download .env file",
+    "savedTo": "Saved to {{path}}"
   },
   "advanced": {
     "tag": "Advanced · optional",

@@ -176,7 +176,9 @@
     "title": "Yuvomi ist bereit!",
     "subtitle": "Dein Familienplaner läuft und dein Admin-Konto ist eingerichtet.",
     "open": "Yuvomi öffnen →",
-    "backupReminder": "Denk daran, deine .env-Datei jetzt zu sichern — sie enthält deine Schlüssel."
+    "backupReminder": "Denk daran, deine .env-Datei jetzt zu sichern — sie enthält deine Schlüssel.",
+    "download": ".env-Datei herunterladen",
+    "savedTo": "Gespeichert unter {{path}}"
   },
   "welcome": {
     "title": "Willkommen bei Yuvomi",

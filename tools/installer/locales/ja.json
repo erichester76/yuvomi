@@ -127,7 +127,9 @@
     "title": "Yuvomi の準備が整いました！",
     "subtitle": "ファミリープランナーが稼働し、管理者アカウントの設定が完了しました。",
     "open": "Yuvomi を開く →",
-    "backupReminder": "今すぐ .env ファイルをバックアップするのを忘れずに — キーが含まれています。"
+    "backupReminder": "今すぐ .env ファイルをバックアップするのを忘れずに — キーが含まれています。",
+    "download": ".env ファイルをダウンロード",
+    "savedTo": "{{path}} に保存しました"
   },
   "advanced": {
     "tag": "詳細設定 · 任意",

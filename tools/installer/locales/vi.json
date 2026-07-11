@@ -127,7 +127,9 @@
     "title": "Yuvomi đã sẵn sàng!",
     "subtitle": "Trình lên kế hoạch gia đình của bạn đang chạy và tài khoản admin đã được thiết lập.",
     "open": "Mở Yuvomi →",
-    "backupReminder": "Nhớ sao lưu tệp .env của bạn ngay bây giờ — nó chứa các khóa của bạn."
+    "backupReminder": "Nhớ sao lưu tệp .env của bạn ngay bây giờ — nó chứa các khóa của bạn.",
+    "download": "Tải xuống tệp .env",
+    "savedTo": "Đã lưu vào {{path}}"
   },
   "advanced": {
     "tag": "Nâng cao · tùy chọn",

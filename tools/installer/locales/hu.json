@@ -127,7 +127,9 @@
     "title": "Yuvomi készen áll!",
     "subtitle": "A családi tervező fut, és az adminisztrátor fiók be van állítva.",
     "open": "Yuvomi megnyitása →",
-    "backupReminder": "Ne feledd most menteni a .env fájlt — ez tartalmazza a kulcsaidat."
+    "backupReminder": "Ne feledd most menteni a .env fájlt — ez tartalmazza a kulcsaidat.",
+    "download": ".env fájl letöltése",
+    "savedTo": "Elmentve ide: {{path}}"
   },
   "advanced": {
     "tag": "Speciális · opcionális",

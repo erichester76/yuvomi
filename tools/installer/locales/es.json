@@ -127,7 +127,9 @@
     "title": "¡Yuvomi está listo!",
     "subtitle": "Tu organizador familiar está en marcha y tu cuenta de administrador está configurada.",
     "open": "Abrir Yuvomi →",
-    "backupReminder": "Recuerda hacer una copia de tu archivo .env ahora: contiene tus claves."
+    "backupReminder": "Recuerda hacer una copia de tu archivo .env ahora: contiene tus claves.",
+    "download": "Descargar archivo .env",
+    "savedTo": "Guardado en {{path}}"
   },
   "advanced": {
     "tag": "Avanzado · opcional",

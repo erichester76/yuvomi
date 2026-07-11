@@ -176,7 +176,9 @@
     "title": "Yuvomi is klaar!",
     "subtitle": "Je gezinsplanner werkt en je beheerdersaccount is ingesteld.",
     "open": "Yuvomi openen →",
-    "backupReminder": "Vergeet niet je .env-bestand nu te back-uppen — het bevat je sleutels."
+    "backupReminder": "Vergeet niet je .env-bestand nu te back-uppen — het bevat je sleutels.",
+    "download": ".env-bestand downloaden",
+    "savedTo": "Opgeslagen in {{path}}"
   },
   "welcome": {
     "title": "Welkom bij Yuvomi",

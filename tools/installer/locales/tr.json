@@ -127,7 +127,9 @@
     "title": "Yuvomi hazır!",
     "subtitle": "Aile planlayıcınız çalışıyor ve yönetici hesabınız ayarlandı.",
     "open": "Yuvomi'u aç →",
-    "backupReminder": "Şimdi .env dosyanızı yedeklemeyi unutmayın — anahtarlarınızı içerir."
+    "backupReminder": "Şimdi .env dosyanızı yedeklemeyi unutmayın — anahtarlarınızı içerir.",
+    "download": ".env dosyasını indir",
+    "savedTo": "Şuraya kaydedildi: {{path}}"
   },
   "advanced": {
     "tag": "Gelişmiş · isteğe bağlı",

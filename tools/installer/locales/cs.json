@@ -176,7 +176,9 @@
     "title": "Yuvomi je připraven!",
     "subtitle": "Tvůj rodinný plánovač běží a účet správce je nastaven.",
     "open": "Otevřít Yuvomi →",
-    "backupReminder": "Nezapomeňte nyní zálohovat soubor .env — obsahuje vaše klíče."
+    "backupReminder": "Nezapomeňte nyní zálohovat soubor .env — obsahuje vaše klíče.",
+    "download": "Stáhnout soubor .env",
+    "savedTo": "Uloženo do {{path}}"
   },
   "welcome": {
     "title": "Vítejte v Yuvomi",
