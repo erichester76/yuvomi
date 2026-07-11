@@ -898,6 +898,24 @@ test('legacy settings page remains available during the leaf migration', () => {
   assert.equal(existsSync(new URL('../public/pages/settings.js', import.meta.url)), true);
 });
 
+test('user multi-select option is the containing block of its hidden checkbox (#483)', () => {
+  // The checkbox is position:absolute + opacity:0 (visually hidden but focusable).
+  // Without position:relative on the option, it resolves against the overflow:hidden
+  // .modal-panel, so tapping a member scrolls the panel instead of the modal body —
+  // a large blank block appears and later fields become unreachable on mobile.
+  const css = read('../public/styles/user-multi-select.css');
+  assert.match(
+    css,
+    /\.user-ms__option\s*\{[^}]*position:\s*relative/,
+    '.user-ms__option must declare position: relative',
+  );
+  assert.match(
+    css,
+    /\.user-ms__checkbox\s*\{[^}]*position:\s*absolute/,
+    'guard assumes .user-ms__checkbox stays position: absolute',
+  );
+});
+
 test('responsive settings shell defines desktop and mobile navigation layouts', () => {
   const source = read('../public/styles/settings.css');
 

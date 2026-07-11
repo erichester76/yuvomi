@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.4] - 2026-07-11
+
+### Fixed
+- Fixed a large blank area appearing in the appointment dialog on mobile after assigning a family member, which pushed the visibility, reminder and save controls out of reach. Tapping a member no longer scrolls the dialog panel instead of its scrollable body. (#483)
+
 ## [1.11.3] - 2026-07-11
 
 ### Fixed
