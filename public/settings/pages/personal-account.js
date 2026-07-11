@@ -329,6 +329,7 @@ function bindEvents(container, user, profileState) {
     try {
       await auth.logout();
     } finally {
+      window.yuvomi?.clearSession?.();
       window.yuvomi?.navigate('/login');
     }
   });

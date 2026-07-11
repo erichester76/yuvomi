@@ -837,10 +837,20 @@ async function renderPage(route, previousPath = null) {
       throw new Error(`Seite ${route.page} exportiert keine render()-Funktion.`);
     }
 
+    // Vollflächige Auth-Seiten (Login, Setup, Passwort-vergessen/-zurücksetzen)
+    // rendern ohne App-Shell. Nach einem Logout kann noch eine Shell aus der
+    // vorigen Sitzung im DOM stehen — sie muss entfernt werden, sonst bleibt die
+    // Navigationsleiste neben dem Login-Formular sichtbar (#478).
+    if (!route.requiresAuth) {
+      if (document.querySelector('.nav-bottom')) {
+        app.replaceChildren();
+        _navBuiltForUserId = null;
+      }
+    }
     // App-Shell einmalig aufbauen BEVOR render() aufgerufen wird -
     // main-content muss im DOM existieren damit document.getElementById()
     // in Seiten-Modulen funktioniert.
-    if (!document.querySelector('.nav-bottom') && currentUser) {
+    else if (!document.querySelector('.nav-bottom') && currentUser) {
       renderAppShell(app);
       _navBuiltForUserId = currentUser.id;
     } else if (currentUser && _navBuiltForUserId !== currentUser.id) {
@@ -2728,6 +2738,17 @@ window.yuvomi = {
   restoreThemeColor: () => {
     const route = allRoutes().find((r) => r.path === currentPath);
     updateThemeColorForRoute(route);
+  },
+  // Client-seitigen Sitzungszustand nach einem bewussten Logout zurücksetzen,
+  // damit die anschließende navigate('/login') nicht am currentUser-Guard
+  // hängenbleibt und kurz das Dashboard zeigt (#478). Der Server-Logout läuft
+  // separat über auth.logout().
+  clearSession: () => {
+    currentUser = null;
+    _navBuiltForUserId = null;
+    stopThirdPartyModulePolling();
+    stopReminders();
+    stopPush();
   },
 };
 
