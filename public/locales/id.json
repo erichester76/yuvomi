@@ -1108,6 +1108,7 @@
         "memberDeletedToast": "{{name}} dihapus.",
         "deleteMemberLabel": "Hapus",
         "logout": "Keluar",
+        "logoutConfirm": "Keluar dari perangkat ini?",
         "synchronizing": "Menyinkronkan…",
         "googleDisconnectConfirm": "Putuskan koneksi Google Calendar?",
         "appleDisconnectConfirm": "Putuskan koneksi Apple Calendar?",

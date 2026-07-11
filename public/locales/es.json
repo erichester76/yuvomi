@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} eliminado.",
         "deleteMemberLabel": "Eliminar",
         "logout": "Cerrar sesión",
+        "logoutConfirm": "¿Cerrar sesión en este dispositivo?",
         "synchronizing": "Sincronizando…",
         "googleDisconnectConfirm": "¿Desconectar Google Calendar?",
         "appleDisconnectConfirm": "¿Desconectar Apple Calendar?",

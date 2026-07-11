@@ -418,10 +418,11 @@ html:has(.search-overlay--visible) yuvomi-install-prompt {
   margin: 0;
 }
 
-/* ── System-Cluster: kompakte 1×3-Reihe (Einstellungen | Hilfe | Änderungen) ── */
+/* ── System-Cluster: kompakte Reihe (Einstellungen | Hilfe | Änderungen |
+ * Abmelden) — Icon-über-Label, monochrom. ── */
 .more-sheet__system {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2);
 }
 
@@ -1004,11 +1005,21 @@ html.fab-anim-done .page-fab {
 
   .nav-sidebar__footer-actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
     gap: var(--space-0h);
     padding: var(--space-2) var(--space-1) 0;
     flex-shrink: 0;
+  }
+
+  /* Abmelden bricht in eine eigene, volle Zeile unter Hilfe/Änderungen und
+   * setzt sich mit einer Haarlinie als terminale Aktion ab. */
+  .nav-sidebar__footer-actions .nav-item--logout {
+    flex-basis: 100%;
+    margin-top: var(--space-1);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-subtle);
   }
 
   /* ── Nav-Item: Sidebar ── */
@@ -1141,6 +1152,13 @@ html.fab-anim-done .page-fab {
   html.sidebar-collapsed .nav-sidebar .nav-sidebar__footer-actions {
     flex-direction: column;
     padding-inline: var(--space-1);
+  }
+
+  /* Eingeklappt stapelt der Footer bereits vertikal (icon-only) — der
+   * Vollzeilen-Umbruch entfällt, die Haarlinie bleibt als Trenner. */
+  html.sidebar-collapsed .nav-sidebar__footer-actions .nav-item--logout {
+    flex-basis: auto;
+    margin-top: var(--space-0h);
   }
 
   html.sidebar-collapsed .nav-sidebar .nav-section-label {

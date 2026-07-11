@@ -1101,6 +1101,7 @@
         "memberDeletedToast": "{{name}} smazán.",
         "deleteMemberLabel": "Smazat",
         "logout": "Odhlásit se",
+        "logoutConfirm": "Odhlásit se z tohoto zařízení?",
         "synchronizing": "Synchronizuji…",
         "googleDisconnectConfirm": "Odpojit připojení Google Calendar?",
         "appleDisconnectConfirm": "Odpojit připojení Apple Calendar?",

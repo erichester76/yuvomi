@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} を削除しました。",
         "deleteMemberLabel": "削除",
         "logout": "ログアウト",
+        "logoutConfirm": "このデバイスからログアウトしますか？",
         "synchronizing": "同期中…",
         "googleDisconnectConfirm": "Google カレンダーの接続を切断しますか？",
         "appleDisconnectConfirm": "Apple カレンダーの接続を切断しますか？",

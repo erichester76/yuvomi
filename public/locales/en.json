@@ -1090,6 +1090,7 @@
         "memberDeletedToast": "{{name}} deleted.",
         "deleteMemberLabel": "Delete",
         "logout": "Log out",
+        "logoutConfirm": "Log out of this device?",
         "synchronizing": "Syncing…",
         "googleDisconnectConfirm": "Disconnect Google Calendar?",
         "appleDisconnectConfirm": "Disconnect Apple Calendar?",

@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} raderade.",
         "deleteMemberLabel": "Radera",
         "logout": "Logga ut",
+        "logoutConfirm": "Logga ut från den här enheten?",
         "synchronizing": "Synkroniseras...",
         "googleDisconnectConfirm": "Koppla bort Google Kalender?",
         "appleDisconnectConfirm": "Koppla bort Apple Calendar?",

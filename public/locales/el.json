@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} διαγράφηκε.",
         "deleteMemberLabel": "Διαγραφή",
         "logout": "Αποσύνδεση",
+        "logoutConfirm": "Αποσύνδεση από αυτή τη συσκευή;",
         "synchronizing": "Συγχρονισμός…",
         "googleDisconnectConfirm": "Αποσύνδεση Google Calendar;",
         "appleDisconnectConfirm": "Αποσύνδεση Apple Calendar;",

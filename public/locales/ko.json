@@ -1108,6 +1108,7 @@
         "memberDeletedToast": "{{name}}이(가) 삭제되었습니다.",
         "deleteMemberLabel": "삭제",
         "logout": "로그아웃",
+        "logoutConfirm": "이 기기에서 로그아웃하시겠습니까?",
         "synchronizing": "동기화 중…",
         "googleDisconnectConfirm": "Google 캘린더 연결을 해제할까요?",
         "appleDisconnectConfirm": "Apple 캘린더 연결을 해제할까요?",

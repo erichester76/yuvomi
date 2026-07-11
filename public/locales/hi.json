@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} हटाया गया।",
         "deleteMemberLabel": "हटाएं",
         "logout": "लॉग आउट",
+        "logoutConfirm": "इस डिवाइस से लॉग आउट करें?",
         "synchronizing": "सिंक हो रहा है…",
         "googleDisconnectConfirm": "Google कैलेंडर कनेक्शन तोड़ें?",
         "appleDisconnectConfirm": "Apple कैलेंडर कनेक्शन तोड़ें?",

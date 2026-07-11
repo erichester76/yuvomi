@@ -1108,6 +1108,7 @@
         "memberDeletedToast": "{{name}} حذف شد.",
         "deleteMemberLabel": "حذف",
         "logout": "خروج",
+        "logoutConfirm": "از این دستگاه خارج می‌شوید؟",
         "synchronizing": "در حال همگام‌سازی…",
         "googleDisconnectConfirm": "اتصال Google Calendar قطع شود؟",
         "appleDisconnectConfirm": "اتصال Apple Calendar قطع شود؟",

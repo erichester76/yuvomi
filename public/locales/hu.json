@@ -1090,6 +1090,7 @@
         "memberDeletedToast": "{{name}} törölve.",
         "deleteMemberLabel": "Törlés",
         "logout": "Kijelentkezés",
+        "logoutConfirm": "Kijelentkezik erről az eszközről?",
         "synchronizing": "Szinkronizálás…",
         "googleDisconnectConfirm": "Google Naptár kapcsolat bontása?",
         "appleDisconnectConfirm": "Apple Naptár kapcsolat bontása?",

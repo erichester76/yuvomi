@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "تم حذف {{name}}.",
         "deleteMemberLabel": "حذف",
         "logout": "تسجيل الخروج",
+        "logoutConfirm": "تسجيل الخروج من هذا الجهاز؟",
         "synchronizing": "جارٍ المزامنة…",
         "googleDisconnectConfirm": "قطع اتصال تقويم Google؟",
         "appleDisconnectConfirm": "قطع اتصال تقويم Apple؟",

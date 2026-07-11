@@ -1090,6 +1090,7 @@
         "memberDeletedToast": "{{name}} verwijderd.",
         "deleteMemberLabel": "Verwijderen",
         "logout": "Uitloggen",
+        "logoutConfirm": "Uitloggen op dit apparaat?",
         "synchronizing": "Synchroniseren…",
         "googleDisconnectConfirm": "Verbinding met Google Agenda verbreken?",
         "appleDisconnectConfirm": "Verbinding met Apple Agenda verbreken?",

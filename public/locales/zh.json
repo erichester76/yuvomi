@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} 已删除。",
         "deleteMemberLabel": "删除",
         "logout": "退出登录",
+        "logoutConfirm": "从此设备退出登录？",
         "synchronizing": "同步中…",
         "googleDisconnectConfirm": "断开 Google 日历连接？",
         "appleDisconnectConfirm": "断开 Apple 日历连接？",

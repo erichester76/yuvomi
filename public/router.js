@@ -15,7 +15,7 @@ import { isKitchenRoute, getLastKitchenRoute } from '/utils/kitchen-tabs.js';
 import { getLastHealthRoute, HEALTH_ROUTES } from '/utils/health-tabs.js';
 import { activityType } from '/utils/health-activity.js';
 import { buildHelpRows } from '/utils/help.js';
-import { openModal } from '/components/modal.js';
+import { openModal, confirmModal } from '/components/modal.js';
 import '/components/datepicker.js';
 import { NAV_ICONS } from '/nav-icons.js';
 import { SETTINGS_LEAVES } from '/settings/registry.js';
@@ -689,6 +689,27 @@ function allRoutes() {
   return [...ROUTES, ...moduleRoutes];
 }
 
+// Bestätigter Logout, überall aus der Navigation erreichbar (Sidebar-Footer +
+// Mehr-Sheet). Teilt den Server-Logout mit den Einstellungen; das finally räumt
+// die lokale Session auch bei Netzfehler, damit man nie „eingeloggt festhängt"
+// (siehe clearSession/#478). Danger-Confirm schützt vor versehentlichem Klick.
+async function confirmAndLogout() {
+  // Kein danger/Rot: Abmelden ist reversibel (wieder einloggen), nicht
+  // destruktiv — Rot bleibt echten Löschaktionen vorbehalten. Der Confirm-
+  // Schritt selbst ist die Absicherung gegen den Fehlklick.
+  const confirmed = await confirmModal(t('settings.logoutConfirm'), {
+    confirmLabel: t('settings.logout'),
+  });
+  if (!confirmed) return false;
+  try {
+    await auth.logout();
+  } finally {
+    window.yuvomi?.clearSession?.();
+    navigate('/login');
+  }
+  return true;
+}
+
 function sidebarActionEl({ labelKey, icon, className, onClick }) {
   const label = t(labelKey);
   const button = document.createElement('button');
@@ -807,6 +828,19 @@ function buildMoreSheetBody() {
     onClick: () => {
       if (window._closeMoreSheet) window._closeMoreSheet({ restoreFocus: false });
       showChangelogModal();
+    },
+  }));
+  system.appendChild(moreActionEl({
+    labelKey: 'settings.logout',
+    icon: 'log-out',
+    className: 'more-item--logout',
+    onClick: () => {
+      if (window._closeMoreSheet) window._closeMoreSheet({ restoreFocus: false });
+      // #more-btn synchron fokussieren, BEVOR das Modal öffnet: openModal
+      // erfasst document.activeElement als previouslyFocused. Sonst landet der
+      // Fokus nach „Abbrechen" auf <body> (das Sheet-Item ist dann inert).
+      document.getElementById('more-btn')?.focus();
+      confirmAndLogout();
     },
   }));
   nodes.push(system);
@@ -1115,6 +1149,15 @@ function renderAppShell(container) {
       icon: 'history',
       className: 'nav-item--changelog',
       onClick: () => showChangelogModal(),
+    }),
+    // Abmelden als terminale Aktion: bricht in eine eigene, volle Zeile unter
+    // Hilfe/Änderungen (CSS: flex-wrap + border-top). Monochrom wie die
+    // Geschwister — Danger-Rot erscheint erst im Confirm.
+    sidebarActionEl({
+      labelKey: 'settings.logout',
+      icon: 'log-out',
+      className: 'nav-item--logout',
+      onClick: () => confirmAndLogout(),
     }),
   );
   sidebar.appendChild(sidebarFooter);

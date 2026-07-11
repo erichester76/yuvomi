@@ -1108,6 +1108,7 @@
         "memberDeletedToast": "{{name}} usunięty.",
         "deleteMemberLabel": "Usuń",
         "logout": "Wyloguj",
+        "logoutConfirm": "Wylogować się z tego urządzenia?",
         "synchronizing": "Synchronizowanie…",
         "googleDisconnectConfirm": "Rozłączyć połączenie z Google Calendar?",
         "appleDisconnectConfirm": "Rozłączyć połączenie z Apple Calendar?",

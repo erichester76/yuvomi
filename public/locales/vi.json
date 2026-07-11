@@ -1090,6 +1090,7 @@
         "memberDeletedToast": "{{name}} đã bị xóa.",
         "deleteMemberLabel": "Xóa",
         "logout": "Đăng xuất",
+        "logoutConfirm": "Đăng xuất khỏi thiết bị này?",
         "synchronizing": "Đang đồng bộ…",
         "googleDisconnectConfirm": "Ngắt kết nối Google Calendar?",
         "appleDisconnectConfirm": "Ngắt kết nối Apple Calendar?",

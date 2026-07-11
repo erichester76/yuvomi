@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-07-11
+
+### Added
+- Logging out is now reachable directly from the navigation: a **Log out** action sits in the desktop sidebar footer and in the mobile "More" sheet, so you no longer have to dig through Settings → Personal → Account. A short confirmation guards against accidental logouts. (#479)
+
 ## [1.8.2] - 2026-07-11
 
 ### Fixed

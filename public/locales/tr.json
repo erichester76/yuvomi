@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} silindi.",
         "deleteMemberLabel": "Sil",
         "logout": "Çıkış yap",
+        "logoutConfirm": "Bu cihazdan çıkış yapılsın mı?",
         "synchronizing": "Senkronize ediliyor…",
         "googleDisconnectConfirm": "Google Takvim bağlantısı kesilsin mi?",
         "appleDisconnectConfirm": "Apple Takvim bağlantısı kesilsin mi?",

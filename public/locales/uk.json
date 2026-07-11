@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} видалено.",
         "deleteMemberLabel": "Видалити",
         "logout": "Вийти",
+        "logoutConfirm": "Вийти на цьому пристрої?",
         "synchronizing": "Синхронізація…",
         "googleDisconnectConfirm": "Від'єднати Google Календар?",
         "appleDisconnectConfirm": "Від'єднати Apple Календар?",

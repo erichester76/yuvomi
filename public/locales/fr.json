@@ -1084,6 +1084,7 @@
         "memberDeletedToast": "{{name}} supprimé.",
         "deleteMemberLabel": "Supprimer",
         "logout": "Se déconnecter",
+        "logoutConfirm": "Se déconnecter de cet appareil ?",
         "synchronizing": "Synchronisation…",
         "googleDisconnectConfirm": "Déconnecter Google Agenda ?",
         "appleDisconnectConfirm": "Déconnecter Apple Calendar ?",
