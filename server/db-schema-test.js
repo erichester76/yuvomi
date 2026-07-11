@@ -763,6 +763,14 @@ const MIGRATIONS_SQL = {
       ON access_permissions(subject_type, subject_id);
   `,
   75: `
+    CREATE TABLE IF NOT EXISTS budget_plans (
+      category    TEXT NOT NULL PRIMARY KEY,
+      amount      REAL NOT NULL,
+      created_by  TEXT,
+      updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+    );
+  `,
+  76: `
     ALTER TABLE budget_entries ADD COLUMN owner_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
     ALTER TABLE budget_entries ADD COLUMN split_method TEXT NOT NULL DEFAULT 'equal';
     ALTER TABLE budget_entries ADD COLUMN linked_expense_id INTEGER REFERENCES expenses(id) ON DELETE SET NULL;
@@ -777,6 +785,40 @@ const MIGRATIONS_SQL = {
       updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
       UNIQUE(budget_entry_id, user_id)
     );
+  `,
+  77: `
+    CREATE TABLE access_permissions_new (
+      subject_type  TEXT NOT NULL CHECK(subject_type IN ('role', 'user')),
+      subject_id    TEXT NOT NULL,
+      resource_type TEXT NOT NULL CHECK(resource_type IN ('module', 'widget', 'capability')),
+      resource_key  TEXT NOT NULL,
+      access        TEXT NOT NULL CHECK(access IN ('none', 'read', 'write', 'allow')),
+      updated_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+      PRIMARY KEY (subject_type, subject_id, resource_type, resource_key)
+    );
+    INSERT INTO access_permissions_new (subject_type, subject_id, resource_type, resource_key, access, updated_at)
+      SELECT subject_type, subject_id, resource_type, resource_key, access, updated_at
+      FROM access_permissions;
+    DROP TABLE access_permissions;
+    ALTER TABLE access_permissions_new RENAME TO access_permissions;
+    CREATE INDEX IF NOT EXISTS idx_access_permissions_subject
+      ON access_permissions(subject_type, subject_id);
+  `,
+  78: `
+    CREATE TABLE budget_plans_new (
+      plan_scope  TEXT NOT NULL DEFAULT 'household' CHECK(plan_scope IN ('household', 'personal')),
+      user_id     INTEGER NOT NULL DEFAULT 0,
+      category    TEXT NOT NULL,
+      amount      REAL NOT NULL,
+      created_by  TEXT,
+      updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+      PRIMARY KEY (plan_scope, user_id, category)
+    );
+    INSERT INTO budget_plans_new (plan_scope, user_id, category, amount, created_by, updated_at)
+      SELECT 'household', 0, category, amount, created_by, updated_at
+      FROM budget_plans;
+    DROP TABLE budget_plans;
+    ALTER TABLE budget_plans_new RENAME TO budget_plans;
   `,
 };
 

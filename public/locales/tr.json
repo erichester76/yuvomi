@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Kredi geri ödemesi: {{borrower}}",
         "typeLoan": "Borç",
         "tabsLabel": "Bütçe bölümleri",
-        "budgetTab": "Bütçe",
+        "budgetTab": "İşlemler",
         "loansTab": "Borçlar",
         "filteredTransactions": "Filtrelenmiş işlemler",
         "clearLoanFilter": "Filtreyi temizle",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Atananlar",
         "splitSectionLabel": "Paylasilan bolusum",
         "singleAssigneeHint": "Bu kalemin ona ait olmasi icin bir kisi atayin.",
-        "multiAssigneeHint": "Birden fazla kisi atayin ve tutarin nasil bolunecegini secin."
+        "multiAssigneeHint": "Birden fazla kisi atayin ve tutarin nasil bolunecegini secin.",
         "planTab": "Plan",
         "planCategoryBudgets": "Kategori bütçeleri",
         "planAddBudget": "Bütçe belirle",

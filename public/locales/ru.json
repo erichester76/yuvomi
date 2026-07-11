@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Платеж по займу: {{borrower}}",
         "typeLoan": "Займ",
         "tabsLabel": "Разделы бюджета",
-        "budgetTab": "Бюджет",
+        "budgetTab": "Транзакции",
         "loansTab": "Займы",
         "filteredTransactions": "Отфильтрованные операции",
         "clearLoanFilter": "Сбросить фильтр",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Назначенные",
         "splitSectionLabel": "Общее распределение",
         "singleAssigneeHint": "Назначьте одного человека, и эта запись станет его.",
-        "multiAssigneeHint": "Назначьте нескольких человек и выберите, как разделить сумму."
+        "multiAssigneeHint": "Назначьте нескольких человек и выберите, как разделить сумму.",
         "planTab": "План",
         "planCategoryBudgets": "Бюджеты по категориям",
         "planAddBudget": "Задать бюджет",

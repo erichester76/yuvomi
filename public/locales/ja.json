@@ -859,7 +859,7 @@
         "loanPaymentTitle": "ローン返済: {{borrower}}",
         "typeLoan": "貸付",
         "tabsLabel": "予算セクション",
-        "budgetTab": "予算",
+        "budgetTab": "取引",
         "loansTab": "貸付",
         "filteredTransactions": "絞り込み済み取引",
         "clearLoanFilter": "フィルター解除",
@@ -923,7 +923,7 @@
         "assigneesLabel": "担当者",
         "splitSectionLabel": "共有分割",
         "singleAssigneeHint": "1人を割り当てると、この項目はその人のものになります。",
-        "multiAssigneeHint": "複数人を割り当てて、金額の分け方を選択します。"
+        "multiAssigneeHint": "複数人を割り当てて、金額の分け方を選択します。",
         "planTab": "予算計画",
         "planCategoryBudgets": "カテゴリ別予算",
         "planAddBudget": "予算を設定",

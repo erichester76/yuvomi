@@ -72,8 +72,12 @@ function freshDb() {
       date TEXT NOT NULL, is_recurring INTEGER NOT NULL DEFAULT 0, created_by INTEGER NOT NULL DEFAULT 1
     );
     CREATE TABLE budget_plans (
-      category TEXT NOT NULL PRIMARY KEY, amount REAL NOT NULL,
-      created_by TEXT, updated_at TEXT
+      plan_scope TEXT NOT NULL DEFAULT 'household',
+      user_id INTEGER NOT NULL DEFAULT 0,
+      category TEXT NOT NULL,
+      amount REAL NOT NULL,
+      created_by TEXT, updated_at TEXT,
+      PRIMARY KEY (plan_scope, user_id, category)
     );
   `);
   return db;

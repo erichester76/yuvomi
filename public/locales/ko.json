@@ -866,7 +866,7 @@
         "loanPaymentTitle": "대출 상환: {{borrower}}",
         "typeLoan": "대출",
         "tabsLabel": "예산 영역",
-        "budgetTab": "예산",
+        "budgetTab": "거래",
         "loansTab": "대출",
         "filteredTransactions": "필터된 거래",
         "clearLoanFilter": "필터 지우기",
@@ -930,7 +930,7 @@
         "assigneesLabel": "담당자",
         "splitSectionLabel": "공유 분할",
         "singleAssigneeHint": "한 사람을 지정하면 이 항목은 그 사람의 것이 됩니다.",
-        "multiAssigneeHint": "여러 사람을 지정하고 금액을 어떻게 나눌지 선택하세요."
+        "multiAssigneeHint": "여러 사람을 지정하고 금액을 어떻게 나눌지 선택하세요.",
         "planTab": "계획",
         "planCategoryBudgets": "카테고리 예산",
         "planAddBudget": "예산 설정",

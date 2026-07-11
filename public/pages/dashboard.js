@@ -5,7 +5,7 @@
  */
 
 import { api } from '/api.js';
-import { canSeeWidget } from '/permissions.js';
+import { canSeeWidget, hasCapability } from '/permissions.js';
 import { t, formatDate, formatTime, getLocale } from '/i18n.js';
 import { getReadableTextColor, AVATAR_FALLBACK_COLOR } from '/utils/color.js';
 import { esc, fmtLocation, renderMarkdownLight } from '/utils/html.js';
@@ -1791,9 +1791,10 @@ export async function render(container, { user }) {
   const currentBudgetMonth = toLocalDateKey(new Date()).slice(0, 7);
 
   async function loadBudgetWidgetSlice(month, view) {
-    const [summary, entries] = await Promise.all([
+    const [summary, entries, plans] = await Promise.all([
       api.get(`/budget/summary?month=${month}${view ? `&view=${view}` : ''}`),
       api.get(`/budget?month=${month}${view ? `&view=${view}` : ''}`),
+      api.get(`/budget/plans?month=${month}${view ? `&view=${view}` : ''}`).catch(() => ({ data: null })),
     ]);
     const byCategory = Array.isArray(summary.data?.byCategory) ? summary.data.byCategory : [];
     const topExpense = byCategory
@@ -1806,8 +1807,9 @@ export async function render(container, { user }) {
       entryCount: Array.isArray(entries.data) ? entries.data.length : 0,
       topExpenseCategory: topExpense?.category || null,
       topExpenseAmount: Math.abs(Number(topExpense?.expenses || 0)),
+      savingsGoal: Number(plans.data?.savings?.planned || 0) || null,
       view,
-      showViewToggle: budgetMode === 'personal' && user?.role === 'admin',
+      showViewToggle: budgetMode === 'personal' && hasCapability('budget_household_view'),
     };
   }
   try {
@@ -1826,7 +1828,7 @@ export async function render(container, { user }) {
     budgetWidgetView = budgetMode === 'personal' ? 'mine' : 'household';
     visibleMealTypes = normalizeVisibleMealTypes(prefsRes.data?.visible_meal_types);
     if (budgetMode === 'personal') {
-      data.budget = await loadBudgetWidgetSlice(currentBudgetMonth, user?.role === 'admin' ? budgetWidgetView : 'mine');
+      data.budget = await loadBudgetWidgetSlice(currentBudgetMonth, hasCapability('budget_household_view') ? budgetWidgetView : 'mine');
     }
   } catch (err) {
     console.error('[Dashboard] Ladefehler:', err.message, 'Status:', err.status ?? 'network');

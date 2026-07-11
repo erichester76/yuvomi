@@ -71,15 +71,27 @@ export const PERMISSION_WIDGETS = Object.freeze([
   { id: 'weather',      module: null },
 ]);
 
+export const PERMISSION_CAPABILITIES = Object.freeze([
+  { key: 'budget_household_view', module: 'budget' },
+  { key: 'budget_household_edit', module: 'budget' },
+  { key: 'budget_plans_edit', module: 'budget' },
+  { key: 'budget_categories_edit', module: 'budget' },
+  { key: 'budget_loans_edit', module: 'budget' },
+]);
+
 export const MODULE_ACCESS_LEVELS = Object.freeze(['none', 'read', 'write']);
 export const WIDGET_ACCESS_LEVELS = Object.freeze(['none', 'allow']);
+export const CAPABILITY_ACCESS_LEVELS = Object.freeze(['none', 'allow']);
 const MODULE_DEFAULT = 'write';
 const WIDGET_DEFAULT = 'allow';
+const CAPABILITY_DEFAULT = 'none';
 
 const MODULE_KEY_SET = new Set(PERMISSION_MODULES.map((m) => m.key));
 const WIDGET_ID_SET = new Set(PERMISSION_WIDGETS.map((w) => w.id));
+const CAPABILITY_KEY_SET = new Set(PERMISSION_CAPABILITIES.map((c) => c.key));
 const MODULE_ACCESS_SET = new Set(MODULE_ACCESS_LEVELS);
 const WIDGET_ACCESS_SET = new Set(WIDGET_ACCESS_LEVELS);
+const CAPABILITY_ACCESS_SET = new Set(CAPABILITY_ACCESS_LEVELS);
 const FAMILY_ROLE_SET = new Set(FAMILY_ROLES);
 
 // Sicherheitsnetz: jeder Permissions-Modulschlüssel muss ein echtes Scope-Modul
@@ -101,15 +113,17 @@ function loadSubjectRows(database, subjectType, subjectId) {
  * Löst die effektiven Rechte eines konkreten Nutzers auf.
  * @param {import('better-sqlite3').Database} database
  * @param {{ id: number, role: string, family_role?: string }} user
- * @returns {{ admin: boolean, modules: Record<string,'none'|'read'|'write'>, widgets: Record<string,'none'|'allow'> }}
+ * @returns {{ admin: boolean, modules: Record<string,'none'|'read'|'write'>, widgets: Record<string,'none'|'allow'>, capabilities: Record<string,'none'|'allow'> }}
  */
 export function resolvePermissions(database, user) {
   const isAdmin = user?.role === 'admin';
   const modules = {};
   const widgets = {};
+  const capabilities = {};
   for (const m of PERMISSION_MODULES) modules[m.key] = isAdmin ? 'write' : MODULE_DEFAULT;
   for (const w of PERMISSION_WIDGETS) widgets[w.id] = isAdmin ? 'allow' : WIDGET_DEFAULT;
-  if (isAdmin) return { admin: true, modules, widgets };
+  for (const c of PERMISSION_CAPABILITIES) capabilities[c.key] = isAdmin ? 'allow' : CAPABILITY_DEFAULT;
+  if (isAdmin) return { admin: true, modules, widgets, capabilities };
 
   const apply = (rows) => {
     for (const r of rows) {
@@ -117,6 +131,8 @@ export function resolvePermissions(database, user) {
         modules[r.resource_key] = r.access;
       } else if (r.resource_type === 'widget' && WIDGET_ID_SET.has(r.resource_key) && WIDGET_ACCESS_SET.has(r.access)) {
         widgets[r.resource_key] = r.access;
+      } else if (r.resource_type === 'capability' && CAPABILITY_KEY_SET.has(r.resource_key) && CAPABILITY_ACCESS_SET.has(r.access)) {
+        capabilities[r.resource_key] = r.access;
       }
     }
   };
@@ -133,7 +149,10 @@ export function resolvePermissions(database, user) {
   for (const w of PERMISSION_WIDGETS) {
     if (w.module && modules[w.module] === 'none') widgets[w.id] = 'none';
   }
-  return { admin: false, modules, widgets };
+  for (const c of PERMISSION_CAPABILITIES) {
+    if (c.module && modules[c.module] === 'none') capabilities[c.key] = 'none';
+  }
+  return { admin: false, modules, widgets, capabilities };
 }
 
 /**
@@ -162,8 +181,8 @@ export function buildSessionModuleAccess(resolved) {
  * Dashboard-Widgets aus — die verbindliche Durchsetzung bleibt serverseitig.
  */
 export function clientPermissions(database, user) {
-  const { admin, modules, widgets } = resolvePermissions(database, user);
-  return { admin, modules, widgets };
+  const { admin, modules, widgets, capabilities } = resolvePermissions(database, user);
+  return { admin, modules, widgets, capabilities };
 }
 
 /** Voller Katalog für die Admin-UI (Module, Widgets, Rollen). */
@@ -171,10 +190,12 @@ export function permissionCatalog() {
   return {
     modules: PERMISSION_MODULES.map((m) => ({ key: m.key, labelKey: m.labelKey, icon: m.icon })),
     widgets: PERMISSION_WIDGETS.map((w) => ({ id: w.id, module: w.module })),
+    capabilities: PERMISSION_CAPABILITIES.map((c) => ({ key: c.key, module: c.module })),
     roles: [...FAMILY_ROLES],
     moduleAccessLevels: [...MODULE_ACCESS_LEVELS],
     widgetAccessLevels: [...WIDGET_ACCESS_LEVELS],
-    defaults: { module: MODULE_DEFAULT, widget: WIDGET_DEFAULT },
+    capabilityAccessLevels: [...CAPABILITY_ACCESS_LEVELS],
+    defaults: { module: MODULE_DEFAULT, widget: WIDGET_DEFAULT, capability: CAPABILITY_DEFAULT },
   };
 }
 
@@ -189,11 +210,13 @@ export function getSubjectPermissions(database, subjectType, subjectId) {
   const rows = loadSubjectRows(database, subjectType, subjectId);
   const modules = {};
   const widgets = {};
+  const capabilities = {};
   for (const r of rows) {
     if (r.resource_type === 'module' && MODULE_KEY_SET.has(r.resource_key)) modules[r.resource_key] = r.access;
     else if (r.resource_type === 'widget' && WIDGET_ID_SET.has(r.resource_key)) widgets[r.resource_key] = r.access;
+    else if (r.resource_type === 'capability' && CAPABILITY_KEY_SET.has(r.resource_key)) capabilities[r.resource_key] = r.access;
   }
-  return { modules, widgets };
+  return { modules, widgets, capabilities };
 }
 
 /**
@@ -203,7 +226,7 @@ export function getSubjectPermissions(database, subjectType, subjectId) {
  * ungültigen Werten.
  * @returns {{ resource_type: string, resource_key: string, access: string }[]}
  */
-export function normalizePermissionInput({ modules = {}, widgets = {} } = {}) {
+export function normalizePermissionInput({ modules = {}, widgets = {}, capabilities = {} } = {}) {
   const rows = [];
   for (const [key, access] of Object.entries(modules || {})) {
     if (!MODULE_KEY_SET.has(key)) throw new Error(`Unknown module: ${key}`);
@@ -217,7 +240,19 @@ export function normalizePermissionInput({ modules = {}, widgets = {} } = {}) {
     if (access === WIDGET_DEFAULT) continue;
     rows.push({ resource_type: 'widget', resource_key: id, access });
   }
+  for (const [key, access] of Object.entries(capabilities || {})) {
+    if (!CAPABILITY_KEY_SET.has(key)) throw new Error(`Unknown capability: ${key}`);
+    if (!CAPABILITY_ACCESS_SET.has(access)) throw new Error(`Invalid capability access: ${access}`);
+    if (access === CAPABILITY_DEFAULT) continue;
+    rows.push({ resource_type: 'capability', resource_key: key, access });
+  }
   return rows;
+}
+
+export function hasCapability(resolved, key) {
+  if (!resolved) return false;
+  if (resolved.admin) return true;
+  return (resolved.capabilities?.[key] ?? CAPABILITY_DEFAULT) === 'allow';
 }
 
 /**

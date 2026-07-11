@@ -224,7 +224,7 @@ router.get('/', (req, res) => {
     // ohne budget_plans-Tabelle die Budget-Aggregation nicht scheitern lassen.
     let savingsGoal = null;
     try {
-      const goalRow = d.prepare("SELECT amount FROM budget_plans WHERE category = '__savings__'").get();
+      const goalRow = d.prepare("SELECT amount FROM budget_plans WHERE plan_scope = 'household' AND user_id = 0 AND category = '__savings__'").get();
       if (goalRow) savingsGoal = Math.round(goalRow.amount * 100) / 100;
     } catch { /* Tabelle fehlt (Legacy/Test) → kein Sparziel */ }
 

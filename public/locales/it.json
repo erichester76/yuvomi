@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Rimborso del prestito: {{borrower}}",
         "typeLoan": "Prestito",
         "tabsLabel": "Sezioni del bilancio",
-        "budgetTab": "Bilancio",
+        "budgetTab": "Transazioni",
         "loansTab": "Prestiti",
         "filteredTransactions": "Movimenti filtrati",
         "clearLoanFilter": "Cancella filtro",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Assegnati",
         "splitSectionLabel": "Ripartizione condivisa",
         "singleAssigneeHint": "Assegna una persona per fare in modo che questo elemento sia suo.",
-        "multiAssigneeHint": "Assegna piu persone e scegli come dividere l'importo."
+        "multiAssigneeHint": "Assegna piu persone e scegli come dividere l'importo.",
         "planTab": "Piano",
         "planCategoryBudgets": "Budget per categoria",
         "planAddBudget": "Imposta budget",

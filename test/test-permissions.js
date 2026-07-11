@@ -23,14 +23,17 @@ import {
   replaceSubjectPermissions,
   normalizePermissionInput,
   isValidFamilyRole,
+  hasCapability,
   PERMISSION_MODULES,
   PERMISSION_WIDGETS,
+  PERMISSION_CAPABILITIES,
 } from '../server/permissions.js';
 
 function freshDb() {
   const db = new DatabaseSync(':memory:');
   db.exec(MIGRATIONS_SQL[1]);   // users
   db.exec(MIGRATIONS_SQL[74]);  // access_permissions
+  db.exec(MIGRATIONS_SQL[77]);  // capabilities support
   return db;
 }
 
@@ -59,7 +62,20 @@ test('Standard ohne Konfiguration: Vollzugriff (rückwärtskompatibel)', () => {
   assert.equal(r.admin, false);
   assert.equal(r.modules.budget, 'write');
   assert.equal(r.widgets.cycle, 'allow');
+  assert.equal(r.capabilities.budget_household_view, 'none');
   assert.equal(buildSessionModuleAccess(r), null); // nichts eingeschränkt
+});
+
+test('Capabilities: Rollen-Profil und Mitglied-Override werden aufgelöst', () => {
+  const db = freshDb();
+  const member = addUser(db, { id: 13, role: 'member', family_role: 'parent' });
+  replaceSubjectPermissions(db, 'role', 'parent', { capabilities: { budget_household_view: 'allow' } });
+  replaceSubjectPermissions(db, 'user', 13, { capabilities: { budget_plans_edit: 'allow' } });
+  const r = resolvePermissions(db, member);
+  assert.equal(hasCapability(r, 'budget_household_view'), true);
+  assert.equal(hasCapability(r, 'budget_plans_edit'), true);
+  assert.equal(hasCapability(r, 'budget_categories_edit'), false);
+  assert.equal(hasCapability(r, 'budget_loans_edit'), false);
 });
 
 test('Rollen-Profil greift für alle Mitglieder der Rolle', () => {
@@ -128,10 +144,12 @@ test('Sparse: Standard-Werte werden nicht gespeichert', () => {
   replaceSubjectPermissions(db, 'role', 'parent', {
     modules: { budget: 'write', health: 'none' }, // write = Standard ⇒ verworfen
     widgets: { cycle: 'allow', family: 'none' },   // allow = Standard ⇒ verworfen
+    capabilities: { budget_household_view: 'none', budget_plans_edit: 'allow' },
   });
   const stored = getSubjectPermissions(db, 'role', 'parent');
   assert.deepEqual(stored.modules, { health: 'none' });
   assert.deepEqual(stored.widgets, { family: 'none' });
+  assert.deepEqual(stored.capabilities, { budget_plans_edit: 'allow' });
 });
 
 test('replaceSubjectPermissions ersetzt atomar (kein Merge)', () => {
@@ -148,7 +166,7 @@ test('Leere Eingabe = „von Rolle erben" (alle Overrides entfernt)', () => {
   addUser(db, { id: 11, role: 'member', family_role: 'child' });
   replaceSubjectPermissions(db, 'user', 11, { modules: { budget: 'none' } });
   replaceSubjectPermissions(db, 'user', 11, {}); // zurücksetzen
-  assert.deepEqual(getSubjectPermissions(db, 'user', 11), { modules: {}, widgets: {} });
+  assert.deepEqual(getSubjectPermissions(db, 'user', 11), { modules: {}, widgets: {}, capabilities: {} });
 });
 
 test('normalizePermissionInput: unbekannte/ungültige Werte werfen', () => {
@@ -156,6 +174,8 @@ test('normalizePermissionInput: unbekannte/ungültige Werte werfen', () => {
   assert.throws(() => normalizePermissionInput({ modules: { budget: 'bogus' } }), /Invalid module access/);
   assert.throws(() => normalizePermissionInput({ widgets: { nope: 'allow' } }), /Unknown widget/);
   assert.throws(() => normalizePermissionInput({ widgets: { cycle: 'read' } }), /Invalid widget access/);
+  assert.throws(() => normalizePermissionInput({ capabilities: { nope: 'allow' } }), /Unknown capability/);
+  assert.throws(() => normalizePermissionInput({ capabilities: { budget_plans_edit: 'read' } }), /Invalid capability access/);
 });
 
 test('isValidFamilyRole', () => {
@@ -167,9 +187,12 @@ test('permissionCatalog liefert Module, Widgets, Rollen, Levels', () => {
   const cat = permissionCatalog();
   assert.ok(cat.modules.some((m) => m.key === 'budget'));
   assert.ok(cat.widgets.some((w) => w.id === 'cycle' && w.module === 'health'));
+  assert.ok(cat.capabilities.some((c) => c.key === 'budget_household_view'));
+  assert.ok(cat.capabilities.some((c) => c.key === 'budget_loans_edit'));
   assert.ok(cat.roles.includes('child'));
   assert.deepEqual(cat.moduleAccessLevels, ['none', 'read', 'write']);
   assert.deepEqual(cat.widgetAccessLevels, ['none', 'allow']);
+  assert.deepEqual(cat.capabilityAccessLevels, ['none', 'allow']);
 });
 
 test('clientPermissions: kompakte Payload mit admin-Flag', () => {
@@ -179,5 +202,6 @@ test('clientPermissions: kompakte Payload mit admin-Flag', () => {
   const p = clientPermissions(db, child);
   assert.equal(p.admin, false);
   assert.equal(p.modules.budget, 'read');
+  assert.equal(p.capabilities.budget_household_view, 'none');
   assert.ok('cycle' in p.widgets);
 });

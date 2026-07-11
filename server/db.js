@@ -2896,6 +2896,30 @@ const MIGRATIONS = [
   },
   {
     version: 75,
+    description: 'planned/estimated budget: per-category monthly caps + monthly savings goal (#468)',
+    up: `
+      -- Geplantes Budget je Ausgabenkategorie und ein Monats-Sparziel (Discussion #468).
+      -- Bewusst als „stetiger" Monatsplan modelliert: EIN Betrag pro Kategorie, der für
+      -- jeden Monat gilt — das ist der 80/20-Fall („mein Lebensmittelbudget sind 400/Monat")
+      -- und vermeidet eine Pro-Monat-Pflege. Der Ist-Wert variiert pro Monat, der Plan bleibt.
+      --
+      --   category  = Ausgabenkategorie-Schlüssel (budget_categories.key, type='expense')
+      --               ODER der reservierte Sentinel '__savings__' für das Monats-Sparziel.
+      --   amount    = geplanter Monatsbetrag, immer positiv (Deckel bzw. Sparziel), 2 Nachkommastellen.
+      --
+      -- Kein FK auf budget_categories: Kategorien können umbenannt/gelöscht werden; ein
+      -- verwaister Plan schadet nicht (wird bei GET einfach ohne Ist-Bezug geführt) und die
+      -- Validierung beim Schreiben stellt gültige Ziele sicher. Append-only.
+      CREATE TABLE IF NOT EXISTS budget_plans (
+        category    TEXT NOT NULL PRIMARY KEY,
+        amount      REAL NOT NULL,
+        created_by  TEXT,
+        updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+      );
+    `,
+  },
+  {
+    version: 76,
     description: 'budget assignees and split metadata',
     up: `
       ALTER TABLE budget_entries ADD COLUMN owner_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
@@ -2919,27 +2943,57 @@ const MIGRATIONS = [
       CREATE TRIGGER IF NOT EXISTS trg_budget_entry_assignments_updated_at
         AFTER UPDATE ON budget_entry_assignments FOR EACH ROW
         BEGIN UPDATE budget_entry_assignments SET updated_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now') WHERE id = OLD.id; END;
-    description: 'planned/estimated budget: per-category monthly caps + monthly savings goal (#468)',
-    up: `
-      -- Geplantes Budget je Ausgabenkategorie und ein Monats-Sparziel (Discussion #468).
-      -- Bewusst als „stetiger" Monatsplan modelliert: EIN Betrag pro Kategorie, der für
-      -- jeden Monat gilt — das ist der 80/20-Fall („mein Lebensmittelbudget sind 400/Monat")
-      -- und vermeidet eine Pro-Monat-Pflege. Der Ist-Wert variiert pro Monat, der Plan bleibt.
-      --
-      --   category  = Ausgabenkategorie-Schlüssel (budget_categories.key, type='expense')
-      --               ODER der reservierte Sentinel '__savings__' für das Monats-Sparziel.
-      --   amount    = geplanter Monatsbetrag, immer positiv (Deckel bzw. Sparziel), 2 Nachkommastellen.
-      --
-      -- Kein FK auf budget_categories: Kategorien können umbenannt/gelöscht werden; ein
-      -- verwaister Plan schadet nicht (wird bei GET einfach ohne Ist-Bezug geführt) und die
-      -- Validierung beim Schreiben stellt gültige Ziele sicher. Append-only.
-      CREATE TABLE IF NOT EXISTS budget_plans (
-        category    TEXT NOT NULL PRIMARY KEY,
-        amount      REAL NOT NULL,
-        created_by  TEXT,
-        updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
-      );
     `,
+  },
+  {
+    version: 77,
+    description: 'capability-based access permissions for module sub-features',
+    up(db) {
+      db.exec(`
+        CREATE TABLE access_permissions_new (
+          subject_type  TEXT NOT NULL CHECK(subject_type IN ('role', 'user')),
+          subject_id    TEXT NOT NULL,
+          resource_type TEXT NOT NULL CHECK(resource_type IN ('module', 'widget', 'capability')),
+          resource_key  TEXT NOT NULL,
+          access        TEXT NOT NULL CHECK(access IN ('none', 'read', 'write', 'allow')),
+          updated_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+          PRIMARY KEY (subject_type, subject_id, resource_type, resource_key)
+        );
+
+        INSERT INTO access_permissions_new (subject_type, subject_id, resource_type, resource_key, access, updated_at)
+          SELECT subject_type, subject_id, resource_type, resource_key, access, updated_at
+          FROM access_permissions;
+
+        DROP TABLE access_permissions;
+        ALTER TABLE access_permissions_new RENAME TO access_permissions;
+        CREATE INDEX IF NOT EXISTS idx_access_permissions_subject
+          ON access_permissions(subject_type, subject_id);
+      `);
+    },
+  },
+  {
+    version: 78,
+    description: 'scope budget plans into household and personal targets',
+    up(db) {
+      db.exec(`
+        CREATE TABLE budget_plans_new (
+          plan_scope  TEXT NOT NULL DEFAULT 'household' CHECK(plan_scope IN ('household', 'personal')),
+          user_id     INTEGER NOT NULL DEFAULT 0,
+          category    TEXT NOT NULL,
+          amount      REAL NOT NULL,
+          created_by  TEXT,
+          updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+          PRIMARY KEY (plan_scope, user_id, category)
+        );
+
+        INSERT INTO budget_plans_new (plan_scope, user_id, category, amount, created_by, updated_at)
+          SELECT 'household', 0, category, amount, created_by, updated_at
+          FROM budget_plans;
+
+        DROP TABLE budget_plans;
+        ALTER TABLE budget_plans_new RENAME TO budget_plans;
+      `);
+    },
   },
 ];
 

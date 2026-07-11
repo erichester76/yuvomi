@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Leningaflossing: {{borrower}}",
         "typeLoan": "Lening",
         "tabsLabel": "Budgetsecties",
-        "budgetTab": "Budget",
+        "budgetTab": "Transacties",
         "loansTab": "Leningen",
         "filteredTransactions": "Gefilterde transacties",
         "clearLoanFilter": "Filter wissen",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Toegewezen aan",
         "splitSectionLabel": "Gedeelde verdeling",
         "singleAssigneeHint": "Wijs een persoon toe zodat dit item van die persoon wordt.",
-        "multiAssigneeHint": "Wijs meerdere personen toe en kies hoe het bedrag wordt verdeeld."
+        "multiAssigneeHint": "Wijs meerdere personen toe en kies hoe het bedrag wordt verdeeld.",
         "planTab": "Plan",
         "planCategoryBudgets": "Categoriebudgetten",
         "planAddBudget": "Budget instellen",

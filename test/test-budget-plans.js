@@ -29,6 +29,14 @@ const expenseCats = database.prepare("SELECT key FROM budget_categories WHERE ty
 assert.ok(expenseCats.length >= 2, 'zwei Ausgabenkategorien erwartet');
 const [catA, catB] = expenseCats.map((c) => c.key);
 
+function insertHouseholdPlan(category, amount) {
+  database.prepare("INSERT INTO budget_plans (plan_scope, user_id, category, amount) VALUES ('household', 0, ?, ?)").run(category, amount);
+}
+
+function insertPersonalPlan(userId, category, amount) {
+  database.prepare("INSERT INTO budget_plans (plan_scope, user_id, category, amount) VALUES ('personal', ?, ?, ?)").run(userId, category, amount);
+}
+
 function seedEntries() {
   database.prepare('DELETE FROM budget_entries').run();
   database.prepare('DELETE FROM budget_plans').run();
@@ -62,8 +70,8 @@ try {
 
   await test('computePlanProgress: Kategorie unter/über Budget', () => {
     seedEntries();
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(catA, 300); // Ist 200 < 300
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(catB, 400); // Ist 450 > 400
+    insertHouseholdPlan(catA, 300); // Ist 200 < 300
+    insertHouseholdPlan(catB, 400); // Ist 450 > 400
     const r = computePlanProgress(database, MONTH);
     const byCat = Object.fromEntries(r.plans.map((p) => [p.category, p]));
     assert.equal(byCat[catA].planned, 300);
@@ -81,7 +89,7 @@ try {
 
   await test('computePlanProgress: Sparziel vs. Netto-Saldo', () => {
     seedEntries(); // income 3000, expenses 650 → balance 2350
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(BUDGET_SAVINGS_KEY, 2000);
+    insertHouseholdPlan(BUDGET_SAVINGS_KEY, 2000);
     const r = computePlanProgress(database, MONTH);
     assert.ok(r.savings);
     assert.equal(r.savings.planned, 2000);
@@ -92,7 +100,7 @@ try {
 
   await test('computePlanProgress: Sparziel nicht erreicht', () => {
     seedEntries();
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(BUDGET_SAVINGS_KEY, 3000);
+    insertHouseholdPlan(BUDGET_SAVINGS_KEY, 3000);
     const r = computePlanProgress(database, MONTH);
     assert.equal(r.savings.met, false);
     assert.equal(r.savings.remaining, 650); // 3000 - 2350
@@ -121,7 +129,7 @@ try {
     });
     const after = database.prepare('SELECT COUNT(*) AS n FROM budget_entries').get().n;
     assert.equal(before, after, 'Einträge unverändert');
-    assert.equal(database.prepare('SELECT COUNT(*) AS n FROM budget_plans WHERE category = ?').get(catA).n, 1);
+    assert.equal(database.prepare("SELECT COUNT(*) AS n FROM budget_plans WHERE plan_scope = 'household' AND user_id = 0 AND category = ?").get(catA).n, 1);
   });
 
   await test('PUT ist idempotent (Upsert)', async () => {
@@ -131,7 +139,7 @@ try {
         method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: a }),
       });
     }
-    assert.equal(database.prepare('SELECT amount FROM budget_plans WHERE category = ?').get(catA).amount, 175);
+    assert.equal(database.prepare("SELECT amount FROM budget_plans WHERE plan_scope = 'household' AND user_id = 0 AND category = ?").get(catA).amount, 175);
     assert.equal(database.prepare('SELECT COUNT(*) AS n FROM budget_plans').get().n, 1);
   });
 
@@ -164,19 +172,29 @@ try {
 
   await test('DELETE entfernt Plan', async () => {
     seedEntries();
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(catA, 250);
+    insertHouseholdPlan(catA, 250);
     const res = await fetch(`${base}/plans/${catA}`, { method: 'DELETE' });
     assert.equal(res.status, 200);
-    assert.equal(database.prepare('SELECT COUNT(*) AS n FROM budget_plans WHERE category = ?').get(catA).n, 0);
+    assert.equal(database.prepare("SELECT COUNT(*) AS n FROM budget_plans WHERE plan_scope = 'household' AND user_id = 0 AND category = ?").get(catA).n, 0);
   });
 
   await test('computeStats liefert plans-Map für Ziel-Marker', () => {
     seedEntries();
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(catA, 250);
-    database.prepare('INSERT INTO budget_plans (category, amount) VALUES (?, ?)').run(BUDGET_SAVINGS_KEY, 900);
+    insertHouseholdPlan(catA, 250);
+    insertHouseholdPlan(BUDGET_SAVINGS_KEY, 900);
     const stats = budget.computeStats(database, { range: 'month', anchor: `${MONTH}-15` });
     assert.equal(stats.plans[catA], 250);
     assert.ok(!(BUDGET_SAVINGS_KEY in stats.plans), 'Sparziel nicht in Kategorie-Plänen');
+  });
+
+  await test('GET /plans?view=mine verwendet persönliche Sparziele', async () => {
+    seedEntries();
+    database.prepare("INSERT INTO sync_config (key, value) VALUES ('budget_mode', 'personal') ON CONFLICT(key) DO UPDATE SET value = excluded.value").run();
+    insertHouseholdPlan(BUDGET_SAVINGS_KEY, 2000);
+    insertPersonalPlan(1, BUDGET_SAVINGS_KEY, 500);
+    const body = (await (await fetch(`${base}/plans?month=${MONTH}&view=mine`)).json()).data;
+    assert.ok(body.savings);
+    assert.equal(body.savings.planned, 500);
   });
 
   console.log(`\n${passed} passed`);

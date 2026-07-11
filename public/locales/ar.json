@@ -859,7 +859,7 @@
         "loanPaymentTitle": "سداد القرض: {{borrower}}",
         "typeLoan": "قرض",
         "tabsLabel": "أقسام الميزانية",
-        "budgetTab": "الميزانية",
+        "budgetTab": "المعاملات",
         "loansTab": "القروض",
         "filteredTransactions": "المعاملات المصفاة",
         "clearLoanFilter": "مسح الفلتر",
@@ -923,7 +923,7 @@
         "assigneesLabel": "المكلّفون",
         "splitSectionLabel": "تقسيم المشاركة",
         "singleAssigneeHint": "عيّن شخصًا واحدًا ليصبح هذا البند خاصًا به.",
-        "multiAssigneeHint": "عيّن عدة أشخاص واختر كيفية تقسيم المبلغ."
+        "multiAssigneeHint": "عيّن عدة أشخاص واختر كيفية تقسيم المبلغ.",
         "planTab": "الخطة",
         "planCategoryBudgets": "ميزانيات الفئات",
         "planAddBudget": "تحديد ميزانية",

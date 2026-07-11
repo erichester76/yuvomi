@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Trả nợ khoản vay: {{borrower}}",
         "typeLoan": "Khoản vay",
         "tabsLabel": "Các phần ngân sách",
-        "budgetTab": "Ngân sách",
+        "budgetTab": "Giao dịch",
         "loansTab": "Khoản vay",
         "filteredTransactions": "Giao dịch đã lọc",
         "clearLoanFilter": "Xóa bộ lọc",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Nguoi duoc giao",
         "splitSectionLabel": "Phan chia chung",
         "singleAssigneeHint": "Gan cho mot nguoi de muc nay thuoc ve ho.",
-        "multiAssigneeHint": "Gan cho nhieu nguoi va chon cach chia so tien."
+        "multiAssigneeHint": "Gan cho nhieu nguoi va chon cach chia so tien.",
         "planTab": "Kế hoạch",
         "planCategoryBudgets": "Ngân sách theo danh mục",
         "planAddBudget": "Đặt ngân sách",

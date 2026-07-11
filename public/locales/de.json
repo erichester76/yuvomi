@@ -866,7 +866,7 @@
         "loanPaymentTitle": "Darlehensrückzahlung: {{borrower}}",
         "typeLoan": "Darlehen",
         "tabsLabel": "Budgetbereiche",
-        "budgetTab": "Budget",
+        "budgetTab": "Transaktionen",
         "loansTab": "Darlehen",
         "filteredTransactions": "Gefilterte Transaktionen",
         "clearLoanFilter": "Filter löschen",

@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Платіж за позикою: {{borrower}}",
         "typeLoan": "Позика",
         "tabsLabel": "Розділи бюджету",
-        "budgetTab": "Бюджет",
+        "budgetTab": "Транзакції",
         "loansTab": "Позики",
         "filteredTransactions": "Відфільтровані операції",
         "clearLoanFilter": "Очистити фільтр",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Призначені",
         "splitSectionLabel": "Спільний розподіл",
         "singleAssigneeHint": "Призначте одну людину, щоб цей запис належав їй.",
-        "multiAssigneeHint": "Призначте кількох людей і виберіть, як розподілити суму."
+        "multiAssigneeHint": "Призначте кількох людей і виберіть, як розподілити суму.",
         "planTab": "План",
         "planCategoryBudgets": "Бюджети за категоріями",
         "planAddBudget": "Задати бюджет",

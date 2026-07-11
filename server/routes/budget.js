@@ -16,6 +16,7 @@ import { loadBudgetAssignments as loadBudgetAssignmentsForDb, saveBudgetAssignme
 import { loadBudgetEntryWithMeta } from '../services/budget-entry-loader.js';
 import { categoryInUseCount, subcategoryInUseCount, categoryCountByType, subcategoryCountForCategory } from '../services/budget-helpers.js';
 import { RECURRENCE_INTERVAL_KEYS, monthsPerInterval, effectiveMonthly, generateRecurringInstances } from '../services/budget-recurrence.js';
+import { resolvePermissions, hasCapability as resolvedHasCapability } from '../permissions.js';
 
 const log = createLogger('Budget');
 
@@ -232,6 +233,51 @@ function isAdmin(req) {
   return req.authRole === 'admin' || req.session?.role === 'admin';
 }
 
+function resolvedBudgetPermissions(req) {
+  if (req._budgetResolvedPermissions) return req._budgetResolvedPermissions;
+  if (isAdmin(req)) {
+    req._budgetResolvedPermissions = { admin: true, modules: { budget: 'write' }, widgets: {}, capabilities: {} };
+    return req._budgetResolvedPermissions;
+  }
+  const userId = req.authUserId || req.session?.userId;
+  if (!userId) {
+    req._budgetResolvedPermissions = { admin: false, modules: {}, widgets: {}, capabilities: {} };
+    return req._budgetResolvedPermissions;
+  }
+  const user = db.get().prepare('SELECT id, role, family_role FROM users WHERE id = ?').get(userId);
+  req._budgetResolvedPermissions = user
+    ? resolvePermissions(db.get(), user)
+    : { admin: false, modules: {}, widgets: {}, capabilities: {} };
+  return req._budgetResolvedPermissions;
+}
+
+function canViewHouseholdBudget(req) {
+  return isAdmin(req) || resolvedHasCapability(resolvedBudgetPermissions(req), 'budget_household_view');
+}
+
+function canEditHouseholdBudget(req) {
+  return isAdmin(req) || resolvedHasCapability(resolvedBudgetPermissions(req), 'budget_household_edit');
+}
+
+function canEditBudgetPlans(req) {
+  return isAdmin(req) || resolvedHasCapability(resolvedBudgetPermissions(req), 'budget_plans_edit');
+}
+
+function canManageBudgetCategories(req) {
+  return isAdmin(req) || resolvedHasCapability(resolvedBudgetPermissions(req), 'budget_categories_edit');
+}
+
+function canEditBudgetLoans(req) {
+  return isAdmin(req) || resolvedHasCapability(resolvedBudgetPermissions(req), 'budget_loans_edit');
+}
+
+function canManageLoan(loan, req) {
+  if (!loan) return false;
+  if (canEditBudgetLoans(req)) return true;
+  const viewerId = req.authUserId || req.session?.userId;
+  return Number(loan.created_by) === Number(viewerId);
+}
+
 function budgetMode() {
   return db.get().prepare('SELECT value FROM sync_config WHERE key = ?').get('budget_mode')?.value === 'personal'
     ? 'personal'
@@ -240,7 +286,7 @@ function budgetMode() {
 
 function normalizeBudgetView(req) {
   if (budgetMode() !== 'personal') return 'household';
-  if (!isAdmin(req)) return 'mine';
+  if (!canViewHouseholdBudget(req)) return 'mine';
   return req.query.view === 'household' ? 'household' : 'mine';
 }
 
@@ -356,9 +402,14 @@ function entryWithLoanMeta(id) {
   return loadBudgetEntryWithMeta(db.get(), id);
 }
 
+function entryAssigneeCount(entryId) {
+  return db.get().prepare('SELECT COUNT(*) AS n FROM budget_entry_assignments WHERE budget_entry_id = ?').get(entryId)?.n || 0;
+}
+
 function canManageBudgetEntry(entry, req) {
   if (!entry) return false;
   if (isAdmin(req)) return true;
+  if (canEditHouseholdBudget(req) && entryAssigneeCount(entry.id) > 1) return true;
   const viewerId = req.authUserId || req.session.userId;
   return Number(entry.owner_user_id || entry.created_by) === Number(viewerId);
 }
@@ -449,6 +500,23 @@ router.get('/summary', (req, res) => {
 // Wörter; zusätzlich validiert das Schreiben gegen die echten Kategorie-Keys).
 export const BUDGET_SAVINGS_KEY = '__savings__';
 
+function budgetPlanScope(view, viewerId = null) {
+  if (view === 'mine' && Number.isInteger(Number(viewerId)) && Number(viewerId) > 0) {
+    return { plan_scope: 'personal', user_id: Number(viewerId) };
+  }
+  return { plan_scope: 'household', user_id: 0 };
+}
+
+function loadBudgetPlanMap(database, { view = 'household', viewerId = null } = {}) {
+  const scope = budgetPlanScope(view, viewerId);
+  const rows = database.prepare(`
+    SELECT category, amount
+    FROM budget_plans
+    WHERE plan_scope = ? AND user_id = ?
+  `).all(scope.plan_scope, scope.user_id);
+  return new Map(rows.map((row) => [row.category, cents(row.amount)]));
+}
+
 /**
  * Berechnet Plan-vs-Ist für einen Monat.
  * Plan = stetiger Monatsbetrag je Ausgabenkategorie; Ist = tatsächliche Ausgaben
@@ -456,19 +524,37 @@ export const BUDGET_SAVINGS_KEY = '__savings__';
  * mit dem Netto-Saldo (Einnahmen − Ausgaben) des Monats.
  * @returns {object} { month, plans: [], savings: {}|null, totalPlanned, totalActual }
  */
-export function computePlanProgress(database, month) {
+export function computePlanProgress(database, month, { view = 'household', viewerId = null } = {}) {
   const from = `${month}-01`;
   const to   = `${month}-31`;
 
-  const planRows = database.prepare('SELECT category, amount FROM budget_plans').all();
-  const planMap  = new Map(planRows.map((r) => [r.category, cents(r.amount)]));
+  const planMap  = loadBudgetPlanMap(database, { view, viewerId });
 
-  // Ist-Ausgaben je Kategorie (als positive Beträge) für den Monat.
-  const spentRows = database.prepare(`
-    SELECT category, SUM(CASE WHEN amount < 0 THEN -amount ELSE 0 END) AS spent
-    FROM budget_entries WHERE date BETWEEN ? AND ? GROUP BY category
-  `).all(from, to);
-  const spentMap = new Map(spentRows.map((r) => [r.category, cents(r.spent || 0)]));
+  const spentMap = new Map();
+  let income = 0;
+  let balance = 0;
+  if (view === 'mine' && viewerId != null) {
+    const rows = loadPersonalBudgetRows(database, from, to, viewerId);
+    for (const row of rows) {
+      const amount = Number(row.amount || 0);
+      balance += amount;
+      if (amount > 0) income += amount;
+      if (amount < 0) spentMap.set(row.category, cents((spentMap.get(row.category) || 0) + Math.abs(amount)));
+    }
+  } else {
+    const spentRows = database.prepare(`
+      SELECT category, SUM(CASE WHEN amount < 0 THEN -amount ELSE 0 END) AS spent
+      FROM budget_entries WHERE date BETWEEN ? AND ? GROUP BY category
+    `).all(from, to);
+    for (const row of spentRows) spentMap.set(row.category, cents(row.spent || 0));
+    const totals = database.prepare(`
+      SELECT SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS income,
+             SUM(amount) AS balance
+      FROM budget_entries WHERE date BETWEEN ? AND ?
+    `).get(from, to);
+    income = cents(totals.income || 0);
+    balance = cents(totals.balance || 0);
+  }
 
   const plans = [];
   for (const [category, planned] of planMap) {
@@ -489,13 +575,8 @@ export function computePlanProgress(database, month) {
   const totalPlanned = cents(plans.reduce((s, p) => s + p.planned, 0));
   const totalActual  = cents(plans.reduce((s, p) => s + p.actual, 0));
 
-  const totals = database.prepare(`
-    SELECT SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS income,
-           SUM(amount) AS balance
-    FROM budget_entries WHERE date BETWEEN ? AND ?
-  `).get(from, to);
-  const income  = cents(totals.income || 0);
-  const balance = cents(totals.balance || 0); // Netto-Ersparnis des Monats
+  income = cents(income);
+  balance = cents(balance); // Netto-Ersparnis des Monats
 
   const savingsPlanned = planMap.get(BUDGET_SAVINGS_KEY);
   const savings = savingsPlanned != null ? {
@@ -518,7 +599,9 @@ export function computePlanProgress(database, month) {
 router.get('/plans', (req, res) => {
   try {
     const month = MONTH_RE.test(req.query.month || '') ? req.query.month : thisMonthLocalKey();
-    res.json({ data: computePlanProgress(db.get(), month) });
+    const view = normalizeBudgetView(req);
+    const viewerId = req.authUserId || req.session.userId;
+    res.json({ data: computePlanProgress(db.get(), month, { view, viewerId }) });
   } catch (err) {
     log.error('', err);
     res.status(500).json({ error: 'Internal error', code: 500 });
@@ -532,7 +615,10 @@ router.get('/plans', (req, res) => {
  */
 router.put('/plans/:category', (req, res) => {
   try {
+    if (!canEditBudgetPlans(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const category  = req.params.category;
+    const view = normalizeBudgetView(req);
+    if (view === 'household' && !canEditBudgetPlans(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const isSavings = category === BUDGET_SAVINGS_KEY;
     if (!isSavings && !validExpenseCategoryKeys().includes(category))
       return res.status(400).json({ error: 'Invalid category.', code: 400 });
@@ -544,12 +630,13 @@ router.put('/plans/:category', (req, res) => {
       return res.status(400).json({ error: 'Betrag muss größer als 0 sein.', code: 400 });
 
     const amount = cents(vAmount.value);
+    const scope = budgetPlanScope(view, req.authUserId || req.session.userId);
     db.get().prepare(`
-      INSERT INTO budget_plans (category, amount, created_by, updated_at)
-      VALUES (?, ?, ?, strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
-      ON CONFLICT(category) DO UPDATE SET
+      INSERT INTO budget_plans (plan_scope, user_id, category, amount, created_by, updated_at)
+      VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+      ON CONFLICT(plan_scope, user_id, category) DO UPDATE SET
         amount = excluded.amount, updated_at = excluded.updated_at
-    `).run(category, amount, req.authUserId || req.session.userId);
+    `).run(scope.plan_scope, scope.user_id, category, amount, req.authUserId || req.session.userId);
 
     res.json({ data: { category, amount } });
   } catch (err) {
@@ -564,7 +651,10 @@ router.put('/plans/:category', (req, res) => {
  */
 router.delete('/plans/:category', (req, res) => {
   try {
-    db.get().prepare('DELETE FROM budget_plans WHERE category = ?').run(req.params.category);
+    const view = normalizeBudgetView(req);
+    if (view === 'household' && !canEditBudgetPlans(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
+    const scope = budgetPlanScope(view, req.authUserId || req.session.userId);
+    db.get().prepare('DELETE FROM budget_plans WHERE plan_scope = ? AND user_id = ? AND category = ?').run(scope.plan_scope, scope.user_id, req.params.category);
     res.json({ data: { deleted: true } });
   } catch (err) {
     log.error('', err);
@@ -708,7 +798,7 @@ router.get('/loans', (req, res) => {
       ORDER BY CASE l.status WHEN 'active' THEN 0 ELSE 1 END,
                l.start_month ASC,
                l.created_at DESC
-    `).all(isAdmin(req) ? 1 : 0, req.authUserId || req.session.userId).map(loanSummaryRow);
+    `).all(canViewHouseholdBudget(req) ? 1 : 0, req.authUserId || req.session.userId).map(loanSummaryRow);
     const active = loans.filter((loan) => loan.status === 'active');
     const totals = loans.reduce((acc, loan) => {
       acc.total_amount += loan.total_amount;
@@ -778,6 +868,7 @@ router.put('/loans/:id', (req, res) => {
     const id = parseInt(req.params.id, 10);
     const loan = db.get().prepare('SELECT * FROM budget_loans WHERE id = ?').get(id);
     if (!loan) return res.status(404).json({ error: 'Loan not found.', code: 404 });
+    if (!canManageLoan(loan, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
 
     const checks = [];
     if (req.body.title !== undefined) checks.push(str(req.body.title, 'Title', { max: MAX_TITLE }));
@@ -828,6 +919,7 @@ router.post('/loans/:id/payments', (req, res) => {
     const id = parseInt(req.params.id, 10);
     const loan = loadLoan(id);
     if (!loan) return res.status(404).json({ error: 'Loan not found.', code: 404 });
+    if (!canManageLoan(loan, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     if (loan.remaining_installments <= 0) return res.status(409).json({ error: 'Loan is already paid.', code: 409 });
 
     const installmentNumber = req.body.installment_number === undefined
@@ -903,6 +995,9 @@ router.post('/loans/:id/payments', (req, res) => {
 router.delete('/loans/:id/payments/:paymentId', (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
+    const loan = db.get().prepare('SELECT * FROM budget_loans WHERE id = ?').get(id);
+    if (!loan) return res.status(404).json({ error: 'Loan not found.', code: 404 });
+    if (!canManageLoan(loan, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const paymentId = parseInt(req.params.paymentId, 10);
     const payment = db.get().prepare(`
       SELECT * FROM budget_loan_payments WHERE id = ? AND loan_id = ?
@@ -929,6 +1024,7 @@ router.delete('/loans/:id', (req, res) => {
     const id = parseInt(req.params.id, 10);
     const loan = db.get().prepare('SELECT * FROM budget_loans WHERE id = ?').get(id);
     if (!loan) return res.status(404).json({ error: 'Loan not found.', code: 404 });
+    if (!canManageLoan(loan, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
 
     const payments = db.get().prepare('SELECT budget_entry_id FROM budget_loan_payments WHERE loan_id = ?').all(id);
     const tx = db.get().transaction(() => {
@@ -949,6 +1045,7 @@ router.delete('/loans/:id', (req, res) => {
 
 router.post('/categories', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const vName = str(req.body.name, 'Name', { max: MAX_SHORT });
     const vType = oneOf(req.body.type || 'expense', ['expense', 'income'], 'Typ');
     const errors = collectErrors([vName, vType]);
@@ -978,6 +1075,7 @@ router.post('/categories', (req, res) => {
 
 router.put('/categories/:key', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const cat = db.get().prepare('SELECT * FROM budget_categories WHERE key = ?').get(req.params.key);
     if (!cat) return res.status(404).json({ error: 'Category not found.', code: 404 });
 
@@ -1000,6 +1098,7 @@ router.put('/categories/:key', (req, res) => {
 
 router.delete('/categories/:key', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const cat = db.get().prepare('SELECT * FROM budget_categories WHERE key = ?').get(req.params.key);
     if (!cat) return res.status(404).json({ error: 'Category not found.', code: 404 });
 
@@ -1020,6 +1119,7 @@ router.delete('/categories/:key', (req, res) => {
 
 router.patch('/categories/reorder', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const vType = oneOf(req.body.type || 'expense', ['expense', 'income'], 'Typ');
     if (vType.error) return res.status(400).json({ error: vType.error, code: 400 });
     const order = Array.isArray(req.body.order) ? req.body.order : [];
@@ -1038,6 +1138,7 @@ router.patch('/categories/reorder', (req, res) => {
 
 router.post('/categories/:categoryKey/subcategories', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const cat = db.get().prepare(`
       SELECT * FROM budget_categories WHERE key = ? AND type = 'expense'
     `).get(req.params.categoryKey);
@@ -1072,6 +1173,7 @@ router.post('/categories/:categoryKey/subcategories', (req, res) => {
 
 router.put('/categories/:key/subcategories/:subKey', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const sub = db.get().prepare('SELECT * FROM budget_subcategories WHERE key = ? AND category_key = ?').get(req.params.subKey, req.params.key);
     if (!sub) return res.status(404).json({ error: 'Subcategory not found.', code: 404 });
 
@@ -1094,6 +1196,7 @@ router.put('/categories/:key/subcategories/:subKey', (req, res) => {
 
 router.delete('/categories/:key/subcategories/:subKey', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const sub = db.get().prepare('SELECT * FROM budget_subcategories WHERE key = ? AND category_key = ?').get(req.params.subKey, req.params.key);
     if (!sub) return res.status(404).json({ error: 'Subcategory not found.', code: 404 });
 
@@ -1114,6 +1217,7 @@ router.delete('/categories/:key/subcategories/:subKey', (req, res) => {
 
 router.patch('/categories/:key/subcategories/reorder', (req, res) => {
   try {
+    if (!canManageBudgetCategories(req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
     const order = Array.isArray(req.body.order) ? req.body.order : [];
     const tx = db.get().transaction((keys) => {
       keys.forEach((key, i) => {
@@ -1577,7 +1681,7 @@ router.delete('/:id', (req, res) => {
  * Aggregiert Budget-Daten für den Statistik-Tab.
  * @param {object} database  better-sqlite3/node:sqlite-Instanz mit .prepare()
  */
-export function computeStats(database, { range, anchor }) {
+export function computeStats(database, { range, anchor, planView = 'household', planViewerId = null }) {
   const r = computeStatsRange(range, anchor);
 
   const totalsRow = database.prepare(`
@@ -1626,9 +1730,9 @@ export function computeStats(database, { range, anchor }) {
   // Hochskalieren erfordern, das leicht in die Irre führt (daher client-seitig
   // bewusst nur im Monat genutzt).
   const plans = {};
-  for (const row of database.prepare('SELECT category, amount FROM budget_plans').all()) {
-    if (row.category === BUDGET_SAVINGS_KEY) continue;
-    plans[row.category] = cents(row.amount);
+  for (const [category, amount] of loadBudgetPlanMap(database, { view: planView, viewerId: planViewerId })) {
+    if (category === BUDGET_SAVINGS_KEY) continue;
+    plans[category] = cents(amount);
   }
 
   return {
@@ -1656,6 +1760,7 @@ function computePersonalStats({ range, anchor, viewerId }) {
     series: current.series,
     byCategory: current.byCategory,
     comparison: previous.totals,
+    plans: computeStats(db.get(), { range, anchor, planView: 'mine', planViewerId: viewerId }).plans,
   };
 }
 
@@ -1674,7 +1779,9 @@ export function statsHandler(req, res) {
       return res.status(400).json({ error: 'anchor muss YYYY-MM-DD sein', code: 400 });
 
     const viewerId = req.authUserId || req.session.userId;
-    res.json({ data: normalizeBudgetView(req) === 'mine' ? computePersonalStats({ range, anchor, viewerId }) : computeStats(db.get(), { range, anchor }) });
+    res.json({ data: normalizeBudgetView(req) === 'mine'
+      ? computePersonalStats({ range, anchor, viewerId })
+      : computeStats(db.get(), { range, anchor, planView: 'household', planViewerId: viewerId }) });
   } catch (err) {
     log.error('', err);
     res.status(500).json({ error: 'Internal error', code: 500 });

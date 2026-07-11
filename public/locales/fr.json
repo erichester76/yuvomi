@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Remboursement du prêt : {{borrower}}",
         "typeLoan": "Prêt",
         "tabsLabel": "Sections du budget",
-        "budgetTab": "Budget",
+        "budgetTab": "Transactions",
         "loansTab": "Prêts",
         "filteredTransactions": "Transactions filtrées",
         "clearLoanFilter": "Effacer le filtre",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Assignés",
         "splitSectionLabel": "Répartition partagée",
         "singleAssigneeHint": "Assignez une personne pour que cet élément lui appartienne.",
-        "multiAssigneeHint": "Assignez plusieurs personnes et choisissez comment répartir le montant."
+        "multiAssigneeHint": "Assignez plusieurs personnes et choisissez comment répartir le montant.",
         "planTab": "Plan",
         "planCategoryBudgets": "Budgets par catégorie",
         "planAddBudget": "Définir un budget",

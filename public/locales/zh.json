@@ -859,7 +859,7 @@
         "loanPaymentTitle": "借款还款：{{borrower}}",
         "typeLoan": "借款",
         "tabsLabel": "预算分区",
-        "budgetTab": "预算",
+        "budgetTab": "交易",
         "loansTab": "借款",
         "filteredTransactions": "已筛选交易",
         "clearLoanFilter": "清除筛选",
@@ -923,7 +923,7 @@
         "assigneesLabel": "分配对象",
         "splitSectionLabel": "共享分摊",
         "singleAssigneeHint": "分配给一个人后，该条目将归此人所有。",
-        "multiAssigneeHint": "分配给多人，并选择如何分摊金额。"
+        "multiAssigneeHint": "分配给多人，并选择如何分摊金额。",
         "planTab": "预算计划",
         "planCategoryBudgets": "分类预算",
         "planAddBudget": "设置预算",

@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Loan repayment: {{borrower}}",
         "typeLoan": "Loan",
         "tabsLabel": "Budget sections",
-        "budgetTab": "Budget",
+        "budgetTab": "Transactions",
         "loansTab": "Loans",
         "filteredTransactions": "Filtered transactions",
         "clearLoanFilter": "Clear filter",

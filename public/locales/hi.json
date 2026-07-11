@@ -859,7 +859,7 @@
         "loanPaymentTitle": "ऋण भुगतान: {{borrower}}",
         "typeLoan": "उधार",
         "tabsLabel": "बजट अनुभाग",
-        "budgetTab": "बजट",
+        "budgetTab": "लेन-देन",
         "loansTab": "उधार",
         "filteredTransactions": "फ़िल्टर किए गए लेन-देन",
         "clearLoanFilter": "फ़िल्टर हटाएं",
@@ -923,7 +923,7 @@
         "assigneesLabel": "असाइन किए गए सदस्य",
         "splitSectionLabel": "साझा बंटवारा",
         "singleAssigneeHint": "एक व्यक्ति को असाइन करें ताकि यह आइटम उसी का हो जाए।",
-        "multiAssigneeHint": "कई लोगों को असाइन करें और चुनें कि राशि कैसे बांटी जाए।"
+        "multiAssigneeHint": "कई लोगों को असाइन करें और चुनें कि राशि कैसे बांटी जाए।",
         "planTab": "योजना",
         "planCategoryBudgets": "श्रेणी बजट",
         "planAddBudget": "बजट तय करें",

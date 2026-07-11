@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Πληρωμή δανείου: {{borrower}}",
         "typeLoan": "Δάνειο",
         "tabsLabel": "Ενότητες προϋπολογισμού",
-        "budgetTab": "Προϋπολογισμός",
+        "budgetTab": "Συναλλαγές",
         "loansTab": "Δάνεια",
         "filteredTransactions": "Φιλτραρισμένες συναλλαγές",
         "clearLoanFilter": "Καθαρισμός φίλτρου",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Ανατεθειμένοι",
         "splitSectionLabel": "Κοινός επιμερισμός",
         "singleAssigneeHint": "Αναθέστε ένα άτομο ώστε αυτό το στοιχείο να είναι δικό του.",
-        "multiAssigneeHint": "Αναθέστε πολλούς ανθρώπους και επιλέξτε πώς θα μοιραστεί το ποσό."
+        "multiAssigneeHint": "Αναθέστε πολλούς ανθρώπους και επιλέξτε πώς θα μοιραστεί το ποσό.",
         "planTab": "Πλάνο",
         "planCategoryBudgets": "Προϋπολογισμοί κατηγοριών",
         "planAddBudget": "Ορισμός προϋπολογισμού",

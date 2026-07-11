@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Splátka půjčky: {{borrower}}",
         "typeLoan": "Půjčka",
         "tabsLabel": "Oblasti rozpočtu",
-        "budgetTab": "Rozpočet",
+        "budgetTab": "Transakce",
         "loansTab": "Půjčky",
         "filteredTransactions": "Filtrované transakce",
         "clearLoanFilter": "Zrušit filtr",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Přiřazeno",
         "splitSectionLabel": "Sdílené rozdělení",
         "singleAssigneeHint": "Přiřaďte jednu osobu, aby tato položka byla její.",
-        "multiAssigneeHint": "Přiřaďte více lidí a zvolte, jak částku rozdělit."
+        "multiAssigneeHint": "Přiřaďte více lidí a zvolte, jak částku rozdělit.",
         "planTab": "Plán",
         "planCategoryBudgets": "Rozpočty kategorií",
         "planAddBudget": "Nastavit rozpočet",

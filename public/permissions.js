@@ -30,7 +30,7 @@ const NAV_TO_MODULE = Object.freeze({
   health: 'health',
 });
 
-let _perms = { admin: false, modules: {}, widgets: {} };
+let _perms = { admin: false, modules: {}, widgets: {}, capabilities: {} };
 
 /** Übernimmt die Rechte-Payload aus einer Auth-Antwort (/me, /login). */
 export function setPermissions(payload) {
@@ -39,13 +39,14 @@ export function setPermissions(payload) {
       admin: payload.admin === true,
       modules: payload.modules && typeof payload.modules === 'object' ? payload.modules : {},
       widgets: payload.widgets && typeof payload.widgets === 'object' ? payload.widgets : {},
+      capabilities: payload.capabilities && typeof payload.capabilities === 'object' ? payload.capabilities : {},
     };
   }
 }
 
 /** Setzt den Store zurück (Logout). */
 export function clearPermissions() {
-  _perms = { admin: false, modules: {}, widgets: {} };
+  _perms = { admin: false, modules: {}, widgets: {}, capabilities: {} };
 }
 
 export function getPermissions() {
@@ -86,4 +87,9 @@ export function isNavModuleReadOnly(navModule) {
 export function canSeeWidget(widgetId) {
   if (_perms.admin) return true;
   return (_perms.widgets?.[widgetId] ?? 'allow') !== 'none';
+}
+
+export function hasCapability(capabilityKey) {
+  if (_perms.admin) return true;
+  return (_perms.capabilities?.[capabilityKey] ?? 'none') === 'allow';
 }

@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Pago del préstamo: {{borrower}}",
         "typeLoan": "Préstamo",
         "tabsLabel": "Secciones del presupuesto",
-        "budgetTab": "Presupuesto",
+        "budgetTab": "Transacciones",
         "loansTab": "Préstamos",
         "filteredTransactions": "Transacciones filtradas",
         "clearLoanFilter": "Limpiar filtro",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Asignados",
         "splitSectionLabel": "Reparto compartido",
         "singleAssigneeHint": "Asigna una persona para que este elemento sea suyo.",
-        "multiAssigneeHint": "Asigna varias personas y elige cómo repartir el importe."
+        "multiAssigneeHint": "Asigna varias personas y elige cómo repartir el importe.",
         "planTab": "Plan",
         "planCategoryBudgets": "Presupuestos por categoría",
         "planAddBudget": "Definir presupuesto",

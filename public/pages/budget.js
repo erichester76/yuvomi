@@ -18,6 +18,7 @@ import { renderPlans } from '/pages/budget-plans.js';
 import { toLocalDateKey } from '/utils/date.js';
 import { budgetCategoryLabel } from '/utils/category-labels.js';
 import { renderUserMultiSelect, bindUserMultiSelect, getSelectedUserIds } from '/components/user-multi-select.js';
+import { hasCapability } from '/permissions.js';
 import '/components/category-manager.js';
 
 // --------------------------------------------------------
@@ -272,7 +273,7 @@ export async function render(container, { user }) {
               ${t('splitExpenses.tabLabel')}
             </button>
           </div>
-          ${state.budgetMode === 'personal' && _user?.role === 'admin' ? `
+          ${state.budgetMode === 'personal' && hasCapability('budget_household_view') ? `
           <div class="budget-view-toggle" role="group" aria-label="${t('budget.viewModeLabel')}">
             <button class="budget-view-toggle__btn ${state.budgetView === 'mine' ? 'budget-view-toggle__btn--active' : ''}" id="budget-view-mine" type="button">${t('budget.viewMine')}</button>
             <button class="budget-view-toggle__btn ${state.budgetView === 'household' ? 'budget-view-toggle__btn--active' : ''}" id="budget-view-household" type="button">${t('budget.viewHousehold')}</button>
@@ -441,11 +442,13 @@ function renderBody() {
   }
   if (state.activeTab === 'plan') {
     setHtml(body, '<div class="budget-tab-panel budget-tab-panel--plan" id="budget-plan-panel"></div>');
-    renderPlans(body.querySelector('#budget-plan-panel'), {
-      user: _user, currency: state.currency, month: state.month,
-      formatAmount, categoryLabel, esc,
-      expenseCategories: expenseCategories(),
-    }).catch((err) => console.error('[Budget] plans render error:', err));
+      renderPlans(body.querySelector('#budget-plan-panel'), {
+        user: _user, currency: state.currency, month: state.month,
+        formatAmount, categoryLabel, esc,
+        expenseCategories: expenseCategories(),
+        budgetView: state.budgetMode === 'personal' ? state.budgetView : 'household',
+        canEditPlans: hasCapability('budget_plans_edit'),
+      }).catch((err) => console.error('[Budget] plans render error:', err));
     return;
   }
   if (state.activeTab === 'loans') {
@@ -513,10 +516,10 @@ function renderBody() {
           ${state.budgetMode === 'personal' ? `<div class="budget-list-header__filter">${state.budgetView === 'household' ? t('budget.viewHousehold') : t('budget.viewMine')}</div>` : ''}
         </div>
         <div class="budget-list-header__actions">
-        <button class="btn btn--icon btn--ghost" id="budget-manage-categories"
+        ${hasCapability('budget_categories_edit') ? `<button class="btn btn--icon btn--ghost" id="budget-manage-categories"
           aria-label="${t('budget.manageCategories')}" title="${t('budget.manageCategories')}">
           <i data-lucide="tags" class="icon-md" aria-hidden="true"></i>
-        </button>
+        </button>` : ''}
         ${state.entries.length ? `
         <a href="/api/v1/budget/export?month=${state.month}" class="btn btn--secondary budget-csv-export">
           <i data-lucide="download" class="icon-sm" aria-hidden="true"></i>CSV
@@ -545,7 +548,7 @@ function renderBody() {
     if (item && !e.target.closest('[data-action]')) {
       const entry = state.entries.find((e) => e.id === parseInt(item.dataset.id, 10));
       if (entry && !entry.is_readonly) {
-        if (state.budgetMode === 'personal' && state.budgetView === 'mine' && entry.assignee_count > 1 && _user?.role === 'admin') {
+        if (state.budgetMode === 'personal' && state.budgetView === 'mine' && entry.assignee_count > 1 && hasCapability('budget_household_edit')) {
           state.budgetView = 'household';
           await loadMonth(state.month);
           renderBody();
@@ -670,7 +673,7 @@ function renderEntries() {
     const canOpenParent = state.budgetMode === 'personal'
       && state.budgetView === 'mine'
       && e.assignee_count > 1
-      && _user?.role === 'admin';
+      && hasCapability('budget_household_edit');
 
     return `
       <div class="budget-entry" data-id="${e.id}">
@@ -761,6 +764,12 @@ function activeLoanLabel() {
   return loan ? t('budget.loanFilterActive', { title: loan.title }) : '';
 }
 
+function canManageLoan(loan) {
+  if (!loan) return false;
+  if (hasCapability('budget_loans_edit')) return true;
+  return Number(loan.created_by) === Number(_user?.id);
+}
+
 function loanPaymentsFor(loans) {
   return loans.flatMap((loan) => (loan.payments ?? []).map((payment) => ({ ...payment, loan })))
     .sort((a, b) => new Date(b.paid_date) - new Date(a.paid_date) || b.installment_number - a.installment_number);
@@ -808,13 +817,13 @@ function renderLoanPaymentEntry(loan, payment) {
       </div>
       <div class="budget-entry__amount budget-entry__amount--income">+${formatAmount(payment.amount)}</div>
       <div class="budget-entry__actions">
-        ${entry ? `
+        ${entry && canManageLoan(loan) ? `
         <button class="budget-entry__action" data-action="loan-payment-edit" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry.id}" aria-label="${t('common.edit')}">
           <i data-lucide="pencil" class="icon-md" aria-hidden="true"></i>
         </button>` : ''}
-        <button class="budget-entry__action budget-entry__delete" data-action="loan-payment-delete" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry?.id ?? ''}" aria-label="${t('budget.deleteLabel')}">
+        ${canManageLoan(loan) ? `<button class="budget-entry__action budget-entry__delete" data-action="loan-payment-delete" data-loan-id="${loan.id}" data-payment-id="${payment.id}" data-entry-id="${entry?.id ?? ''}" aria-label="${t('budget.deleteLabel')}">
           <i data-lucide="trash-2" class="icon-md" aria-hidden="true"></i>
-        </button>
+        </button>` : ''}
       </div>
     </div>
   `;
@@ -982,7 +991,7 @@ function renderLoanCard(loan) {
       <div class="budget-loan-card__footer">
         <span>${t('budget.loanNextDue', { month: nextDue })}</span>
         <div class="budget-loan-card__actions">
-          <button class="btn btn--secondary btn--icon" data-action="loan-edit" data-id="${loan.id}" aria-label="${t('budget.editLoan')}">
+          ${canManageLoan(loan) ? `<button class="btn btn--secondary btn--icon" data-action="loan-edit" data-id="${loan.id}" aria-label="${t('budget.editLoan')}">
             <i data-lucide="pencil" aria-hidden="true"></i>
           </button>
           <button class="btn btn--secondary btn--icon" data-action="loan-delete" data-id="${loan.id}" aria-label="${t('budget.deleteLoan')}">
@@ -990,7 +999,7 @@ function renderLoanCard(loan) {
           </button>
           <button class="btn btn--primary" data-action="loan-pay" data-id="${loan.id}" ${payDisabled}>
             ${t('budget.markLoanPaid')}
-          </button>
+          </button>` : ''}
         </div>
       </div>
     </article>

@@ -24,7 +24,8 @@ function fmt(v) { return view.ctx.formatAmount(v); }
 async function load() {
   const body = view.root.querySelector('#budget-plan-body');
   try {
-    const res = await api.get(`/budget/plans?month=${view.month}`);
+    const viewParam = view.ctx?.budgetView ? `&view=${view.ctx.budgetView}` : '';
+    const res = await api.get(`/budget/plans?month=${view.month}${viewParam}`);
     view.data = res.data;
     view.error = false;
   } catch (err) {
@@ -76,9 +77,9 @@ function renderBody(body) {
     <div class="budget-plan__section">
       <div class="budget-plan__section-head">
         <h3 class="budget-plan__section-title">${t('budget.planCategoryBudgets')}</h3>
-        <button class="btn btn--secondary btn--sm" id="budget-plan-add">
+        ${view.ctx?.canEditPlans ? `<button class="btn btn--secondary btn--sm" id="budget-plan-add">
           <i data-lucide="plus" class="icon-md" aria-hidden="true"></i>${t('budget.planAddBudget')}
-        </button>
+        </button>` : ''}
       </div>
       <div id="budget-plan-rows">${renderRows(d.plans)}</div>
     </div>
@@ -88,9 +89,11 @@ function renderBody(body) {
 }
 
 function renderSavingsCard(savings) {
+  const Tag = view.ctx?.canEditPlans ? 'button' : 'div';
+  const typeAttr = view.ctx?.canEditPlans ? ' type="button"' : '';
   if (!savings) {
     return `
-      <button type="button" class="budget-plan-savings budget-plan-savings--empty" id="budget-plan-savings">
+      <${Tag}${typeAttr} class="budget-plan-savings budget-plan-savings--empty" id="budget-plan-savings">
         <div class="budget-plan-savings__prompt">
           <i data-lucide="piggy-bank" aria-hidden="true"></i>
           <div>
@@ -99,7 +102,7 @@ function renderSavingsCard(savings) {
           </div>
         </div>
         <span class="budget-plan-savings__prompt-cta">${t('budget.planSetGoal')} <i data-lucide="chevron-right" aria-hidden="true"></i></span>
-      </button>`;
+      </${Tag}>`;
   }
 
   const ratio = Math.max(0, Math.min(1, savings.ratio));
@@ -116,7 +119,7 @@ function renderSavingsCard(savings) {
       : t('budget.planSavingsShort', { amount: fmt(Math.max(0, savings.remaining)) });
 
   return `
-    <button type="button" class="budget-plan-savings budget-plan-savings--tone-${tone}" id="budget-plan-savings">
+    <${Tag}${typeAttr} class="budget-plan-savings budget-plan-savings--tone-${tone}" id="budget-plan-savings">
       <div class="budget-plan-savings__ring">
         <svg viewBox="0 0 120 120" aria-hidden="true">
           <circle class="budget-plan-savings__ring-track" cx="60" cy="60" r="${R}" fill="none" stroke-width="10" />
@@ -136,7 +139,7 @@ function renderSavingsCard(savings) {
       </div>
       <i data-lucide="pencil" class="budget-plan-savings__edit" aria-hidden="true"></i>
       <span class="sr-only">${t('budget.planEditAction')}</span>
-    </button>`;
+    </${Tag}>`;
 }
 
 function renderRows(plans) {
@@ -149,13 +152,15 @@ function renderRows(plans) {
       </div>`;
   }
   return plans.map((p) => {
+    const Tag = view.ctx?.canEditPlans ? 'button' : 'div';
+    const typeAttr = view.ctx?.canEditPlans ? ' type="button"' : '';
     const tone = toneForRatio(p.ratio, p.over);
     const pct = Math.max(0, Math.min(100, Math.round(p.ratio * 100)));
     const foot = p.over
       ? t('budget.planOverBy', { amount: fmt(Math.abs(p.remaining)) })
       : t('budget.planLeft', { amount: fmt(Math.max(0, p.remaining)) });
     return `
-      <button type="button" class="budget-plan-row budget-plan-row--tone-${tone}" data-category="${view.ctx.esc(p.category)}">
+      <${Tag}${typeAttr} class="budget-plan-row budget-plan-row--tone-${tone}" data-category="${view.ctx.esc(p.category)}">
         <div class="budget-plan-row__top">
           <span class="budget-plan-row__label">${view.ctx.esc(view.ctx.categoryLabel(p.category))}</span>
           <span class="budget-plan-row__amounts"><strong>${fmt(p.actual)}</strong> / ${fmt(p.planned)}</span>
@@ -165,11 +170,12 @@ function renderRows(plans) {
         </div>
         <div class="budget-plan-row__foot">${foot}</div>
         <span class="sr-only">${t('budget.planEditAction')}</span>
-      </button>`;
+      </${Tag}>`;
   }).join('');
 }
 
 function wire(body) {
+  if (!view.ctx?.canEditPlans) return;
   body.querySelector('#budget-plan-add')?.addEventListener('click', openAddPlan);
   body.querySelector('#budget-plan-savings')?.addEventListener('click', () =>
     openPlanEditor({ category: '__savings__', savings: true }));

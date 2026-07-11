@@ -866,7 +866,7 @@
         "loanPaymentTitle": "Spłata pożyczki: {{borrower}}",
         "typeLoan": "Pożyczka",
         "tabsLabel": "Sekcje budżetu",
-        "budgetTab": "Budżet",
+        "budgetTab": "Transakcje",
         "loansTab": "Pożyczki",
         "filteredTransactions": "Przefiltrowane transakcje",
         "clearLoanFilter": "Wyczyść filtr",
@@ -930,7 +930,7 @@
         "assigneesLabel": "Przypisani",
         "splitSectionLabel": "Wspolny podzial",
         "singleAssigneeHint": "Przypisz jedna osobe, aby ten wpis byl jej.",
-        "multiAssigneeHint": "Przypisz kilka osob i wybierz, jak podzielic kwote."
+        "multiAssigneeHint": "Przypisz kilka osob i wybierz, jak podzielic kwote.",
         "planTab": "Plan",
         "planCategoryBudgets": "Budżety kategorii",
         "planAddBudget": "Ustaw budżet",

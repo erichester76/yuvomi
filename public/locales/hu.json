@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Hitel visszafizetés: {{borrower}}",
         "typeLoan": "Hitel",
         "tabsLabel": "Költségvetési szakaszok",
-        "budgetTab": "Költségvetés",
+        "budgetTab": "Tranzakciók",
         "loansTab": "Hitelek",
         "filteredTransactions": "Szűrt tranzakciók",
         "clearLoanFilter": "Szűrő törlése",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Hozzárendeltek",
         "splitSectionLabel": "Megosztott felosztás",
         "singleAssigneeHint": "Rendelj hozzá egy személyt, hogy ez a tétel az övé legyen.",
-        "multiAssigneeHint": "Rendelj hozzá több személyt, és válaszd ki, hogyan oszlik meg az összeg."
+        "multiAssigneeHint": "Rendelj hozzá több személyt, és válaszd ki, hogyan oszlik meg az összeg.",
         "planTab": "Terv",
         "planCategoryBudgets": "Kategória-költségkeretek",
         "planAddBudget": "Költségkeret megadása",

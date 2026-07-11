@@ -859,7 +859,7 @@
         "loanPaymentTitle": "Låneåterbetalning: {{borrower}}",
         "typeLoan": "Lån",
         "tabsLabel": "Budgetsektioner",
-        "budgetTab": "Budget",
+        "budgetTab": "Transaktioner",
         "loansTab": "Lån",
         "filteredTransactions": "Filtrerade transaktioner",
         "clearLoanFilter": "Rensa filter",
@@ -923,7 +923,7 @@
         "assigneesLabel": "Tilldelade",
         "splitSectionLabel": "Delad uppdelning",
         "singleAssigneeHint": "Tilldela en person sa att posten blir deras.",
-        "multiAssigneeHint": "Tilldela flera personer och valj hur beloppet ska delas."
+        "multiAssigneeHint": "Tilldela flera personer och valj hur beloppet ska delas.",
         "planTab": "Plan",
         "planCategoryBudgets": "Kategoribudgetar",
         "planAddBudget": "Ange budget",
