@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.2] - 2026-07-11
+
+### Fixed
+- The login screen now shows the new app logo (three overlapping circles) instead of the old house glyph, so the first screen you see matches the rest of the app.
+
 ## [1.11.1] - 2026-07-11
 
 ### Changed
