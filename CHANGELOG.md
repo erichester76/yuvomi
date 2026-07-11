@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.1] - 2026-07-12
+
+### Fixed
+- **Collapsed sidebar footer no longer misaligns on hover (#488).** When hovering an unpinned, collapsed desktop sidebar to expand it, the footer actions (Help, Changelog, Log out) stayed in their icon-only centered column instead of matching the pinned layout. The flyout now restores the expanded row layout, with Help and Changelog side by side and Log out on its own full-width row.
+
 ## [1.13.0] - 2026-07-11
 
 ### Added
