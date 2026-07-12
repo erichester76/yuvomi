@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "家族計画。安全。プライバシー重視。オープンソース。",
+        "tagline": "家族のプランナーへおかえりなさい。",
         "usernameLabel": "ユーザー名",
-        "usernamePlaceholder": "ユーザー名",
         "passwordLabel": "パスワード",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "ログイン",
         "loggingIn": "ログイン中…",
-        "tooManyAttempts": "試行回数が多すぎます。しばらくお待ちください。",
+        "tooManyAttempts": "試行回数が多すぎます。1分ほど待ってからもう一度お試しください。",
         "invalidCredentials": "ユーザー名またはパスワードが正しくありません。",
         "showPassword": "パスワードを表示",
         "hidePassword": "パスワードを非表示",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "SSOでサインイン",
         "orDivider": "または",
         "ssoError": "SSOサインインに失敗しました。もう一度お試しください。",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "接続に失敗しました。サーバーが起動しているか確認して、もう一度お試しください。",
+        "capsLockWarning": "Caps Lock がオンになっています。",
+        "fillAllFields": "ユーザー名とパスワードを入力してください。"
     },
     "setup": {
         "title": "Yuvomi へようこそ",

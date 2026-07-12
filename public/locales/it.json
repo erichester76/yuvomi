@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Pianificazione familiare. Sicura. Rispettosa della privacy. Open source.",
+        "tagline": "Bentornato nel tuo pianificatore familiare.",
         "usernameLabel": "Nome utente",
-        "usernamePlaceholder": "nomeutente",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Accedi",
         "loggingIn": "Accesso in corso…",
-        "tooManyAttempts": "Troppi tentativi. Attendi un momento.",
+        "tooManyAttempts": "Troppi tentativi. Attendi circa un minuto e riprova.",
         "invalidCredentials": "Credenziali non valide.",
         "showPassword": "Mostra password",
         "hidePassword": "Nascondi password",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Accedi con SSO",
         "orDivider": "o",
         "ssoError": "Accesso SSO non riuscito. Riprova.",
-        "forgotPassword": "Password dimenticata?"
+        "forgotPassword": "Password dimenticata?",
+        "networkError": "Connessione non riuscita. Verifica che il server sia in esecuzione e riprova.",
+        "capsLockWarning": "Il tasto Bloc Maiusc è attivo.",
+        "fillAllFields": "Inserisci nome utente e password."
     },
     "setup": {
         "title": "Benvenuto in Yuvomi",

@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Kế hoạch gia đình. Bảo mật. Thân thiện với quyền riêng tư. Mã nguồn mở.",
+        "tagline": "Chào mừng bạn trở lại trình lập kế hoạch gia đình.",
         "usernameLabel": "Tên người dùng",
-        "usernamePlaceholder": "tên_người_dùng",
         "passwordLabel": "Mật khẩu",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Đăng nhập",
         "loggingIn": "Đang đăng nhập…",
-        "tooManyAttempts": "Quá nhiều lần thử. Vui lòng đợi một lát.",
+        "tooManyAttempts": "Quá nhiều lần thử. Vui lòng đợi khoảng một phút rồi thử lại.",
         "invalidCredentials": "Thông tin đăng nhập không hợp lệ.",
         "showPassword": "Hiện mật khẩu",
         "hidePassword": "Ẩn mật khẩu",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Đăng nhập với SSO",
         "orDivider": "hoặc",
         "ssoError": "Đăng nhập SSO thất bại. Vui lòng thử lại.",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "Kết nối thất bại. Kiểm tra xem máy chủ có đang chạy không rồi thử lại.",
+        "capsLockWarning": "Caps Lock đang bật.",
+        "fillAllFields": "Vui lòng nhập tên người dùng và mật khẩu."
     },
     "setup": {
         "title": "Chào mừng đến với Yuvomi",

@@ -1712,14 +1712,12 @@
         }
     },
     "login": {
-        "tagline": "Familienplanung. Sicher. Datenschutzfreundlich. Open Source.",
+        "tagline": "Willkommen zurück bei eurem Familienplaner.",
         "usernameLabel": "Benutzername",
-        "usernamePlaceholder": "benutzername",
         "passwordLabel": "Passwort",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Anmelden",
         "loggingIn": "Wird angemeldet …",
-        "tooManyAttempts": "Zu viele Versuche. Bitte warte kurz.",
+        "tooManyAttempts": "Zu viele Versuche. Bitte warte etwa eine Minute und versuche es erneut.",
         "invalidCredentials": "Ungültige Anmeldedaten.",
         "showPassword": "Passwort anzeigen",
         "hidePassword": "Passwort verbergen",
@@ -1727,7 +1725,10 @@
         "loginWithSso": "Mit SSO anmelden",
         "orDivider": "oder",
         "ssoError": "SSO-Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
-        "forgotPassword": "Passwort vergessen?"
+        "forgotPassword": "Passwort vergessen?",
+        "networkError": "Verbindung fehlgeschlagen. Prüfe, ob der Server läuft, und versuche es erneut.",
+        "capsLockWarning": "Feststelltaste (Caps Lock) ist aktiv.",
+        "fillAllFields": "Bitte gib Benutzername und Passwort ein."
     },
     "setup": {
         "title": "Willkommen bei Yuvomi",

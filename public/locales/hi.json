@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "पारिवारिक योजना। सुरक्षित। गोपनीयता-अनुकूल। ओपन सोर्स।",
+        "tagline": "अपने पारिवारिक प्लानर में फिर से आपका स्वागत है।",
         "usernameLabel": "उपयोगकर्ता नाम",
-        "usernamePlaceholder": "उपयोगकर्ता नाम",
         "passwordLabel": "पासवर्ड",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "लॉग इन",
         "loggingIn": "लॉग इन हो रहा है…",
-        "tooManyAttempts": "बहुत अधिक प्रयास। कृपया थोड़ा प्रतीक्षा करें।",
+        "tooManyAttempts": "बहुत अधिक प्रयास। कृपया लगभग एक मिनट प्रतीक्षा करें और पुनः प्रयास करें।",
         "invalidCredentials": "अमान्य क्रेडेंशियल।",
         "showPassword": "पासवर्ड दिखाएं",
         "hidePassword": "पासवर्ड छिपाएं",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "SSO से साइन इन करें",
         "orDivider": "या",
         "ssoError": "SSO साइन-इन विफल रहा। कृपया पुनः प्रयास करें।",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "कनेक्शन विफल रहा. जांचें कि सर्वर चल रहा है और पुनः प्रयास करें।",
+        "capsLockWarning": "कैप्स लॉक चालू है।",
+        "fillAllFields": "कृपया अपना उपयोगकर्ता नाम और पासवर्ड दर्ज करें।"
     },
     "setup": {
         "title": "Yuvomi में आपका स्वागत है",

@@ -1712,14 +1712,12 @@
         }
     },
     "login": {
-        "tagline": "برنامه‌ریزی خانواده. امن. حریم‌خصوصی‌محور. متن‌باز.",
+        "tagline": "دوباره به برنامه‌ریز خانوادگی‌تان خوش آمدید.",
         "usernameLabel": "نام کاربری",
-        "usernamePlaceholder": "نام کاربری",
         "passwordLabel": "رمز عبور",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "ورود",
         "loggingIn": "در حال ورود …",
-        "tooManyAttempts": "تلاش‌های بیش از حد. لطفاً کمی صبر کنید.",
+        "tooManyAttempts": "تلاش‌های بیش از حد. لطفاً حدود یک دقیقه صبر کنید و دوباره تلاش کنید.",
         "invalidCredentials": "اطلاعات ورود نامعتبر است.",
         "showPassword": "نمایش رمز عبور",
         "hidePassword": "پنهان‌سازی رمز عبور",
@@ -1727,7 +1725,10 @@
         "loginWithSso": "ورود با SSO",
         "orDivider": "یا",
         "ssoError": "ورود با SSO ناموفق بود. لطفاً دوباره تلاش کنید.",
-        "forgotPassword": "رمز عبور را فراموش کرده‌اید؟"
+        "forgotPassword": "رمز عبور را فراموش کرده‌اید؟",
+        "networkError": "اتصال ناموفق بود. بررسی کنید که سرور در حال اجرا باشد و دوباره تلاش کنید.",
+        "capsLockWarning": "کلید Caps Lock روشن است.",
+        "fillAllFields": "لطفاً نام کاربری و رمز عبور را وارد کنید."
     },
     "setup": {
         "title": "به Yuvomi خوش آمدید",

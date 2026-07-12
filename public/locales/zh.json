@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "家庭规划。安全。注重隐私。开源。",
+        "tagline": "欢迎回到您的家庭计划工具。",
         "usernameLabel": "用户名",
-        "usernamePlaceholder": "用户名",
         "passwordLabel": "密码",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "登录",
         "loggingIn": "登录中…",
-        "tooManyAttempts": "尝试次数过多，请稍后再试。",
+        "tooManyAttempts": "尝试次数过多。请等待约一分钟后再试。",
         "invalidCredentials": "用户名或密码错误。",
         "showPassword": "显示密码",
         "hidePassword": "隐藏密码",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "通过SSO登录",
         "orDivider": "或",
         "ssoError": "SSO登录失败，请重试。",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "连接失败。请检查服务器是否正在运行，然后重试。",
+        "capsLockWarning": "大写锁定已开启。",
+        "fillAllFields": "请输入用户名和密码。"
     },
     "setup": {
         "title": "欢迎使用 Yuvomi",

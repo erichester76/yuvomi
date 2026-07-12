@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.2] - 2026-07-12
+
+### Added
+- **Caps Lock warning on the login password field.** The single most common cause of a false "wrong password" is now surfaced live while you type, and hidden again when the field loses focus.
+- **Clear message when the login form is submitted empty** ("Please enter your username and password") instead of only the fields turning red — announced to screen readers, not conveyed by colour alone.
+
+### Fixed
+- **Login no longer mislabels a server or connection problem as "invalid credentials."** A network or server error now shows a distinct message that points self-hosters at their server, so an unreachable server never makes you doubt a correct password. Only a genuine 401 reports wrong credentials.
+- **Password visibility toggle now works correctly in right-to-left languages** (Arabic, Persian) — it sits on the correct side, no longer overlaps typed text, and its tap target meets the 44px comfortable minimum.
+- **No more layout shift when single sign-on is enabled.** The SSO button is resolved before the login screen renders, with a timeout so a slow identity provider never blocks password login.
+
+### Changed
+- **Improved login error recovery.** After a failed sign-in both fields are highlighted, focus moves to the error message, and "Forgot password?" is emphasized when password reset is available.
+- **Warmer login greeting** ("Welcome back to your family planner.") and a calmer single-accent background. Username autofocus is now limited to pointer devices, so opening the login screen on a phone no longer pops up the keyboard over the branding.
+
 ## [1.14.1] - 2026-07-12
 
 ### Fixed

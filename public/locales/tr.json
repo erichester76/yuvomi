@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Aile planlaması. Güvenli. Gizlilik dostu. Açık kaynak.",
+        "tagline": "Aile planlayıcına tekrar hoş geldin.",
         "usernameLabel": "Kullanıcı adı",
-        "usernamePlaceholder": "kullaniciadi",
         "passwordLabel": "Şifre",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Giriş yap",
         "loggingIn": "Giriş yapılıyor…",
-        "tooManyAttempts": "Çok fazla deneme. Lütfen bir süre bekleyin.",
+        "tooManyAttempts": "Çok fazla deneme. Lütfen yaklaşık bir dakika bekleyip tekrar deneyin.",
         "invalidCredentials": "Geçersiz kimlik bilgileri.",
         "showPassword": "Şifreyi göster",
         "hidePassword": "Şifreyi gizle",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "SSO ile giriş yap",
         "orDivider": "veya",
         "ssoError": "SSO girişi başarısız oldu. Lütfen tekrar deneyin.",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "Bağlantı başarısız oldu. Sunucunun çalıştığını kontrol edip tekrar deneyin.",
+        "capsLockWarning": "Caps Lock açık.",
+        "fillAllFields": "Lütfen kullanıcı adını ve şifreni gir."
     },
     "setup": {
         "title": "Yuvomi’a hoş geldiniz",

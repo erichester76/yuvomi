@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Rodinné plánování. Bezpečné. Soukromé. Open Source.",
+        "tagline": "Vítejte zpět ve svém rodinném plánovači.",
         "usernameLabel": "Uživatelské jméno",
-        "usernamePlaceholder": "uživatelské jméno",
         "passwordLabel": "Heslo",
-        "passwordPlaceholder": "········",
         "loginButton": "Přihlásit se",
         "loggingIn": "Přihlašování …",
-        "tooManyAttempts": "Příliš mnoho pokusů. Chvíli počkejte.",
+        "tooManyAttempts": "Příliš mnoho pokusů. Počkejte prosím asi minutu a zkuste to znovu.",
         "invalidCredentials": "Neplatné přihlašovací údaje.",
         "showPassword": "Zobrazit heslo",
         "hidePassword": "Skrýt heslo",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Přihlásit se přes SSO",
         "orDivider": "nebo",
         "ssoError": "Přihlášení přes SSO selhalo. Zkuste to prosím znovu.",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "Připojení selhalo. Zkontrolujte, zda server běží, a zkuste to znovu.",
+        "capsLockWarning": "Caps Lock je zapnutý.",
+        "fillAllFields": "Zadejte prosím uživatelské jméno a heslo."
     },
     "setup": {
         "title": "Vítejte v Yuvomi",

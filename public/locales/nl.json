@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Gezinsplanning. Veilig. Privacyvriendelijk. Open source.",
+        "tagline": "Welkom terug bij je gezinsplanner.",
         "usernameLabel": "Gebruikersnaam",
-        "usernamePlaceholder": "gebruikersnaam",
         "passwordLabel": "Wachtwoord",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Inloggen",
         "loggingIn": "Inloggen…",
-        "tooManyAttempts": "Te veel pogingen. Wacht even.",
+        "tooManyAttempts": "Te veel pogingen. Wacht ongeveer een minuut en probeer het opnieuw.",
         "invalidCredentials": "Ongeldige inloggegevens.",
         "showPassword": "Wachtwoord tonen",
         "hidePassword": "Wachtwoord verbergen",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Aanmelden met SSO",
         "orDivider": "of",
         "ssoError": "SSO-aanmelding mislukt. Probeer het opnieuw.",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "Verbinding mislukt. Controleer of de server draait en probeer het opnieuw.",
+        "capsLockWarning": "Caps Lock staat aan.",
+        "fillAllFields": "Voer je gebruikersnaam en wachtwoord in."
     },
     "setup": {
         "title": "Welkom bij Yuvomi",

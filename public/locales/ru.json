@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Семейное планирование. Безопасно. С уважением к приватности. Открытый исходный код.",
+        "tagline": "С возвращением в ваш семейный планировщик.",
         "usernameLabel": "Имя пользователя",
-        "usernamePlaceholder": "имяпользователя",
         "passwordLabel": "Пароль",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Войти",
         "loggingIn": "Вход…",
-        "tooManyAttempts": "Слишком много попыток. Подождите немного.",
+        "tooManyAttempts": "Слишком много попыток. Подождите около минуты и повторите попытку.",
         "invalidCredentials": "Неверные данные для входа.",
         "showPassword": "Показать пароль",
         "hidePassword": "Скрыть пароль",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Войти через SSO",
         "orDivider": "или",
         "ssoError": "Вход через SSO не удался. Повторите попытку.",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "Не удалось подключиться. Проверьте, запущен ли сервер, и повторите попытку.",
+        "capsLockWarning": "Включён Caps Lock.",
+        "fillAllFields": "Введите имя пользователя и пароль."
     },
     "setup": {
         "title": "Добро пожаловать в Yuvomi",

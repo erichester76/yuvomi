@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Family planning. Secure. Privacy-friendly. Open source.",
+        "tagline": "Üdv újra a családi tervezőben.",
         "usernameLabel": "Felhasználónév",
-        "usernamePlaceholder": "felhasználónév",
         "passwordLabel": "Jelszó",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Bejelentkezés",
         "loggingIn": "Bejelentkezés…",
-        "tooManyAttempts": "Túl sok próbálkozás. Kérjük, várjon egy pillanatot.",
+        "tooManyAttempts": "Túl sok próbálkozás. Kérjük, várj körülbelül egy percet, majd próbáld újra.",
         "invalidCredentials": "Érvénytelen hitelesítő adatok.",
         "showPassword": "Jelszó megjelenítése",
         "hidePassword": "Jelszó elrejtése",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Bejelentkezés SSO-val",
         "orDivider": "vagy",
         "ssoError": "SSO bejelentkezés sikertelen. Kérjük, próbálja újra.",
-        "forgotPassword": "Elfelejtett jelszó?"
+        "forgotPassword": "Elfelejtett jelszó?",
+        "networkError": "A kapcsolat sikertelen. Ellenőrizd, hogy fut-e a szerver, majd próbáld újra.",
+        "capsLockWarning": "A Caps Lock be van kapcsolva.",
+        "fillAllFields": "Add meg a felhasználóneved és a jelszavad."
     },
     "setup": {
         "title": "Üdvözöljük a Yuvomi-ban",

@@ -1712,14 +1712,12 @@
         }
     },
     "login": {
-        "tagline": "가족 계획. 안전하게. 개인정보 보호. 오픈 소스.",
+        "tagline": "가족 플래너에 다시 오신 것을 환영합니다.",
         "usernameLabel": "사용자 이름",
-        "usernamePlaceholder": "사용자이름",
         "passwordLabel": "비밀번호",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "로그인",
         "loggingIn": "로그인 중 …",
-        "tooManyAttempts": "시도가 너무 많습니다. 잠시 기다려 주세요.",
+        "tooManyAttempts": "시도가 너무 많습니다. 약 1분 후에 다시 시도해 주세요.",
         "invalidCredentials": "잘못된 로그인 정보입니다.",
         "showPassword": "비밀번호 표시",
         "hidePassword": "비밀번호 숨기기",
@@ -1727,7 +1725,10 @@
         "loginWithSso": "SSO로 로그인",
         "orDivider": "또는",
         "ssoError": "SSO 로그인에 실패했습니다. 다시 시도해 주세요.",
-        "forgotPassword": "비밀번호를 잊으셨나요?"
+        "forgotPassword": "비밀번호를 잊으셨나요?",
+        "networkError": "연결에 실패했습니다. 서버가 실행 중인지 확인하고 다시 시도해 주세요.",
+        "capsLockWarning": "Caps Lock이 켜져 있습니다.",
+        "fillAllFields": "사용자 이름과 비밀번호를 입력해 주세요."
     },
     "setup": {
         "title": "Yuvomi에 오신 것을 환영합니다",

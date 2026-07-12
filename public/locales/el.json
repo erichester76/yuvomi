@@ -1705,14 +1705,12 @@
         }
     },
     "login": {
-        "tagline": "Οικογενειακός προγραμματισμός. Ασφαλής. Φιλικός προς την ιδιωτικότητα. Ανοιχτός κώδικας.",
+        "tagline": "Καλώς ήρθατε ξανά στον οικογενειακό σας οργανωτή.",
         "usernameLabel": "Όνομα χρήστη",
-        "usernamePlaceholder": "χρήστης",
         "passwordLabel": "Κωδικός",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Σύνδεση",
         "loggingIn": "Σύνδεση…",
-        "tooManyAttempts": "Πολλές προσπάθειες. Παρακαλώ περιμένετε λίγο.",
+        "tooManyAttempts": "Πάρα πολλές προσπάθειες. Περιμένετε περίπου ένα λεπτό και δοκιμάστε ξανά.",
         "invalidCredentials": "Λανθασμένα στοιχεία σύνδεσης.",
         "showPassword": "Εμφάνιση κωδικού",
         "hidePassword": "Απόκρυψη κωδικού",
@@ -1720,7 +1718,10 @@
         "loginWithSso": "Σύνδεση με SSO",
         "orDivider": "ή",
         "ssoError": "Η σύνδεση SSO απέτυχε. Παρακαλώ δοκιμάστε ξανά.",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "networkError": "Η σύνδεση απέτυχε. Ελέγξτε αν ο διακομιστής λειτουργεί και δοκιμάστε ξανά.",
+        "capsLockWarning": "Το Caps Lock είναι ενεργό.",
+        "fillAllFields": "Εισαγάγετε το όνομα χρήστη και τον κωδικό πρόσβασης."
     },
     "setup": {
         "title": "Καλώς ορίσατε στο Yuvomi",

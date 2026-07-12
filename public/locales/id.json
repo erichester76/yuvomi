@@ -1712,14 +1712,12 @@
         }
     },
     "login": {
-        "tagline": "Perencanaan keluarga. Aman. Ramah privasi. Sumber terbuka.",
+        "tagline": "Selamat datang kembali di perencana keluarga Anda.",
         "usernameLabel": "Nama pengguna",
-        "usernamePlaceholder": "namapengguna",
         "passwordLabel": "Kata sandi",
-        "passwordPlaceholder": "••••••••",
         "loginButton": "Masuk",
         "loggingIn": "Sedang masuk …",
-        "tooManyAttempts": "Terlalu banyak percobaan. Harap tunggu sebentar.",
+        "tooManyAttempts": "Terlalu banyak percobaan. Tunggu sekitar satu menit lalu coba lagi.",
         "invalidCredentials": "Kredensial tidak valid.",
         "showPassword": "Tampilkan kata sandi",
         "hidePassword": "Sembunyikan kata sandi",
@@ -1727,7 +1725,10 @@
         "loginWithSso": "Masuk dengan SSO",
         "orDivider": "atau",
         "ssoError": "Masuk SSO gagal. Silakan coba lagi.",
-        "forgotPassword": "Lupa kata sandi?"
+        "forgotPassword": "Lupa kata sandi?",
+        "networkError": "Koneksi gagal. Periksa apakah server berjalan lalu coba lagi.",
+        "capsLockWarning": "Caps Lock aktif.",
+        "fillAllFields": "Masukkan nama pengguna dan kata sandi Anda."
     },
     "setup": {
         "title": "Selamat datang di Yuvomi",
