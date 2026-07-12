@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.3] - 2026-07-12
+
+### Added
+- **Assigned members now appear on calendar events (#493).** The month, week, day, and agenda views show an avatar stack (profile photo or initials, with a "+N" overflow) for each event's assigned members — the same treatment as the Tasks list. The event title truncates first so the assignment stays visible, and the assignee names are carried in each event's tooltip and accessible label for screen readers.
+
 ## [1.13.2] - 2026-07-12
 
 ### Fixed

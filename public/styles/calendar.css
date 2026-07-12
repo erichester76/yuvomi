@@ -307,6 +307,24 @@
   text-overflow: ellipsis;
 }
 
+/* Zugewiesene im Chip: rechtsbündig, der Titel kürzt zuerst per Ellipsis.
+ * Der Stack schrumpft nie und bleibt so immer sichtbar. */
+.cal-chip__assigned {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Im kompakten Gitter-Kontext trägt ein dünnerer Ring die Überlappung —
+ * die 2px-Trennung der Agenda wäre bei 15–16px-Avataren zu schwer. */
+.month-day__event .avatar-stack__item,
+.allday-event .avatar-stack__item,
+.week-event__title .avatar-stack__item {
+  border-width: 1.5px;
+  margin-left: -5px;
+}
+
 .event-icon {
   width: var(--space-4);
   height: var(--space-4);

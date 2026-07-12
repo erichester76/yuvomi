@@ -359,6 +359,35 @@ function eventSurfaceStyle(ev) {
   return `--ev-color:${esc(resolveEventColor(ev))};`;
 }
 
+/**
+ * Rendert den Avatar-Stack der Zugewiesenen für einen Termin-Chip in den
+ * Gitter-Ansichten (Monat/Woche/Tag). Die Chip-Farbe trägt bereits den ersten
+ * Assignee; der Stack liefert die Identität (Foto/Initialen), die Farbe allein
+ * nicht kommunizieren kann. Leerstring, wenn niemand zugewiesen ist.
+ */
+function chipAssigneeStack(ev, { size, maxVisible }) {
+  const users = ev.assigned_users ?? [];
+  if (!users.length) return '';
+  return `<span class="cal-chip__assigned">${renderAvatarStack(users, { size, maxVisible })}</span>`;
+}
+
+/**
+ * Textalternative der Zuweisung, z. B. „Zugewiesen an: Linda, Marco". Trägt die
+ * „Wer"-Information, die der Avatar-Stack nur visuell kommuniziert, in title-/
+ * aria-label-Attribute — damit Screenreader sie im Gitter mitbekommen.
+ * Leerstring, wenn niemand zugewiesen ist.
+ */
+function chipAssigneeLabel(ev) {
+  const names = (ev.assigned_users ?? []).map((u) => u.display_name).filter(Boolean);
+  return names.length ? `${t('calendar.assignedLabel')}: ${names.join(', ')}` : '';
+}
+
+/** Escapte ` · Zugewiesen an: …`-Ergänzung zum Anhängen an ein title-Attribut. */
+function chipAssigneeTitleSuffix(ev) {
+  const label = chipAssigneeLabel(ev);
+  return label ? ` · ${esc(label)}` : '';
+}
+
 // --------------------------------------------------------
 // State
 // --------------------------------------------------------
@@ -1282,8 +1311,8 @@ function renderMonthDay(date, inMonth) {
     <div class="month-day__event"
          data-id="${ev.id}"
          style="${eventSurfaceStyle(ev)}"
-         title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}"
-    >${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span></div>
+         title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}${chipAssigneeTitleSuffix(ev)}"
+    >${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span>${chipAssigneeStack(ev, { size: 15, maxVisible: 2 })}</div>
   `).join('');
 
   const MAX_TASK_SHOW = 2;
@@ -1356,7 +1385,7 @@ function renderWeekView(container) {
             ${alldayEvs[i].map((ev) => `
               <div class="allday-event" data-id="${ev.id}"
                    style="${eventSurfaceStyle(ev)}"
-                   title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span></div>
+                   title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}${chipAssigneeTitleSuffix(ev)}">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span>${chipAssigneeStack(ev, { size: 16, maxVisible: 3 })}</div>
             `).join('')}
             ${tasksOnDay(d).map(renderTaskChip).join('')}
           </div>
@@ -1440,8 +1469,9 @@ function renderWeekEvent(ev, layout = null) {
 
   return `
     <div class="week-event" data-id="${ev.id}"
-         style="top:${top}px;height:${height}px;left:${left};width:${width};${eventSurfaceStyle(ev)}">
-      <div class="week-event__title">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span>${(ev.recurrence_rule || ev.is_recurring_instance) ? calendarRepeatIconHtml() : ''}</div>
+         style="top:${top}px;height:${height}px;left:${left};width:${width};${eventSurfaceStyle(ev)}"
+         title="${esc(ev.title)}${chipAssigneeTitleSuffix(ev)}">
+      <div class="week-event__title">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span>${(ev.recurrence_rule || ev.is_recurring_instance) ? calendarRepeatIconHtml() : ''}${chipAssigneeStack(ev, { size: 14, maxVisible: 2 })}</div>
       <div class="week-event__time">${formatTime(ev.start_datetime)}${ev.end_datetime ? '–' + formatTime(ev.end_datetime) : ''}</div>
     </div>
   `;
@@ -1573,7 +1603,7 @@ function renderDayView(container) {
           ${allday.map((ev) => `
             <div class="allday-event" data-id="${ev.id}"
                  style="${eventSurfaceStyle(ev)}"
-                 title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span></div>`).join('')}
+                 title="${esc(ev.title)}${ev.cal_name ? ' · ' + ev.cal_name : ''}${chipAssigneeTitleSuffix(ev)}">${eventIconHtml(ev.icon, 'event-icon event-icon--compact')}<span>${esc(ev.title)}</span>${chipAssigneeStack(ev, { size: 16, maxVisible: 3 })}</div>`).join('')}
           ${tasksOnDay(state.cursor).map(renderTaskChip).join('')}
         </div>
       </div>` : ''}
@@ -1970,7 +2000,7 @@ function renderAgendaEvent(ev, dayStr) {
   const assignedUsers = ev.assigned_users ?? [];
   return `
     <div class="agenda-event" data-id="${ev.id}" role="button" tabindex="0"
-         aria-label="${esc(ev.title)}, ${esc(timeStr)}">
+         aria-label="${esc(ev.title)}, ${esc(timeStr)}${chipAssigneeLabel(ev) ? ', ' + esc(chipAssigneeLabel(ev)) : ''}">
       <div class="agenda-event__color" style="background:${esc(displayBg)};"></div>
       <div class="agenda-event__body">
         <div class="agenda-event__title">${eventIconHtml(ev.icon)}<span>${esc(ev.title)}</span>${(ev.recurrence_rule || ev.is_recurring_instance) ? calendarRepeatIconHtml() : ''}</div>
