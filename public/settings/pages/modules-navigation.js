@@ -45,13 +45,17 @@ const DEFAULT_MODULE_ACCENT = 'var(--color-accent)';
 const NAV_SECTION_LABEL_KEYS = Object.freeze({
   [NAV_SECTION.overview]: 'nav.sectionOverview',
   [NAV_SECTION.plan]: 'nav.sectionPlan',
-  [NAV_SECTION.home]: 'nav.sectionHome',
+  [NAV_SECTION.household]: 'nav.sectionHousehold',
+  [NAV_SECTION.people]: 'nav.sectionPeople',
+  [NAV_SECTION.finance]: 'nav.sectionFinance',
   [NAV_SECTION.customModules]: 'nav.sectionCustomModules',
 });
 const NAV_SECTIONS = Object.freeze([
   NAV_SECTION.overview,
   NAV_SECTION.plan,
-  NAV_SECTION.home,
+  NAV_SECTION.household,
+  NAV_SECTION.people,
+  NAV_SECTION.finance,
   NAV_SECTION.customModules,
 ]);
 
@@ -95,7 +99,7 @@ function buildRows(preferences, thirdPartyModules) {
     type: 'kitchen',
     id: 'kitchen',
     orderId: 'kitchen',
-    section: NAV_SECTION.home,
+    section: NAV_SECTION.household,
     label: t('nav.kitchen'),
     icon: 'utensils',
     children: kitchenChildren,
@@ -126,11 +130,11 @@ function buildRows(preferences, thirdPartyModules) {
     };
   });
 
-  // Kitchen an erster Definitionsposition einfügen (vor das erste Home-Modul),
+  // Kitchen an erster Definitionsposition einfügen (vor das erste Haushalts-Modul),
   // damit es konsistent mit der globalen Navigation erscheint.
   const ordered = [];
   for (const row of rows) {
-    if (!kitchenInserted && ['contacts', 'birthdays', 'budget', 'documents', 'housekeeping'].includes(row.id)) {
+    if (!kitchenInserted && ['housekeeping', 'documents', 'rewards', 'contacts', 'birthdays', 'health', 'budget'].includes(row.id)) {
       ordered.push(kitchenRow);
       kitchenInserted = true;
     }

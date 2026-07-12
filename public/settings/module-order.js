@@ -3,12 +3,19 @@ export const DEFAULT_MOBILE_NAV_ORDER = Object.freeze(['calendar', 'tasks', 'kit
 export const NAV_SECTION = Object.freeze({
   overview: 0,
   plan: 1,
-  home: 2,
-  customModules: 3,
+  household: 2,
+  people: 3,
+  finance: 4,
+  customModules: 5,
 });
 
 const KITCHEN_CHILD_ID_SET = new Set(KITCHEN_CHILD_IDS);
 const PLAN_MODULE_IDS = new Set(['calendar', 'tasks', 'notes']);
+// Ehemals ein einziger „Zuhause"-Sammeltopf (8 Module) — aufgeteilt in semantische
+// Gruppen ≤5, damit die Sidebar-Sektion eine Bedeutung trägt statt „nicht Plan/Übersicht".
+const HOUSEHOLD_MODULE_IDS = new Set(['kitchen', 'meals', 'recipes', 'shopping', 'housekeeping', 'documents', 'rewards']);
+const PEOPLE_MODULE_IDS = new Set(['contacts', 'birthdays', 'health']);
+const FINANCE_MODULE_IDS = new Set(['budget']);
 const MOBILE_NAV_ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 
 function isMobileNavId(id) {
@@ -52,8 +59,11 @@ export function expandModuleOrder(order = []) {
 export function moduleSection(id) {
   if (id === 'dashboard') return NAV_SECTION.overview;
   if (PLAN_MODULE_IDS.has(id)) return NAV_SECTION.plan;
+  if (HOUSEHOLD_MODULE_IDS.has(id)) return NAV_SECTION.household;
+  if (PEOPLE_MODULE_IDS.has(id)) return NAV_SECTION.people;
+  if (FINANCE_MODULE_IDS.has(id)) return NAV_SECTION.finance;
   if (typeof id === 'string' && id.startsWith('third-party-')) return NAV_SECTION.customModules;
-  return NAV_SECTION.home;
+  return NAV_SECTION.household;
 }
 
 export function sortNavigationItems(items = [], order = []) {

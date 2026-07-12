@@ -83,7 +83,9 @@ const sharedTranslationKeys = [
   'settings.desktopNavigationHint',
   'nav.sectionOverview',
   'nav.sectionPlan',
-  'nav.sectionHome',
+  'nav.sectionHousehold',
+  'nav.sectionPeople',
+  'nav.sectionFinance',
   'nav.sectionCustomModules',
   'shopping.manageCategories',
 ];
@@ -481,10 +483,16 @@ test('navigation sections match the grouped desktop information architecture', (
   assert.equal(moduleSection('calendar'), NAV_SECTION.plan);
   assert.equal(moduleSection('tasks'), NAV_SECTION.plan);
   assert.equal(moduleSection('notes'), NAV_SECTION.plan);
-  assert.equal(moduleSection('kitchen'), NAV_SECTION.home);
-  assert.equal(moduleSection('contacts'), NAV_SECTION.home);
+  assert.equal(moduleSection('kitchen'), NAV_SECTION.household);
+  assert.equal(moduleSection('housekeeping'), NAV_SECTION.household);
+  assert.equal(moduleSection('documents'), NAV_SECTION.household);
+  assert.equal(moduleSection('rewards'), NAV_SECTION.household);
+  assert.equal(moduleSection('contacts'), NAV_SECTION.people);
+  assert.equal(moduleSection('birthdays'), NAV_SECTION.people);
+  assert.equal(moduleSection('health'), NAV_SECTION.people);
+  assert.equal(moduleSection('budget'), NAV_SECTION.finance);
   assert.equal(moduleSection('third-party-weather-station'), NAV_SECTION.customModules);
-  assert.equal(moduleSection('settings'), NAV_SECTION.home);
+  assert.equal(moduleSection('settings'), NAV_SECTION.household);
 });
 
 test('desktop navigation order is applied only inside each section', () => {
@@ -506,8 +514,10 @@ test('desktop navigation order is applied only inside each section', () => {
       { module: 'tasks' },
       { module: 'calendar' },
       { module: 'notes' },
-      { module: 'budget' },
+      // contacts (Menschen) steht vor budget (Finanzen) — Sektions-Reihenfolge
+      // schlägt die gespeicherte Modul-Ordnung, die nur innerhalb einer Sektion gilt.
       { module: 'contacts' },
+      { module: 'budget' },
       { module: 'third-party-weather-station' },
       { module: 'settings' },
     ],

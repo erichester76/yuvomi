@@ -994,15 +994,20 @@ html.fab-anim-done .page-fab {
     display: flex;
     flex-direction: column;
     gap: var(--space-0h);
-    /* Kein Container-Padding: Item-Padding allein steuert die Icon-Flucht,
-     * die schwebende Indikator-Pille zieht ihren Einzug über left/right. */
-    padding: 0;
+    /* Kein seitliches Container-Padding: Item-Padding steuert die Icon-Flucht,
+     * die schwebende Indikator-Pille zieht ihren Einzug über left/right. Unten
+     * ein kleiner Puffer, damit das letzte Item (Settings) beim Scrollen nicht an
+     * die Footer-Haarlinie stößt. */
+    padding: 0 0 var(--space-2);
     flex: 1;
     overflow-y: auto;
     scrollbar-width: none;
   }
   .nav-sidebar__items::-webkit-scrollbar { display: none; }
 
+  /* Footer ist eine eigene, nicht-scrollende Region (flex-shrink:0) und setzt
+   * sich mit einer Haarlinie vom scrollenden Nav-Bereich ab — so verschmilzt das
+   * gepinnte Settings-Item nie mit Hilfe/Änderungen/Abmelden. */
   .nav-sidebar__footer-actions {
     display: flex;
     flex-wrap: wrap;
@@ -1010,6 +1015,8 @@ html.fab-anim-done .page-fab {
     justify-content: flex-start;
     gap: var(--space-0h);
     padding: var(--space-2) var(--space-1) 0;
+    margin-top: var(--space-1);
+    border-top: 1px solid var(--color-border-subtle);
     flex-shrink: 0;
   }
 
@@ -1148,8 +1155,13 @@ html.fab-anim-done .page-fab {
     padding-left: 0;
   }
 
+  /* Eingeklappt: Labels bleiben im Layout (Sidebar-Breite ist fix, overflow:hidden
+   * beschneidet den Überhang), nur per Opacity verborgen. So kein „display:block"-
+   * Pop, der den Text mitten in der Breiten-Animation auf Einzelzeichen klippt —
+   * und der Accessible Name des Items bleibt erhalten (besser für Screenreader). */
   html.sidebar-collapsed .nav-sidebar .nav-item__label {
-    display: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
   }
 
   html.sidebar-collapsed .nav-sidebar .nav-sidebar__footer-actions {
@@ -1166,7 +1178,8 @@ html.fab-anim-done .page-fab {
   }
 
   html.sidebar-collapsed .nav-sidebar .nav-section-label {
-    display: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
   }
 
   /* ── Eingeklappt: Rail expandiert bei Hover/Fokus und zeigt Labels ──
@@ -1188,11 +1201,16 @@ html.fab-anim-done .page-fab {
     display: flex;
   }
 
+  /* Beim Aufklappen die Labels erst einblenden, NACHDEM die Breite gewachsen ist
+   * (Delay ≈ Dauer der width-Transition 0.4s). So erscheint der Text bei voller
+   * Breite statt beschnitten mitzuwachsen. Ausblenden (un-hover) läuft ohne Delay
+   * über die Basis-Regel oben. */
   html.sidebar-collapsed:not(.sidebar-collapse-pointer-lock) .nav-sidebar:hover .nav-item__label,
   html.sidebar-collapsed .nav-sidebar:focus-within .nav-item__label,
   html.sidebar-collapsed:not(.sidebar-collapse-pointer-lock) .nav-sidebar:hover .nav-section-label,
   html.sidebar-collapsed .nav-sidebar:focus-within .nav-section-label {
-    display: block;
+    opacity: 1;
+    transition: opacity 0.18s ease 0.22s;
   }
 
   /* Beim Aufklappen (Hover/Fokus) muss der Footer das Expanded-Layout annehmen:
@@ -3182,7 +3200,9 @@ textarea.input { resize: vertical; }
   position: relative;
 }
 
-/* ── Sidebar: Morphende Indikator-Pille (Strukturell) ── */
+/* ── Sidebar: Morphende Indikator-Pille (Strukturell) ──
+ * Persistente Aktiv-Pille: verankert am aktiven Item, gleitet nur bei echtem
+ * Routenwechsel (Signature-Moment) — nicht beim Hover. */
 .nav-sidebar__indicator {
   position: absolute;
   /* Schwebend zentriert: seitlicher Einzug statt voller Breite */
@@ -3197,6 +3217,35 @@ textarea.input { resize: vertical; }
     opacity 0.25s ease;
   will-change: transform;
   z-index: 0;
+}
+
+/* ── Sidebar: Zarte Hover-/Fokus-Vorschau (Strukturell) ──
+ * Entkoppelt vom Aktiv-Marker: eine ruhige Fläche (kein Glas-Blur, kein Akzent),
+ * die dem Hover/Fokus folgt, damit die Aktiv-Pille beim Erkunden stehen bleibt. */
+.nav-sidebar__hover {
+  position: absolute;
+  left: var(--space-1);
+  right: var(--space-1);
+  top: 0;
+  height: var(--target-base); /* 44px */
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-3);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.28s cubic-bezier(0.28, 1.25, 0.36, 1),
+    opacity 0.18s ease;
+  will-change: transform, opacity;
+  z-index: 0;
+}
+
+/* ── Sidebar: Sektions-Gruppe (SR-Semantik) ──
+ * role="group" + aria-labelledby macht die visuelle Gruppierung für Screenreader
+ * sichtbar. display:flex bewahrt das Item-Stacking + gemeinsame Lücke. */
+.nav-sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0h);
 }
 
 /* Nav-Items über dem Sidebar-Indikator */
@@ -3216,7 +3265,7 @@ textarea.input { resize: vertical; }
 }
 
 /* Kein statischer Hover-Hintergrund wenn Liquid-Indikator aktiv —
- * die schwebende Pille übernimmt die Hover-Vorschau (opacity 0.5 via router.js) */
+ * das separate .nav-sidebar__hover-Element übernimmt die Vorschau (via router.js). */
 .nav-sidebar__items--liquid .nav-item:hover:not([aria-current="page"]) {
   background: transparent !important;
   box-shadow: none !important;
@@ -3267,7 +3316,14 @@ textarea.input { resize: vertical; }
 
 @media (prefers-reduced-motion: reduce) {
   .nav-sidebar__indicator,
+  .nav-sidebar__hover,
   .nav-bottom__indicator {
+    transition: opacity 0.01ms;
+  }
+
+  /* Flyout-Labels ohne Einblend-Verzögerung — sofort sichtbar statt 0.22s Delay. */
+  html.sidebar-collapsed .nav-sidebar .nav-item__label,
+  html.sidebar-collapsed .nav-sidebar .nav-section-label {
     transition: opacity 0.01ms;
   }
 

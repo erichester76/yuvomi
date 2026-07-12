@@ -255,7 +255,9 @@ const MOBILE_FAVORITE_COUNT = 3;
 const NAV_SECTION_LABEL_KEYS = Object.freeze({
   [NAV_SECTION.overview]: 'nav.sectionOverview',
   [NAV_SECTION.plan]: 'nav.sectionPlan',
-  [NAV_SECTION.home]: 'nav.sectionHome',
+  [NAV_SECTION.household]: 'nav.sectionHousehold',
+  [NAV_SECTION.people]: 'nav.sectionPeople',
+  [NAV_SECTION.finance]: 'nav.sectionFinance',
   [NAV_SECTION.customModules]: 'nav.sectionCustomModules',
 });
 
@@ -1103,35 +1105,42 @@ function renderAppShell(container) {
 
   const sidebarItems = document.createElement('div');
   sidebarItems.className = 'nav-sidebar__items nav-sidebar__items--liquid';
-  sidebarItems.setAttribute('role', 'list');
+  // Kein role="list": die Kinder sind Sektions-Gruppen (role="group") + das
+  // gepinnte Settings-Item, keine listitems. Die <nav>-Hülle trägt die
+  // Navigations-Semantik, die Gruppen die Sektions-Struktur.
   sidebarNavItems().forEach((item) => sidebarItems.appendChild(item));
 
-  // Indikator-Pille zeigt Vorschau, wohin sie gleiten würde — für Maus (hover)
-  // UND Tastatur (focus). Ohne Fokus-Parität wäre der Signature-Moment
-  // maus-exklusiv und Keyboard-Nutzer sähen nur den Outline.
-  const previewIndicator = (item) => {
-    const ind = sidebarItems.querySelector('.nav-sidebar__indicator');
-    if (!ind) return;
+  // Zarte Hover-Vorschau — bewegt das separate `__hover`-Element (NICHT die
+  // Aktiv-Pille) für Maus (hover) UND Tastatur (focus). Auf dem aktiven Item
+  // wird nichts gezeigt: die Aktiv-Pille steht dort bereits.
+  const previewHover = (item) => {
+    const hov = sidebarItems.querySelector('.nav-sidebar__hover');
+    if (!hov) return;
+    if (item.getAttribute('aria-current') === 'page') { hov.style.opacity = '0'; return; }
     const cr = sidebarItems.getBoundingClientRect();
     const ir = item.getBoundingClientRect();
-    // Pille (44px) vertikal im Item (48px) zentrieren — aus realen Höhen, token-unabhängig
-    const centerOffset = (ir.height - ind.getBoundingClientRect().height) / 2;
-    ind.style.transform = `translateY(${ir.top - cr.top + sidebarItems.scrollTop + centerOffset}px)`;
-    ind.style.opacity = '0.5';
+    // Vorschau (44px) vertikal im Item zentrieren — aus realen Höhen, token-unabhängig
+    const centerOffset = (ir.height - hov.getBoundingClientRect().height) / 2;
+    hov.style.transform = `translateY(${ir.top - cr.top + sidebarItems.scrollTop + centerOffset}px)`;
+    hov.style.opacity = '1';
+  };
+  const hideHover = () => {
+    const hov = sidebarItems.querySelector('.nav-sidebar__hover');
+    if (hov) hov.style.opacity = '0';
   };
   sidebarItems.addEventListener('mouseover', (ev) => {
     const item = ev.target.closest('.nav-item');
-    if (item) previewIndicator(item);
+    if (item) previewHover(item);
   });
-  sidebarItems.addEventListener('mouseleave', () => positionSidebarIndicator());
-  // Tastatur-Fokus treibt dieselbe Gleit-Vorschau; verlässt der Fokus die Liste
-  // ganz, kehrt die Pille zum aktiven Item zurück.
+  sidebarItems.addEventListener('mouseleave', hideHover);
+  // Tastatur-Fokus treibt dieselbe Vorschau; verlässt der Fokus die Liste, wird
+  // sie ausgeblendet. Die Aktiv-Pille bleibt die ganze Zeit am aktiven Item.
   sidebarItems.addEventListener('focusin', (ev) => {
     const item = ev.target.closest('.nav-item');
-    if (item) previewIndicator(item);
+    if (item) previewHover(item);
   });
   sidebarItems.addEventListener('focusout', (ev) => {
-    if (!sidebarItems.contains(ev.relatedTarget)) positionSidebarIndicator();
+    if (!sidebarItems.contains(ev.relatedTarget)) hideHover();
   });
 
   const syncSidebarIndicator = () => {
@@ -1876,19 +1885,21 @@ function navItems() {
     { path: '/calendar',  label: t('nav.calendar'),  icon: 'calendar',         module: 'calendar',  section: NAV_SECTION.plan },
     { path: '/tasks',     label: t('nav.tasks'),     icon: 'check-square',     module: 'tasks',     section: NAV_SECTION.plan },
     { path: '/notes',     label: t('nav.notes'),     icon: 'sticky-note',      module: 'notes',     section: NAV_SECTION.plan },
-    // Home — Kitchen-Gruppe zuerst, dann die übrigen Haushalts-Module
-    { path: '/meals',     label: t('nav.meals'),     icon: 'utensils',      module: 'meals',    section: NAV_SECTION.home, kitchenGroup: true },
-    { path: '/recipes',   label: t('nav.recipes'),   icon: 'book-text',     module: 'recipes',  section: NAV_SECTION.home, kitchenGroup: true },
-    { path: '/shopping',  label: t('nav.shopping'),  icon: 'shopping-cart', module: 'shopping', section: NAV_SECTION.home, kitchenGroup: true },
-    { path: '/contacts',  label: t('nav.contacts'),  icon: 'book-user',        module: 'contacts',    section: NAV_SECTION.home },
-    { path: '/birthdays', label: t('nav.birthdays'), icon: 'cake',             module: 'birthdays',   section: NAV_SECTION.home },
-    { path: '/budget',    label: t('nav.budget'),    icon: 'wallet',           module: 'budget',      section: NAV_SECTION.home },
-    { path: '/documents', label: t('nav.documents'), icon: 'folder-lock',      module: 'documents',   section: NAV_SECTION.home },
-    { path: '/housekeeping', label: t('nav.housekeeping'), icon: 'paintbrush', module: 'housekeeping', section: NAV_SECTION.home },
-    { path: '/rewards',   label: t('nav.rewards'),   icon: 'award',            module: 'rewards',     section: NAV_SECTION.home },
-    { path: '/health',    label: t('nav.health'),    icon: 'heart-pulse',      module: 'health',      section: NAV_SECTION.home },
+    // Haushalt — Kitchen-Gruppe zuerst, dann die übrigen Haushalts-Module
+    { path: '/meals',     label: t('nav.meals'),     icon: 'utensils',      module: 'meals',    section: NAV_SECTION.household, kitchenGroup: true },
+    { path: '/recipes',   label: t('nav.recipes'),   icon: 'book-text',     module: 'recipes',  section: NAV_SECTION.household, kitchenGroup: true },
+    { path: '/shopping',  label: t('nav.shopping'),  icon: 'shopping-cart', module: 'shopping', section: NAV_SECTION.household, kitchenGroup: true },
+    { path: '/housekeeping', label: t('nav.housekeeping'), icon: 'paintbrush', module: 'housekeeping', section: NAV_SECTION.household },
+    { path: '/documents', label: t('nav.documents'), icon: 'folder-lock',      module: 'documents',   section: NAV_SECTION.household },
+    { path: '/rewards',   label: t('nav.rewards'),   icon: 'award',            module: 'rewards',     section: NAV_SECTION.household },
+    // Menschen
+    { path: '/contacts',  label: t('nav.contacts'),  icon: 'book-user',        module: 'contacts',    section: NAV_SECTION.people },
+    { path: '/birthdays', label: t('nav.birthdays'), icon: 'cake',             module: 'birthdays',   section: NAV_SECTION.people },
+    { path: '/health',    label: t('nav.health'),    icon: 'heart-pulse',      module: 'health',      section: NAV_SECTION.people },
+    // Finanzen
+    { path: '/budget',    label: t('nav.budget'),    icon: 'wallet',           module: 'budget',      section: NAV_SECTION.finance },
     // Settings ist am Ende gepinnt (siehe unten).
-    { path: '/settings',  navHref: '/settings?view=domains', label: t('nav.settings'),  icon: 'settings',         module: 'settings',    section: NAV_SECTION.home },
+    { path: '/settings',  navHref: '/settings?view=domains', label: t('nav.settings'),  icon: 'settings',         module: 'settings',    section: NAV_SECTION.household },
   ];
   const thirdPartyItems = _thirdPartyModules
     .filter((module) => module.enabled && module.status === 'enabled' && module.menu?.show && module.route?.path)
@@ -1966,44 +1977,78 @@ function secondaryMobileItems() {
 
 function sidebarNavItems() {
   const elements = [];
-  // Morphende Indikator-Pille — wird als erstes Kind eingefügt damit
-  // z-index: 0 es hinter den nav-items (z-index: 1) hält.
+  // Zwei entkoppelte Elemente hinter den Nav-Items (z-index: 0):
+  // 1. Die persistente Aktiv-Pille bleibt am aktiven Item verankert — sie wandert
+  //    NICHT beim Hover, damit „Du bist hier" beim Erkunden erhalten bleibt.
+  // 2. Die zarte Hover-Vorschau folgt Hover/Fokus (leiser, ohne Glas-Blur) und
+  //    ist die einzige, die sich beim Zeigen bewegt.
   const indicator = document.createElement('div');
   indicator.className = 'nav-sidebar__indicator';
   indicator.setAttribute('aria-hidden', 'true');
   elements.push(indicator);
 
+  const hover = document.createElement('div');
+  hover.className = 'nav-sidebar__hover';
+  hover.setAttribute('aria-hidden', 'true');
+  elements.push(hover);
+
   let kitchenAdded = false;
   let currentSection = null;
+  let currentGroup = null;
 
-  const pushSectionLabel = (section) => {
+  // Die Übersicht (Dashboard) ist die App-Wurzel und sitzt als einzelnes Item
+  // ganz oben — ohne „Übersicht"-Sektionsheader über einem „Übersicht"-Item
+  // (Stutter). Sie rendert als direktes Kind, ohne Gruppe/Label.
+  const HEADERLESS_SECTIONS = new Set([NAV_SECTION.overview]);
+
+  // Jede sichtbare Sektion wird ein role="group" mit aria-labelledby auf ihr Label
+  // — so ist die visuelle Gruppierung für Screenreader hörbar (statt verwaister
+  // Label-Divs zwischen Links). Items landen im aktuellen Gruppen-Container.
+  const startSection = (section) => {
     if (section === currentSection) return;
     currentSection = section;
+    if (HEADERLESS_SECTIONS.has(section)) { currentGroup = null; return; }
     const labelKey = NAV_SECTION_LABEL_KEYS[section];
-    if (!labelKey) return;
+    if (!labelKey) { currentGroup = null; return; }
+    const labelId = `nav-section-${section}`;
     const label = document.createElement('div');
     label.className = 'nav-section-label';
+    label.id = labelId;
     label.textContent = t(labelKey);
-    elements.push(label);
+    const group = document.createElement('div');
+    group.className = 'nav-sidebar__group';
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-labelledby', labelId);
+    group.appendChild(label);
+    elements.push(group);
+    currentGroup = group;
+  };
+
+  const appendNavEl = (el) => {
+    (currentGroup ?? { appendChild: (n) => elements.push(n) }).appendChild(el);
   };
 
   navItems().forEach((item) => {
-    // Settings ist gepinnt und gehört zu keiner sichtbaren Sektionsgruppe.
-    if (item.module !== 'settings') pushSectionLabel(item.section);
+    // Settings ist gepinnt und gehört zu keiner sichtbaren Sektionsgruppe —
+    // es bleibt direktes Kind von .nav-sidebar__items (margin-top:auto-Pin).
+    if (item.module !== 'settings') startSection(item.section);
 
     if (item.kitchenGroup) {
       if (!kitchenAdded) {
-        elements.push(sidebarKitchenEl());
+        appendNavEl(sidebarKitchenEl());
         kitchenAdded = true;
       }
       return;
     }
     const el = navItemEl(item);
-    // Settings ans Sidebar-Ende pinnen — über eine explizite Klasse statt
-    // ":last-child a": ein Third-Party-Modul, das als letztes <a> rendert,
-    // würde sonst fälschlich nach unten gedrückt.
-    if (item.module === 'settings') el.classList.add('nav-item--pinned-end');
-    elements.push(el);
+    if (item.module === 'settings') {
+      // Ans Sidebar-Ende pinnen — als direktes Kind (nicht in einer Gruppe),
+      // über eine explizite Klasse statt ":last-child a".
+      el.classList.add('nav-item--pinned-end');
+      elements.push(el);
+      return;
+    }
+    appendNavEl(el);
   });
   return elements;
 }

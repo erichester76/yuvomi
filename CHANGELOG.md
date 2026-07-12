@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-07-12
+
+### Changed
+- **Redesigned the desktop sidebar's active-page marker.** The highlight now stays anchored to the page you are on instead of following the cursor when you hover other items, so you never lose track of where you are. Hovering shows a separate, quieter preview, and the active pill glides only when you actually change pages.
+- **Reorganized the desktop navigation into clearer sections.** The single overflowing "Home" group is split into **Household**, **People**, and **Finance** — each kept short and scannable — and the dashboard now sits at the top without a redundant header. The new section labels are translated into all 23 languages.
+- **Sidebar navigation sections are now exposed to screen readers as labelled groups** (instead of an invalid list), and the collapsed icon rail keeps each item's accessible name.
+
+### Fixed
+- **The Settings entry no longer merges into the footer** at the bottom of the desktop sidebar when many modules are enabled; the footer is now a clearly separated region.
+- **Collapsed-sidebar labels no longer flash truncated to single characters** while the rail expands on hover or focus.
+
 ## [1.14.2] - 2026-07-12
 
 ### Added

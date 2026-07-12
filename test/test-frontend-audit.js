@@ -182,7 +182,9 @@ test('settings information-architecture keys exist in every locale', () => {
     // App navigation section labels.
     'nav.sectionOverview',
     'nav.sectionPlan',
-    'nav.sectionHome',
+    'nav.sectionHousehold',
+    'nav.sectionPeople',
+    'nav.sectionFinance',
     'nav.sectionCustomModules',
     // Unauthorized / access-redirected notice.
     'settings.accessRedirected',
@@ -1586,7 +1588,9 @@ test('global navigation groups domains with translated section labels', () => {
   // resolves section labels through t().
   assert.match(routerSource, /'nav\.sectionOverview'/);
   assert.match(routerSource, /'nav\.sectionPlan'/);
-  assert.match(routerSource, /'nav\.sectionHome'/);
+  assert.match(routerSource, /'nav\.sectionHousehold'/);
+  assert.match(routerSource, /'nav\.sectionPeople'/);
+  assert.match(routerSource, /'nav\.sectionFinance'/);
   assert.match(routerSource, /'nav\.sectionCustomModules'/);
   assert.match(routerSource, /t\(labelKey\)/);
 
@@ -1598,7 +1602,8 @@ test('global navigation derives exactly one Kitchen destination', () => {
   const routerSource = read('../public/router.js');
 
   // Kitchen is inserted once via sidebarKitchenEl(), gated by a single-shot flag.
-  assert.equal((routerSource.match(/elements\.push\(sidebarKitchenEl\(\)\)/g) ?? []).length, 1);
+  // It is appended into the current section group via appendNavEl().
+  assert.equal((routerSource.match(/appendNavEl\(sidebarKitchenEl\(\)\)/g) ?? []).length, 1);
   assert.match(routerSource, /if \(!kitchenAdded\)/);
 });
 
@@ -1852,7 +1857,7 @@ test('sticky section headers stack above glass cards via --z-sticky', () => {
 test('every locale resolves the grouped navigation section labels', () => {
   const localesDir = new URL('../public/locales/', import.meta.url);
   const files = readdirSync(localesDir).filter((f) => f.endsWith('.json'));
-  const sectionKeys = ['sectionOverview', 'sectionPlan', 'sectionHome', 'sectionCustomModules'];
+  const sectionKeys = ['sectionOverview', 'sectionPlan', 'sectionHousehold', 'sectionPeople', 'sectionFinance', 'sectionCustomModules'];
 
   assert.ok(files.length >= 16, 'expected at least 16 locale files');
   for (const file of files) {

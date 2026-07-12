@@ -136,7 +136,7 @@ test('router.js: Keyboard-Shortcut g h navigiert ins Gesundheitsmodul', () => {
 
 test('router.js: Nav-Eintrag Gesundheit (Sektion home, Icon heart-pulse)', () => {
   const src = read('public/router.js');
-  assert.match(src, /path: '\/health',[\s\S]*icon: 'heart-pulse',[\s\S]*module: 'health',[\s\S]*section: NAV_SECTION\.home/);
+  assert.match(src, /path: '\/health',[\s\S]*icon: 'heart-pulse',[\s\S]*module: 'health',[\s\S]*section: NAV_SECTION\.people/);
 });
 
 // --------------------------------------------------------
